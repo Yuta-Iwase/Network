@@ -1,3 +1,5 @@
+// 2017/02/19
+// Github同期テスト
 
 public class gitTest {
 
@@ -6,8 +8,8 @@ public class gitTest {
 		System.out.println("hello_git");
 		System.out.println("hello_git2");
 		System.out.println("hello_git3");
-		
-		
+
+
 	}
 
 }
