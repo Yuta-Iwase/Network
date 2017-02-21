@@ -3,15 +3,16 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-// 「US airports」の整頓
+// 「Florida ecosystem dry」の整頓
 
-public class AirportTest17_1_1_NetworkEditer {
+public class AirportTest17_1_2_NetworkEditer {
 	public static void main(String[] args) throws Exception{
-		Scanner scan = new Scanner(new File("USairport500_edited.csv"));
-		Scanner scan2 = new Scanner(new File("USairport500_edited.csv"));
-		PrintWriter pw = new PrintWriter(new File("USairport500_weighted.csv"));
-		PrintWriter pw2 = new PrintWriter(new File("USairport500_degreeList.csv"));
-		PrintWriter pw3 = new PrintWriter(new File("USairport500_unweighted.csv"));
+		String inputFileName = "Florida_edit3.csv";
+		Scanner scan = new Scanner(new File(inputFileName));
+		Scanner scan2 = new Scanner(new File(inputFileName));
+		PrintWriter pw = new PrintWriter(new File("Florida_weighted"));
+		PrintWriter pw2 = new PrintWriter(new File("Florida_degreeList.csv"));
+		PrintWriter pw3 = new PrintWriter(new File("Florida_unweighted.csv"));
 
 		int N=0;
 		int M=0;
@@ -22,7 +23,7 @@ public class AirportTest17_1_1_NetworkEditer {
 		while(scan2.hasNextInt()){
 			maxIndex = Math.max(maxIndex, scan2.nextInt());
 			maxIndex = Math.max(maxIndex, scan2.nextInt());
-			scan2.nextInt();
+			scan2.nextDouble();
 		}
 		boolean[] appNode = new boolean[maxIndex+1];
 		for(int i=0;i<appNode.length;i++) appNode[i] = false;

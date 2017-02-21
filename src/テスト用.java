@@ -1,16 +1,12 @@
-import java.io.File;
-import java.io.PrintWriter;
-
 public class テスト用 {
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception{
-		PrintWriter pw = new PrintWriter(new File("てすとてすと.txt"));
-		pw.println("aaaaa");
+		double a =  5.217257E+00;
 
-		pw.close();
+		System.out.println(a);
 	}
 
 }
