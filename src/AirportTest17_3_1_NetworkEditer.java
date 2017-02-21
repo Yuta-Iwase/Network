@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 // 「Florida ecosystem dry」の整頓
 
-public class AirportTest17_1_2_NetworkEditer {
+public class AirportTest17_3_1_NetworkEditer {
 	public static void main(String[] args) throws Exception{
 		String inputFileName = "Florida_edit3.csv";
 		Scanner scan = new Scanner(new File(inputFileName));
