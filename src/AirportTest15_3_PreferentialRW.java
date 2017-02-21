@@ -2,7 +2,7 @@ import java.io.File;
 import java.io.PrintWriter;
 
 // ネットワークの(重みの)ランダマイズ
-// ①シンプル・ランダムウォーク
+// ③PreferentialRW
 public class AirportTest15_3_PreferentialRW {
 	public static void main(String[] args) throws Exception{
 		final int walkN = 100000;

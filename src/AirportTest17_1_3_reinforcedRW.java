@@ -1,22 +1,18 @@
 import java.io.File;
 import java.io.PrintWriter;
 
-// ネットワークの(重みの)ランダマイズ
-// ②reinforcedRW
-public class AirportTest15_2_reinforcedRW {
+public class AirportTest17_1_3_reinforcedRW {
 	public static void main(String[] args) throws Exception{
 		final int walkN = 100000;
-		String fileName = "reinforcedRW.csv";
+		String outputFileName = "USairport500_reinforcedRW.csv";
 
 		// 書き込み用オブジェクト定義
-		PrintWriter pw = new PrintWriter(new File(fileName));
+		PrintWriter pw = new PrintWriter(new File(outputFileName));
 
 		// 基本データ読み込み・データ活用のための準備
-		NetworkForCSVFile net = new NetworkForCSVFile("S10b-14_BetAport_LabelRemoved_and_Weighted.csv",false,true,true,true);
-		net.setNode();
-		new AirportNetworkTransformer().makeUndirectedEdge(net);
+		NetworkForCSVFile net = new NetworkForCSVFile("USairport500_weighted.csv",false,true,false,false);
+		net.setNode(false);
 		net.setEdge();
-		net.setLabel("LabelList.csv");
 
 		// 作業変数定義
 		int currentNodeIndex = (int)(net.N * Math.random());
