@@ -10,7 +10,7 @@ public class AirportTest17_3_1_NetworkEditer {
 		String inputFileName = "Florida_edit3.csv";
 		Scanner scan = new Scanner(new File(inputFileName));
 		Scanner scan2 = new Scanner(new File(inputFileName));
-		PrintWriter pw = new PrintWriter(new File("Florida_weighted"));
+		PrintWriter pw = new PrintWriter(new File("Florida_weighted.csv"));
 		PrintWriter pw2 = new PrintWriter(new File("Florida_degreeList.csv"));
 		PrintWriter pw3 = new PrintWriter(new File("Florida_unweighted.csv"));
 
