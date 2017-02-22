@@ -2,10 +2,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class AirportTest17_1_5_PropertyPloter {
+public class AirportTest17_3_5_PropertyPloter {
 
 	public static void main(String[] args) throws Exception{
-		Scanner scan = new Scanner(new File("USairport500_weighted.csv"));
+		Scanner scan = new Scanner(new File("Florida_weighted.csv"));
 		
 		ArrayList<Double> weightList = new ArrayList<Double>();
 		
