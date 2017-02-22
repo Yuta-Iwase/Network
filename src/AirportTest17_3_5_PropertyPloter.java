@@ -21,6 +21,7 @@ public class AirportTest17_3_5_PropertyPloter {
 		
 		scan.close();
 		
+		
 
 	}
 
