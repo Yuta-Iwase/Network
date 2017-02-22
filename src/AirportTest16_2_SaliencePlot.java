@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class AirportTest16_2_SaliencePlot {
 	public static void main(String[] args) throws Exception{
-		PrintWriter pw = new PrintWriter(new File("salience_gamma=3.5.csv"));
+		PrintWriter pw = new PrintWriter(new File("salience_gamma=2.7_highWalk.csv"));
 
-		NetworkForCSVFile net = new NetworkForCSVFile("ReinforcedRW用コンフィグネットワーク.csv",false,true,false,false);
+		NetworkForCSVFile net = new NetworkForCSVFile("ReinforcedRW用コンフィグネットワーク_highWalk.csv",false,true,false,false);
 		net.setNode(false);
 
 		ArrayList<Integer> queue = new ArrayList<Integer>();

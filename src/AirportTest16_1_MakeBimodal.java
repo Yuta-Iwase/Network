@@ -6,12 +6,12 @@ public class AirportTest16_1_MakeBimodal {
 		//// 各数値定義
 		// コンフィグ用
 		final int N = 1000;
-		final double gamma = 2.5;
+		final double gamma = 2.7;
 		final int minDegree = 2;
 		final int maxDegree = N-1;
 		// ランダマイズ用
 		final int walkN = N*100000;
-		String fileName = "ReinforcedRW用コンフィグネットワーク.csv";
+		String fileName = "ReinforcedRW用コンフィグネットワーク_highWalk.csv";
 
 		//// コンフィグレーション
 		// べき則に従う次数リストを作る
