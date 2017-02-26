@@ -3,7 +3,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-// 「US airports」の整頓
+// 「US airports 500」の整頓
+// (注)本来取り込むデータは「US airports」だったが誤って「US airports 500」を取り込んでしまった
 
 public class AirportTest17_1_1_NetworkEditer {
 	public static void main(String[] args) throws Exception{
