@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 // 読み込んだデータからsalienceを計算
 
-public class AirportTest18__1_2fix_OriginalNetworkSalience {
+public class AirportTest18_1_2fix_OriginalNetworkSalience {
 	public static void main(String[] args) throws Exception{
 		String folderName = "USAirport/";
 

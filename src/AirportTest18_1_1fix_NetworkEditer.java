@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 // 「US airports」の整頓
 
-public class AirportTest18__1_1fix_NetworkEditer {
+public class AirportTest18_1_1fix_NetworkEditer {
 	public static void main(String[] args) throws Exception{
 		String folderName = "USAirport/";
 
