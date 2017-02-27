@@ -7,11 +7,13 @@ import java.util.Scanner;
 
 public class AirportTest18__1_1fix_NetworkEditer {
 	public static void main(String[] args) throws Exception{
-		Scanner scan = new Scanner(new File("USairport500_edited.csv"));
-		Scanner scan2 = new Scanner(new File("USairport500_edited.csv"));
-		PrintWriter pw = new PrintWriter(new File("USairport500_weighted.csv"));
-		PrintWriter pw2 = new PrintWriter(new File("USairport500_degreeList.csv"));
-		PrintWriter pw3 = new PrintWriter(new File("USairport500_unweighted.csv"));
+		String folderName = "USAirport/";
+
+		Scanner scan = new Scanner(new File(folderName + "USAirport.txt"));
+		Scanner scan2 = new Scanner(new File(folderName + "USAirport.txt"));
+		PrintWriter pw = new PrintWriter(new File(folderName + "USAirport_weighted.csv"));
+		PrintWriter pw2 = new PrintWriter(new File(folderName + "USAirport_degreeList.csv"));
+		PrintWriter pw3 = new PrintWriter(new File(folderName + "USAirport_unweighted.csv"));
 
 		int N=0;
 		int M=0;
