@@ -111,8 +111,9 @@ public class AirportTest15_4_SaliencePlot {
 		// 各辺のSalienceを出力
 		for(m=0;m<net.M;m++){
 //			System.out.println(m + "\t" + edge.get(m).linkSalience);
-			pw.println(m + "\t" + edge.get(m).linkSalience);
-			System.out.println(edge.get(m).linkSalience);
+			pw.println(m + "," + edge.get(m).linkSalience);
+//			System.out.println(edge.get(m).linkSalience);
+			System.out.println(net.weight[m]);
 		}
 		
 		pw.close();

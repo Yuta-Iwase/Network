@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 
 public class AirportTest16_1_MakeBimodal {
 	public static void main(String[] args) throws Exception{
-		double point = 0.1;
+		double point = 2.0;
 		
 		//// 各数値定義
 		// コンフィグ用
