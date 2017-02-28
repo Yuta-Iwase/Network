@@ -10,6 +10,7 @@ public class AirportTest18_1_2fix_OriginalNetworkSalience {
 
 		PrintWriter pw = new PrintWriter(new File(folderName + "USAirport_OriginalSalience.csv"));
 
+
 		NetworkForCSVFile net = new NetworkForCSVFile(folderName + "USAirport_weighted.csv",false,true,false,false);
 		net.setNode(false);
 
@@ -115,7 +116,8 @@ public class AirportTest18_1_2fix_OriginalNetworkSalience {
 		System.out.println();
 		for(m=0;m<net.M;m++){
 			pw.println(m + "," + edge.get(m).linkSalience);
-			System.out.println(m + "\t" + edge.get(m).linkSalience);
+//			System.out.println(m + "\t" + edge.get(m).linkSalience);
+			System.out.println(net.weight[m]);
 		}
 
 		pw.close();

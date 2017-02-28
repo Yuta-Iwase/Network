@@ -8,8 +8,8 @@ import java.io.PrintWriter;
 
 public class AirportTest15_2_reinforcedRW {
 	public static void main(String[] args) throws Exception{
-		final int walkN = 100000;
-		String fileName = "reinforcedRW.csv";
+		final int walkN = 1000000;
+		String fileName = "JPAir_RRW.csv";
 
 		// 書き込み用オブジェクト定義
 		PrintWriter pw = new PrintWriter(new File(fileName));
@@ -43,7 +43,7 @@ public class AirportTest15_2_reinforcedRW {
 			}
 
 			// 加重
-			newWeight[currentNode.eList.get(selectedEdge).index] += 1.0;
+			newWeight[currentNode.eList.get(selectedEdge).index] += 0.1;
 
 			// nextNodeIndexの決定
 			if(currentNode.eList.get(selectedEdge).node[0]!=currentNodeIndex){

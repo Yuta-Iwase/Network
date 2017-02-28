@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 
 public class AirportTest16_1_MakeBimodal {
 	public static void main(String[] args) throws Exception{
+		double point = 0.1;
+		
 		//// 各数値定義
 		// コンフィグ用
 		final int N = 1000;
@@ -13,7 +15,7 @@ public class AirportTest16_1_MakeBimodal {
 		final int minDegree = 2;
 		final int maxDegree = N-1;
 		// ランダマイズ用
-		final int walkN = N*100000;
+		final int walkN = N*10000;
 		String fileName = "ReinforcedRW用コンフィグネットワーク_highWalk.csv";
 
 		//// コンフィグレーション
@@ -74,7 +76,7 @@ public class AirportTest16_1_MakeBimodal {
 				threshold += newWeight[currentNode.eList.get(selectedEdge).index];
 			}
 			// 加重
-			newWeight[currentNode.eList.get(selectedEdge).index] += 1.0;
+			newWeight[currentNode.eList.get(selectedEdge).index] += point;
 			// nextNodeIndexの決定
 			if(currentNode.eList.get(selectedEdge).node[0]!=currentNodeIndex){
 				nextNodeIndex = currentNode.eList.get(selectedEdge).node[0];

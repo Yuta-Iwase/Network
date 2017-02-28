@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class AirportTest16_2_SaliencePlot {
 	public static void main(String[] args) throws Exception{
 		PrintWriter pw = new PrintWriter(new File("salience_gamma=2.7_highWalk.csv"));
+		PrintWriter pw2 = new PrintWriter(new File("weight_gamma=2.7_highWalk.csv"));
 
 		NetworkForCSVFile net = new NetworkForCSVFile("ReinforcedRW用コンフィグネットワーク_highWalk.csv",false,true,false,false);
 		net.setNode(false);
@@ -111,10 +112,15 @@ public class AirportTest16_2_SaliencePlot {
 		System.out.println();
 		for(m=0;m<net.M;m++){
 			pw.println(m + "," + edge.get(m).linkSalience);
-			System.out.println(m + "\t" + edge.get(m).linkSalience);
+			pw2.println(m + "," + net.weight[m]);
+			System.out.println(edge.get(m).linkSalience);
 		}
 
 		pw.close();
+		pw2.close();
+		
+		System.out.println("N=" + net.N);
+		System.out.println("M=" + net.M);
 
 }
 

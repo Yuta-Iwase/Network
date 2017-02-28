@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 // 17/02/28 バグ修正
 public class AirportTest18_1_3fix_reinforcedRW {
 	public static void main(String[] args) throws Exception{
+		double point = 1.0;
+
 		int N = 1574;
 		final int walkN = 10000*N;
 
@@ -42,7 +44,7 @@ public class AirportTest18_1_3fix_reinforcedRW {
 			}
 
 			// 加重
-			newWeight[currentNode.eList.get(selectedEdge).index] += 1.0;
+			newWeight[currentNode.eList.get(selectedEdge).index] += point;
 
 			// nextNodeIndexの決定
 			if(currentNode.eList.get(selectedEdge).node[0]!=currentNodeIndex){

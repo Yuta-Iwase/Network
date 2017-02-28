@@ -1,12 +1,18 @@
+import java.io.File;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
+// PrintWriter追加
+
 public class AirportTest15_4_SaliencePlot {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception{
 //		NetworkForCSVFile net = new NetworkForCSVFile("SimpleRW.csv",false,true,false,false);
-//		NetworkForCSVFile net = new NetworkForCSVFile("reinforcedRW.csv",false,true,false,false);
-		NetworkForCSVFile net = new NetworkForCSVFile("PreferentialRW.csv",false,true,false,false);
+		NetworkForCSVFile net = new NetworkForCSVFile("JPAir_RRW.csv",false,true,false,false);
+//		NetworkForCSVFile net = new NetworkForCSVFile("PreferentialRW.csv",false,true,false,false);
 		net.setNode(false);
 		net.setLabel("空港ラベル表.csv");
+
+		PrintWriter pw = new PrintWriter(new File("JPAir_RRW_s.csv"));
 
 		ArrayList<Integer> queue = new ArrayList<Integer>();
 		ArrayList<Integer> stack = new ArrayList<Integer>();
@@ -104,8 +110,12 @@ public class AirportTest15_4_SaliencePlot {
 		// 出力⑥
 		// 各辺のSalienceを出力
 		for(m=0;m<net.M;m++){
-			System.out.println(m + "\t" + edge.get(m).linkSalience);
+//			System.out.println(m + "\t" + edge.get(m).linkSalience);
+			pw.println(m + "\t" + edge.get(m).linkSalience);
+			System.out.println(edge.get(m).linkSalience);
 		}
+		
+		pw.close();
 
 }
 
