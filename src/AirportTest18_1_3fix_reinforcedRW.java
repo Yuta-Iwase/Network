@@ -3,6 +3,7 @@ import java.io.PrintWriter;
 
 // メモ:後ろで動画流しつつwalkN=1500万で12秒
 
+// 17/02/28 バグ修正
 public class AirportTest18_1_3fix_reinforcedRW {
 	public static void main(String[] args) throws Exception{
 		int N = 1574;
@@ -32,7 +33,7 @@ public class AirportTest18_1_3fix_reinforcedRW {
 			// ここが各ランダムウォークで変化する内容(辺の選択方法)
 			sumW = 0;
 			for(int i=0;i<currentNode.eList.size();i++) sumW+=newWeight[currentNode.eList.get(i).index];
-			r = (int)(sumW*Math.random());
+			r = (sumW*Math.random());
 			selectedEdge = 0;
 			threshold = newWeight[currentNode.eList.get(0).index];
 			while(r > threshold){

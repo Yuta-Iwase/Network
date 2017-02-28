@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.PrintWriter;
 
+// 17/02/28 バグ修正
 public class AirportTest17_3_3_reinforcedRW {
 	public static void main(String[] args) throws Exception{
 		final int walkN = 100000;
@@ -27,7 +28,7 @@ public class AirportTest17_3_3_reinforcedRW {
 			// ここが各ランダムウォークで変化する内容(辺の選択方法)
 			sumW = 0;
 			for(int i=0;i<currentNode.eList.size();i++) sumW+=newWeight[currentNode.eList.get(i).index];
-			r = (int)(sumW*Math.random());
+			r = (sumW*Math.random());
 			selectedEdge = 0;
 			threshold = newWeight[currentNode.eList.get(0).index];
 			while(r > threshold){
