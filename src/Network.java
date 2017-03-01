@@ -9,6 +9,7 @@ import java.util.Scanner;
 //// ・フィールド変数はprivateとしてゲッターを用いて呼び出すべきか?
 //// ・フィールド変数weight[] と Edgeクラスのweight が役割として重複している。
 //// ・(16/12/12-14)にかけてのエラーの大本はココ、このプロジェクトの火薬庫
+//// ・[17/03/01]linkSalience()の吟味
 // 更新
 // 16/7/28
 // ・Edgeクラス追加
@@ -196,10 +197,13 @@ public class Network implements Cloneable{
 		}
 	}
 
-	/** このメソッドを実行することで
-	 * 辺のリストedgeListを使うことができる。
-	 * 頂点について、所有する辺のリストeListを使うことができる。
-	 * (注)list[][]が定義されている場合のみ使用可能*/
+	/** このメソッドを実行することで<br>
+	 * 辺のリストedgeListを使うことができる。<br>
+	 * 頂点について、所有する辺のリストeListを使うことができる。<br>
+	 * (注)<br>
+	 * list[][]が定義されている場合のみ使用可能<br>
+	 * さらにsetNode()またはsetNode(false)適用後でないと使えない<br>
+	 * */
 	public void setEdge(){
 		Edge currentEdge = null;
 		for(int i=0;i<M;i++){
@@ -421,8 +425,12 @@ public class Network implements Cloneable{
 		}
 	}
 
-	/** 頂点の媒介中心性を計算しプロットする(Brandesらの方法)
-	* 無向グラフのみ実行可能 */
+	/** 頂点の媒介中心性を計算しプロットする(Brandesらの方法)<br>
+	* (注)<br>
+	* 無向グラフのみ実行可能 <br>
+	* さらにsetNode()またはsetNode(false)を使う必要がある<br>
+	*
+	* */
 	public void betweenCentrality(){
 		// 変数定義
 		Node currentNode;
@@ -494,10 +502,226 @@ public class Network implements Cloneable{
 				}
 			}
 		}
+	}
 
-		// 結果表示
-		for(int n=0;n<N;n++){
-			System.out.println(n + "\t" + nodeList.get(n).betweenCentrality);
+	/**
+	 * 辺の媒介中心性を計算しプロットする(Brandesらの方法)<br>
+	 * 無向グラフのみ実行可能<br>
+	 * (注)<br>
+	 * 以下の状況が必要<br>
+	 * ●weight[]定義済み<br>
+	 * ●doubleCount=true<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 */
+	public void EdgeBetweenness(){
+		ArrayList<Integer> queue = new ArrayList<Integer>();
+		ArrayList<Integer> stack = new ArrayList<Integer>();
+
+		double[] sigma = new double[N];
+		double[] delta = new double[N];
+		for(int i=0;i<N;i++)sigma[i]=0;
+
+		//distance from source
+		double[] dist = new double[N];
+
+		//list of predecessors on shortest paths from source
+		ArrayList<ArrayList<Integer>> Pred = new ArrayList<ArrayList<Integer>>();
+		for(int i=0;i<N;i++) Pred.add(new ArrayList<Integer>());
+
+		ArrayList<Edge> edge = new ArrayList<Edge>();
+		for(int i=0;i<M;i++)edge.add(new Edge());
+
+		int v,w,m,minIndex,vwEdge;
+		double c;
+		Double minDis;
+
+
+		for(int s=0 ; s<N ; s++){
+			//// single-source shortest-paths problem
+			// initialization
+			for(int i=0 ; i<N ; i++){
+				Pred.get(i).clear();
+				dist[i] = Double.MAX_VALUE;
+				sigma[i] = 0;
+			}
+			dist[s] = 0;
+			sigma[s] = 1;
+			queue.add(s);
+
+			while(!queue.isEmpty()){
+				// queueからdist[v]が最小となるものを取り出す
+				minDis = Double.MAX_VALUE - 1.0;
+				v = -1;
+				minIndex = -1;
+				for(int i=0;i<queue.size();i++){
+					if(minDis > dist[queue.get(i)]){
+						minDis = dist[queue.get(i)];
+						v = queue.get(i);
+						minIndex = i;
+					}
+				}
+				queue.remove(minIndex);
+				stack.add(v);
+
+				for(int neighbor=0 ; neighbor<nodeList.get(v).list.size() ; neighbor++){
+					w = nodeList.get(v).list.get(neighbor).index;
+					// path discovery
+					vwEdge = searchEdge(v,w);
+					if(dist[w] > dist[v] + 1.0/weight[vwEdge]){
+						dist[w] = dist[v] + 1.0/weight[vwEdge];
+
+						// insert/update w
+						queue.add(w);
+						for(int i=0;i<queue.size()-1;i++){
+							if(queue.get(i) == w){
+								queue.remove(i);
+								break;
+							}
+						}
+
+						sigma[w] = 0;
+
+						Pred.get(w).clear();
+					}
+					//path counting
+					if(dist[w] == dist[v]+1.0/weight[vwEdge]){
+						sigma[w] = sigma[w] + sigma[v];
+						Pred.get(w).add(v);
+					}
+				}
+			}
+
+			for(int i=0;i<delta.length;i++)delta[i]=0.0;
+			int[] node = new int[2];
+			int[] listNode = new int[2];
+			//// accumulation
+			while(!stack.isEmpty()){
+				w = stack.get(stack.size()-1);
+				stack.remove(stack.size()-1);
+
+				for(int i=0 ; i<Pred.get(w).size() ; i++){
+					v = Pred.get(w).get(i);
+					node[0] = Math.min(v,w);
+					node[1] = Math.max(v,w);
+					for(m=0;m<M;m++){
+						listNode[0] = Math.min(list[m][0],list[m][1]);
+						listNode[1] = Math.max(list[m][0],list[m][1]);
+						if(listNode[0]==node[0]&&listNode[1]==node[1])break;
+					}
+					edge.get(m).setNode(node[0], node[1]);
+
+					c = (sigma[v]/sigma[w]) * (1.0+delta[w]);
+					edge.get(m).betweenCentrality = edge.get(m).betweenCentrality + c;
+					delta[v] = delta[v] + c;
+				}
+
+				if(w!=s){
+					edgeList.get(w).betweenCentrality = edgeList.get(w).betweenCentrality + delta[w];
+				}
+			}
+		}
+	}
+
+	/**
+	 * 辺のsalienceを計算しプロットする(Brandesを書き換えGradyが作った方法)<br>
+	 * 無向グラフのみ実行可能<br>
+	 * (注)<br>
+	 * 以下の状況が必要<br>
+	 * ●weight[]定義済み<br>
+	 * ●doubleCount=true<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 */
+	public void LinkSalience(){
+		ArrayList<Integer> queue = new ArrayList<Integer>();
+		ArrayList<Integer> stack = new ArrayList<Integer>();
+
+		//distance from source
+		double[] dist = new double[N];
+
+		//list of predecessors on shortest paths from source
+		ArrayList<ArrayList<Integer>> Pred = new ArrayList<ArrayList<Integer>>();
+		for(int i=0;i<N;i++) Pred.add(new ArrayList<Integer>());
+
+		ArrayList<Edge> edge = new ArrayList<Edge>();
+		for(int i=0;i<M;i++)edge.add(new Edge());
+
+		int v,w,m,minIndex,vwEdge;
+		Double minDis;
+
+
+		for(int s=0 ; s<N ; s++){
+			//// single-source shortest-paths problem
+			// initialization
+			for(int i=0 ; i<N ; i++){
+				Pred.get(i).clear();
+				dist[i] = Double.MAX_VALUE;
+			}
+			dist[s] = 0;
+			queue.add(s);
+
+			while(!queue.isEmpty()){
+				// queueからdist[v]が最小となるものを取り出す
+				minDis = Double.MAX_VALUE - 1.0;
+				v = -1;
+				minIndex = -1;
+				for(int i=0;i<queue.size();i++){
+					if(minDis > dist[queue.get(i)]){
+						minDis = dist[queue.get(i)];
+						v = queue.get(i);
+						minIndex = i;
+					}
+				}
+				queue.remove(minIndex);
+				stack.add(v);
+
+				for(int neighbor=0 ; neighbor<nodeList.get(v).list.size() ; neighbor++){
+					w = nodeList.get(v).list.get(neighbor).index;
+					// path discovery
+					vwEdge = searchEdge(v,w);
+					if(dist[w] > dist[v] + 1.0/weight[vwEdge]){
+						dist[w] = dist[v] + 1.0/weight[vwEdge];
+
+						// insert/update w
+						queue.add(w);
+						for(int i=0;i<queue.size()-1;i++){
+							if(queue.get(i) == w){
+								queue.remove(i);
+								break;
+							}
+						}
+
+						Pred.get(w).clear();
+					}
+					//path counting
+					if(dist[w] == dist[v]+1.0/weight[vwEdge]){
+						Pred.get(w).add(v);
+					}
+				}
+			}
+
+			int[] node = new int[2];
+			int[] listNode = new int[2];
+			//// accumulation
+			while(!stack.isEmpty()){
+				w = stack.get(stack.size()-1);
+				stack.remove(stack.size()-1);
+
+				for(int i=0 ; i<Pred.get(w).size() ; i++){
+					v = Pred.get(w).get(i);
+					node[0] = Math.min(v,w);
+					node[1] = Math.max(v,w);
+					for(m=0;m<M;m++){
+						listNode[0] = Math.min(list[m][0],list[m][1]);
+						listNode[1] = Math.max(list[m][0],list[m][1]);
+						if(listNode[0]==node[0]&&listNode[1]==node[1])break;
+					}
+					edge.get(m).setNode(node[0], node[1]);
+//					edge.get(m).linkSalience = edge.get(m).linkSalience+1;
+					edgeList.get(m).linkSalience += 1;
+				}
+			}
 		}
 	}
 
@@ -526,16 +750,36 @@ public class Network implements Cloneable{
 	protected static class Edge{
 		int index;
 		int[] node = new int[2];
+		double betweenCentrality;
+		int linkSalience;
+
+		Edge() {
+			init();
+			node[0] = -1;
+			node[1] = -1;
+		}
 
 		Edge(int i,int j) {
+			init();
 			node[0]=i;
 			node[1]=j;
 		}
 
 		Edge(int i,int j,int inputIndex) {
+			init();
 			node[0]=i;
 			node[1]=j;
 			index = inputIndex;
+		}
+
+		void setNode(int n1,int n2){
+			node[0] = Math.min(n1, n2);
+			node[1] = Math.max(n1, n2);
+		}
+
+		private void init(){
+			linkSalience=0;
+			betweenCentrality=0;
 		}
 
 	}
