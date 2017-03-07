@@ -5,7 +5,7 @@ public class AirportTest9_EdgeBC_ForWeighted {
 		NetworkForCSVFile net = new NetworkForCSVFile("S10b-14_BetAport_LabelRemoved_and_Weighted.csv",false , true, true,true);
 		net.setNode();
 		new AirportNetworkTransformer().makeUndirectedEdge(net);
-		
+
 		net.setLabel("空港ラベル表.csv");
 
 		ArrayList<Integer> queue = new ArrayList<Integer>();

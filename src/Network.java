@@ -163,7 +163,6 @@ public class Network implements Cloneable{
 		int currentEdge = 0;
 		for(int n=0;n<N;n++){
 			for(int i=0;i<degree[n];i++){
-				System.out.println(M + "\t" + n);
 				nodeList.get(n).list.add(nodeList.get(list[currentEdge+i][1]));
 			}
 			currentEdge += degree[n];

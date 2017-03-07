@@ -124,7 +124,7 @@ public class AirportTest7_LinkSalience_ForWeighted {
 				// 規格化
 //				System.out.println(((double)i)/net.N + "\t" + ((double)distribution[i]/net.M));
 				// 規格化なし
-				System.out.println(((double)i) + "\t" + ((double)distribution[i]));
+//				System.out.println(((double)i) + "\t" + ((double)distribution[i]));
 			}
 		}
 		// 出力②
@@ -172,9 +172,9 @@ public class AirportTest7_LinkSalience_ForWeighted {
 
 		// 出力⑥
 		// 各辺のSalienceを出力
-//		for(m=0;m<net.M;m++){
-//			System.out.println(m + "," + edge.get(m).linkSalience);
-//		}
+		for(m=0;m<net.M;m++){
+			System.out.println(m + "\t" + edge.get(m).linkSalience);
+		}
 
 }
 
