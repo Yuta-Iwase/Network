@@ -15,7 +15,7 @@ public class AirportTest16_1_MakeBimodal {
 		final int minDegree = 2;
 		final int maxDegree = N-1;
 		// ランダマイズ用
-		final int walkN = N*10000;
+		final int walkN = N*1000;
 		String fileName = "ReinforcedRW用コンフィグネットワーク_highWalk.csv";
 
 		//// コンフィグレーション
