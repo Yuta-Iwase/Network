@@ -19,8 +19,9 @@ public class AirportTestXX_PropertyPloter {
 //			property(6, i);
 //			System.out.println("タスク" + i + "終了");
 //		}
-		property(6, 4);
-		property(6, 5);
+		property(6, 0);
+		property(6, 1);
+//		property(6, 2);
 		
 //		rRW("conf2_7/conf2.7_nw.csv","conf2_7/conf2.7_rRW20.0.csv",20.0,false);
 //		property(7, 4);
@@ -40,8 +41,8 @@ public class AirportTestXX_PropertyPloter {
 	public static void property(int input_fileN,int input_mode) throws Exception{
 		int fileN = input_fileN; ///
 		int mode = input_mode; ///
-		String directory = "random_conf2_7min4/"; ///
-		String coreName = "random_conf2.7min4_"; ///
+		String directory = "conf2_7min4/"; ///
+		String coreName = "conf2.7min4_"; ///
 
 		String headName = directory + coreName;
 		String[] target = new String[7];
