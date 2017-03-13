@@ -15,24 +15,31 @@ public class AirportTestXX_PropertyPloter {
 //		net.printList();
 
 //		RW_Ploter();
-//		property(6, 5);
+		for(int i=0;i<6;i++){
+			property(6, i);
+			System.out.println("タスク" + i + "終了");
+		}
+		
+//		rRW("conf2_7/conf2.7_nw.csv","conf2_7/conf2.7_rRW20.0.csv",20.0,false);
+//		property(7, 4);
 
 	}
 
 	public static void RW_Ploter() throws Exception{
-		String baseFile = "WorldAir/WorldAir_w.csv";
-		sRW(baseFile,"WorldAir/WorldAir_sRW.csv",true);
-		rRW(baseFile,"WorldAir/WorldAir_rRW1.0.csv",1.0,true);
-		rRW(baseFile,"WorldAir/WorldAir_rRW2.0.csv",2.0,true);
-		rRW(baseFile,"WorldAir/WorldAir_rRW10.0.csv",10.0,true);
-		pRW(baseFile,"WorldAir/WorldAir_pRW.csv",true);
+		boolean weighted = false;
+		String baseFile = "random_conf2_7min4/random_conf2.7min4_nw.csv";
+		sRW(baseFile,"random_conf2_7min4/random_conf2.7min4_sRW.csv",weighted);
+		rRW(baseFile,"random_conf2_7min4/random_conf2.7min4_rRW1.0.csv",1.0,weighted);
+		rRW(baseFile,"random_conf2_7min4/random_conf2.7min4_rRW2.0.csv",2.0,weighted);
+		rRW(baseFile,"random_conf2_7min4/random_conf2.7min4_rRW10.0.csv",10.0,weighted);
+		pRW(baseFile,"random_conf2_7min4/random_conf2.7min4_pRW.csv",weighted);
 	}
 
 	public static void property(int input_fileN,int input_mode) throws Exception{
 		int fileN = input_fileN; ///
 		int mode = input_mode; ///
-		String directory = "WorldAir/"; ///
-		String coreName = "WorldAir_"; ///
+		String directory = "random_conf2_7min4/"; ///
+		String coreName = "random_conf2.7min4_"; ///
 
 		String headName = directory + coreName;
 		String[] target = new String[7];
@@ -44,7 +51,7 @@ public class AirportTestXX_PropertyPloter {
 		targetElement[1] = "sRW";
 		targetElement[2] = "rRW1.0";
 		targetElement[3] = "rRW2.0";
-		targetElement[4] = "rRW10.0";
+		targetElement[4] = "rRW20.0";
 		targetElement[5] = "pRW";
 		if(fileN >= 7){
 			targetElement[6] = "w";
