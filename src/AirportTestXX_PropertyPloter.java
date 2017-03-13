@@ -44,8 +44,8 @@ public class AirportTestXX_PropertyPloter {
 	public static void property(int input_fileN,int input_mode) throws Exception{
 		int fileN = input_fileN; ///
 		int mode = input_mode; ///
-		String directory = "conf2_7min4/"; ///
-		String coreName = "conf2.7min4_"; ///
+		String directory = "random_conf2_7min4/"; ///
+		String coreName = "random_conf2.7min4_"; ///
 
 		String headName = directory + coreName;
 		String[] target = new String[7];
@@ -80,6 +80,34 @@ public class AirportTestXX_PropertyPloter {
 		}else{
 			net = new NetworkForCSVFile(target[mode], false, true, false, false);
 		}
+		net.setNode(false);
+		net.setEdge();
+		net.EdgeBetweenness();
+		net.LinkSalience();
+
+		for(int i=0;i<net.M;i++){
+			System.out.println(i + plotDelimiter + net.weight[i] + plotDelimiter + net.edgeList.get(i).betweenCentrality + plotDelimiter + net.edgeList.get(i).linkSalience);
+			pw.println(i + plotDelimiter + net.weight[i] + plotDelimiter + net.edgeList.get(i).betweenCentrality + plotDelimiter + net.edgeList.get(i).linkSalience);
+		}
+
+		pw.close();
+	}
+	
+	static void property20() throws Exception{
+		String directory = "conf2_7min4/"; ///
+		String coreName = "conf2.7min4_"; ///
+		String targetElement = "rRW20.0";
+
+		String headName = directory + coreName;
+		String target = headName;
+
+		target += targetElement + ".csv";
+
+		String pwFile = directory + targetElement + "/property.csv";
+		PrintWriter pw = new PrintWriter(new File(pwFile));
+		NetworkForCSVFile net;
+
+		net = new NetworkForCSVFile(target, false, true, false, false);
 		net.setNode(false);
 		net.setEdge();
 		net.EdgeBetweenness();
