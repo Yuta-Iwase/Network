@@ -15,10 +15,12 @@ public class AirportTestXX_PropertyPloter {
 //		net.printList();
 
 //		RW_Ploter();
-		for(int i=0;i<6;i++){
-			property(6, i);
-			System.out.println("タスク" + i + "終了");
-		}
+//		for(int i=0;i<6;i++){
+//			property(6, i);
+//			System.out.println("タスク" + i + "終了");
+//		}
+		property(6, 4);
+		property(6, 5);
 		
 //		rRW("conf2_7/conf2.7_nw.csv","conf2_7/conf2.7_rRW20.0.csv",20.0,false);
 //		property(7, 4);
@@ -51,7 +53,7 @@ public class AirportTestXX_PropertyPloter {
 		targetElement[1] = "sRW";
 		targetElement[2] = "rRW1.0";
 		targetElement[3] = "rRW2.0";
-		targetElement[4] = "rRW20.0";
+		targetElement[4] = "rRW10.0";
 		targetElement[5] = "pRW";
 		if(fileN >= 7){
 			targetElement[6] = "w";
