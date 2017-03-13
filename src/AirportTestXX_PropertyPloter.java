@@ -19,9 +19,12 @@ public class AirportTestXX_PropertyPloter {
 //			property(6, i);
 //			System.out.println("タスク" + i + "終了");
 //		}
-		property(6, 0);
-		property(6, 1);
-//		property(6, 2);
+//		property(6, 0);
+//		property(6, 1);
+		property(6, 2);
+		property(6, 3);
+		property(6, 4);
+		property(6, 5);
 		
 //		rRW("conf2_7/conf2.7_nw.csv","conf2_7/conf2.7_rRW20.0.csv",20.0,false);
 //		property(7, 4);
