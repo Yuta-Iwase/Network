@@ -1,37 +1,39 @@
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.Scanner;
 
 
 public class AirportTestXX_PropertyPloter {
+	static String plotDelimiter = ",";
+
 	public static void main(String[] args) throws Exception{
 //		S10b14_BetAport_salience();
-		
+
 //		NetworkForCSVFile net = new NetworkForCSVFile("S10b-14_BetAport_LabelRemoved_and_Weighted.csv", false, true, true, true);
 //		net.setNode();
 //		new AirportNetworkTransformer().makeUndirectedEdge(net);
-		
+
 //		net.printList();
-		
-		property(6, 5);
-		
+
+//		RW_Ploter();
+//		property(6, 5);
+
 	}
-	
+
 	public static void RW_Ploter() throws Exception{
-		String baseFile = "conf2_7/conf2.7_nw.csv";
-		sRW(baseFile,"conf2_7/conf2.7_sRW.csv");
-		rRW(baseFile,"conf2_7/conf2.7_rRW1.0.csv",1.0);
-		rRW(baseFile,"conf2_7/conf2.7_rRW2.0.csv",2.0);
-		rRW(baseFile,"conf2_7/conf2.7_rRW10.0.csv",10.0);
-		pRW(baseFile,"conf2_7/conf2.7_pRW.csv");
+		String baseFile = "WorldAir/WorldAir_w.csv";
+		sRW(baseFile,"WorldAir/WorldAir_sRW.csv",true);
+		rRW(baseFile,"WorldAir/WorldAir_rRW1.0.csv",1.0,true);
+		rRW(baseFile,"WorldAir/WorldAir_rRW2.0.csv",2.0,true);
+		rRW(baseFile,"WorldAir/WorldAir_rRW10.0.csv",10.0,true);
+		pRW(baseFile,"WorldAir/WorldAir_pRW.csv",true);
 	}
-	
+
 	public static void property(int input_fileN,int input_mode) throws Exception{
 		int fileN = input_fileN; ///
 		int mode = input_mode; ///
-		String directory = "conf2_7/"; ///
-		String coreName = "conf2.7_"; ///
-		
+		String directory = "WorldAir/"; ///
+		String coreName = "WorldAir_"; ///
+
 		String headName = directory + coreName;
 		String[] target = new String[7];
 		String[] targetElement = new String[7];
@@ -45,13 +47,13 @@ public class AirportTestXX_PropertyPloter {
 		targetElement[4] = "rRW10.0";
 		targetElement[5] = "pRW";
 		if(fileN >= 7){
-			targetElement[6] = "w";			
+			targetElement[6] = "w";
 		}
-		
+
 		for(int i=0;i<fileN;i++){
 			target[i] += (targetElement[mode] + ".csv");
 		}
-		
+
 		String pwFile = directory + targetElement[mode] + "/property.csv";
 		PrintWriter pw = new PrintWriter(new File(pwFile));
 		NetworkForCSVFile net;
@@ -69,23 +71,23 @@ public class AirportTestXX_PropertyPloter {
 		net.setEdge();
 		net.EdgeBetweenness();
 		net.LinkSalience();
-		
+
 		for(int i=0;i<net.M;i++){
-			System.out.println(i + "\t" + net.weight[i] + "\t" + net.edgeList.get(i).betweenCentrality + "\t" + net.edgeList.get(i).linkSalience);
-			pw.println(i + "\t" + net.weight[i] + "\t" + net.edgeList.get(i).betweenCentrality + "\t" + net.edgeList.get(i).linkSalience);
+			System.out.println(i + plotDelimiter + net.weight[i] + plotDelimiter + net.edgeList.get(i).betweenCentrality + plotDelimiter + net.edgeList.get(i).linkSalience);
+			pw.println(i + plotDelimiter + net.weight[i] + plotDelimiter + net.edgeList.get(i).betweenCentrality + plotDelimiter + net.edgeList.get(i).linkSalience);
 		}
-		
+
 		pw.close();
 	}
-	
-	public static void sRW(String name,String out) throws Exception{
-		NetworkForCSVFile net = new NetworkForCSVFile(name,false,false,false,false);
+
+	public static void sRW(String name,String out,boolean weighted) throws Exception{
+		NetworkForCSVFile net = new NetworkForCSVFile(name,false,weighted,false,false);
 		net.setNode(false);
 		net.setEdge();
 		PrintWriter pw = new PrintWriter(new File(out));
-		
+
 		int walkN = net.N*1000;
-		
+
 		// 作業変数定義
 		int currentNodeIndex = (int)(net.N * Math.random());
 		int selectedEdge,nextNodeIndex;
@@ -108,25 +110,25 @@ public class AirportTestXX_PropertyPloter {
 			}
 			currentNodeIndex = nextNodeIndex;
 		}
-		
+
 		// プロット
 		for(int i=0;i<net.M;i++){
 			net.weight[i] = newWeight[i];
-			pw.println(net.list[i][0] + "\t" + net.list[i][1] + "\t"+ net.weight[i]);
-//			System.out.println(net.list[i][0] + "\t" + net.list[i][1] + "\t" + net.weight[i]);
+			pw.println(net.list[i][0] + plotDelimiter + net.list[i][1] + plotDelimiter+ net.weight[i]);
+//			System.out.println(net.list[i][0] + plotDelimiter + net.list[i][1] + plotDelimiter + net.weight[i]);
 		}
-		
+
 		pw.close();
 	}
-	
-	public static void rRW(String name,String out,double point) throws Exception{
-		NetworkForCSVFile net = new NetworkForCSVFile(name,false,false,false,false);
+
+	public static void rRW(String name,String out,double point,boolean weighted) throws Exception{
+		NetworkForCSVFile net = new NetworkForCSVFile(name,false,weighted,false,false);
 		net.setNode(false);
 		net.setEdge();
 		PrintWriter pw = new PrintWriter(new File(out));
-		
+
 		int walkN = net.N*1000;
-		
+
 		// 作業変数定義
 		int currentNodeIndex = (int)(net.N * Math.random());
 		int selectedEdge,nextNodeIndex;
@@ -159,25 +161,25 @@ public class AirportTestXX_PropertyPloter {
 			}
 			currentNodeIndex = nextNodeIndex;
 		}
-		
+
 		// プロット
 		for(int i=0;i<net.M;i++){
 			net.weight[i] = newWeight[i];
-			pw.println(net.list[i][0] + "\t" + net.list[i][1] + "\t"+ net.weight[i]);
-//			System.out.println(net.list[i][0] + "\t" + net.list[i][1] + "\t" + net.weight[i]);
+			pw.println(net.list[i][0] + plotDelimiter + net.list[i][1] + plotDelimiter+ net.weight[i]);
+//			System.out.println(net.list[i][0] + plotDelimiter + net.list[i][1] + plotDelimiter + net.weight[i]);
 		}
-		
+
 		pw.close();
 	}
 
-	public static void pRW(String name,String out) throws Exception{
-		NetworkForCSVFile net = new NetworkForCSVFile(name,false,false,false,false);
+	public static void pRW(String name,String out,boolean weighted) throws Exception{
+		NetworkForCSVFile net = new NetworkForCSVFile(name,false,weighted,false,false);
 		net.setNode(false);
 		net.setEdge();
 		PrintWriter pw = new PrintWriter(new File(out));
-		
+
 		int walkN = net.N*1000;
-		
+
 		// 作業変数定義
 		int currentNodeIndex = (int)(net.N * Math.random());
 		int selectedEdge,nextNodeIndex;
@@ -210,14 +212,14 @@ public class AirportTestXX_PropertyPloter {
 			}
 			currentNodeIndex = nextNodeIndex;
 		}
-		
+
 		// プロット
 		for(int i=0;i<net.M;i++){
 			net.weight[i] = newWeight[i];
-			pw.println(net.list[i][0] + "\t" + net.list[i][1] + "\t"+ net.weight[i]);
-//			System.out.println(net.list[i][0] + "\t" + net.list[i][1] + "\t" + net.weight[i]);
+			pw.println(net.list[i][0] + plotDelimiter + net.list[i][1] + plotDelimiter+ net.weight[i]);
+//			System.out.println(net.list[i][0] + plotDelimiter + net.list[i][1] + plotDelimiter + net.weight[i]);
 		}
-		
+
 		pw.close();
 	}
 
