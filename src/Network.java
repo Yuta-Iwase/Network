@@ -516,7 +516,8 @@ public class Network implements Cloneable{
 	 * ●setNode()またはsetNode(false)適用済み<br>
 	 * ●setEdge()適用済み<br>
 	 */
-	public void EdgeBetweenness(){		ArrayList<Integer> queue = new ArrayList<Integer>();
+	public void EdgeBetweenness(){
+	ArrayList<Integer> queue = new ArrayList<Integer>();
 	ArrayList<Integer> stack = new ArrayList<Integer>();
 
 	double[] sigma = new double[N];

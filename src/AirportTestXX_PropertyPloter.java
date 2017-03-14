@@ -3,6 +3,11 @@ import java.io.PrintWriter;
 
 
 public class AirportTestXX_PropertyPloter {
+	static String directory = "random_conf2_7/";
+	static String baseFile =  directory + "random_conf2.7_nw.csv";
+	static boolean weighted = false;
+	static String coreName = "random_conf2.7_";
+
 	static String plotDelimiter = ",";
 
 	public static void main(String[] args) throws Exception{
@@ -21,31 +26,53 @@ public class AirportTestXX_PropertyPloter {
 //		}
 //		property(6, 0);
 //		property(6, 1);
-		property(6, 2);
-		property(6, 3);
-		property(6, 4);
-		property(6, 5);
+//		property(6, 2);
+//		property(6, 3);
+//		property(6, 4);
+//		property(6, 5);
+//		property20();
 		
+		String in  = "random_conf2_7min4/random_conf2.7min4_rRW1.0high.csv";
+		String out = "random_conf2_7min4/rRW10.0_high/property.csv";
+		property(in, out, true);
+
+//		rRW_high("random_conf2_7min4/random_conf2.7min4_nw.csv", "random_conf2_7min4/random_conf2.7min4_rRW1.0high.csv", 1.0, false);
+
 //		rRW("conf2_7/conf2.7_nw.csv","conf2_7/conf2.7_rRW20.0.csv",20.0,false);
 //		property(7, 4);
 
 	}
 
 	public static void RW_Ploter() throws Exception{
-		boolean weighted = false;
-		String baseFile = "random_conf2_7min4/random_conf2.7min4_nw.csv";
-		sRW(baseFile,"random_conf2_7min4/random_conf2.7min4_sRW.csv",weighted);
-		rRW(baseFile,"random_conf2_7min4/random_conf2.7min4_rRW1.0.csv",1.0,weighted);
-		rRW(baseFile,"random_conf2_7min4/random_conf2.7min4_rRW2.0.csv",2.0,weighted);
-		rRW(baseFile,"random_conf2_7min4/random_conf2.7min4_rRW10.0.csv",10.0,weighted);
-		pRW(baseFile,"random_conf2_7min4/random_conf2.7min4_pRW.csv",weighted);
+		String plotNameCore = directory + coreName;
+		sRW(baseFile,(plotNameCore + "sRW.csv"),weighted);
+		rRW(baseFile,(plotNameCore + "rRW1.0.csv"),1.0,weighted);
+		rRW(baseFile,(plotNameCore + "rRW2.0.csv"),2.0,weighted);
+		rRW(baseFile,(plotNameCore + "rRW10.0.csv"),10.0,weighted);
+		rRW(baseFile,(plotNameCore + "rRW20.0.csv"),20.0,weighted);
+		pRW(baseFile,(plotNameCore + "pRW.csv"),weighted);
+	}
+
+	public static void property(String input_fileName,String output_name,boolean input_weighted) throws Exception{
+		NetworkForCSVFile net = new NetworkForCSVFile(input_fileName, false, input_weighted, false, false);
+		PrintWriter pw = new PrintWriter(new File(output_name));
+
+		net.setNode(false);
+		net.setEdge();
+		net.EdgeBetweenness();
+		net.LinkSalience();
+
+		for(int i=0;i<net.M;i++){
+			System.out.println(i + plotDelimiter + net.weight[i] + plotDelimiter + net.edgeList.get(i).betweenCentrality + plotDelimiter + net.edgeList.get(i).linkSalience);
+			pw.println(i + plotDelimiter + net.weight[i] + plotDelimiter + net.edgeList.get(i).betweenCentrality + plotDelimiter + net.edgeList.get(i).linkSalience);
+		}
+
+		pw.close();
 	}
 
 	public static void property(int input_fileN,int input_mode) throws Exception{
 		int fileN = input_fileN; ///
 		int mode = input_mode; ///
-		String directory = "random_conf2_7min4/"; ///
-		String coreName = "random_conf2.7min4_"; ///
 
 		String headName = directory + coreName;
 		String[] target = new String[7];
@@ -92,10 +119,8 @@ public class AirportTestXX_PropertyPloter {
 
 		pw.close();
 	}
-	
+
 	static void property20() throws Exception{
-		String directory = "conf2_7min4/"; ///
-		String coreName = "conf2.7min4_"; ///
 		String targetElement = "rRW20.0";
 
 		String headName = directory + coreName;
@@ -142,6 +167,57 @@ public class AirportTestXX_PropertyPloter {
 
 			// 加重
 			newWeight[currentNode.eList.get(selectedEdge).index] += 1.0;
+
+			// nextNodeIndexの決定
+			if(currentNode.eList.get(selectedEdge).node[0]!=currentNodeIndex){
+				nextNodeIndex = currentNode.eList.get(selectedEdge).node[0];
+			}else{
+				nextNodeIndex = currentNode.eList.get(selectedEdge).node[1];
+			}
+			currentNodeIndex = nextNodeIndex;
+		}
+
+		// プロット
+		for(int i=0;i<net.M;i++){
+			net.weight[i] = newWeight[i];
+			pw.println(net.list[i][0] + plotDelimiter + net.list[i][1] + plotDelimiter+ net.weight[i]);
+//			System.out.println(net.list[i][0] + plotDelimiter + net.list[i][1] + plotDelimiter + net.weight[i]);
+		}
+
+		pw.close();
+	}
+
+	public static void rRW_high(String name,String out,double point,boolean weighted) throws Exception{
+		NetworkForCSVFile net = new NetworkForCSVFile(name,false,weighted,false,false);
+		net.setNode(false);
+		net.setEdge();
+		PrintWriter pw = new PrintWriter(new File(out));
+
+		int walkN = net.N*10000000;
+
+		// 作業変数定義
+		int currentNodeIndex = (int)(net.N * Math.random());
+		int selectedEdge,nextNodeIndex;
+		int sumW;
+		double r,threshold;
+		double[] newWeight = new double[net.M];
+		for(int i=0;i<net.M;i++) newWeight[i]=1.0;
+		for(int t=0;t<walkN;t++){
+			Network.Node currentNode = net.nodeList.get(currentNodeIndex);
+
+			// ここが各ランダムウォークで変化する内容(辺の選択方法)
+			sumW = 0;
+			for(int i=0;i<currentNode.eList.size();i++) sumW+=newWeight[currentNode.eList.get(i).index];
+			r = (sumW*Math.random());
+			selectedEdge = 0;
+			threshold = newWeight[currentNode.eList.get(0).index];
+			while(r > threshold){
+				selectedEdge++;
+				threshold += newWeight[currentNode.eList.get(selectedEdge).index];
+			}
+
+			// 加重
+			newWeight[currentNode.eList.get(selectedEdge).index] += point;
 
 			// nextNodeIndexの決定
 			if(currentNode.eList.get(selectedEdge).node[0]!=currentNodeIndex){
