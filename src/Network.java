@@ -731,6 +731,60 @@ public class Network implements Cloneable{
 		}
 	}
 
+	/**
+	 *  ReinforcedRandomWalkを実行する。<br>
+	 *  無向グラフのみ実行可能<br>
+	 * (注)<br>
+	 * 以下の状況が必要<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 * @param step
+	 * @param deltaW
+	 */
+	public void ReinforcedRandomWalk(int step, double deltaW){
+		weight = new double[M];
+
+		// 作業変数定義
+		int currentNodeIndex = (int)(N * Math.random());
+		int selectedEdge,nextNodeIndex;
+		int sumW;
+		double r,threshold;
+		double[] newWeight = new double[M];
+		for(int i=0;i<M;i++) newWeight[i]=1.0;
+		for(int t=0;t<step;t++){
+			Network.Node currentNode = nodeList.get(currentNodeIndex);
+
+			// ここが各ランダムウォークで変化する内容(辺の選択方法)
+			sumW = 0;
+			for(int i=0;i<currentNode.eList.size();i++) sumW+=newWeight[currentNode.eList.get(i).index];
+			r = (sumW*Math.random());
+			selectedEdge = 0;
+			threshold = newWeight[currentNode.eList.get(0).index];
+			while(r > threshold){
+				selectedEdge++;
+				threshold += newWeight[currentNode.eList.get(selectedEdge).index];
+			}
+
+			// 加重
+			newWeight[currentNode.eList.get(selectedEdge).index] += deltaW;
+
+			// nextNodeIndexの決定
+			if(currentNode.eList.get(selectedEdge).node[0]!=currentNodeIndex){
+				nextNodeIndex = currentNode.eList.get(selectedEdge).node[0];
+			}else{
+				nextNodeIndex = currentNode.eList.get(selectedEdge).node[1];
+			}
+			currentNodeIndex = nextNodeIndex;
+		}
+
+		// 再定義
+		for(int i=0;i<M;i++){
+			weight[i] = newWeight[i];
+		}
+		weighted = true;
+
+	}
+
 	// Networkｵﾌﾞｼﾞｪｸﾄを複製できるようにメソッド追加
 	public Network clone(){
 		try {
