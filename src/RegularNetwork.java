@@ -1,7 +1,8 @@
 
 
-public class RegularNetwork {
-	public static void main(String[] args) {
+public class RegularNetwork extends Network{
+	public RegularNetwork() {
+		// TODO 自動生成されたコンストラクター・スタブ
 		// 作りたいネットワークの頂点数
 		int N=100;
 		// 頂点の次数/2
@@ -18,5 +19,9 @@ public class RegularNetwork {
 			}
 			System.out.println();
 		}
+	}
+	
+	public static void main(String[] args) {
+
 	}
 }

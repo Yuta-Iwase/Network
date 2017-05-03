@@ -741,11 +741,16 @@ public class Network implements Cloneable{
 	 * @param step
 	 * @param deltaW
 	 */
+	static int cNode;
 	public void ReinforcedRandomWalk(int step, double deltaW){
 		weight = new double[M];
 
 		// 作業変数定義
-		int currentNodeIndex = (int)(N * Math.random());
+		int currentNodeIndex;
+		do{
+			currentNodeIndex = (int)(N * Math.random());
+		}while(degree[currentNodeIndex]==0);
+		currentNodeIndex=0;
 		int selectedEdge,nextNodeIndex;
 		int sumW;
 		double r,threshold;
@@ -775,6 +780,7 @@ public class Network implements Cloneable{
 				nextNodeIndex = currentNode.eList.get(selectedEdge).node[1];
 			}
 			currentNodeIndex = nextNodeIndex;
+			cNode = currentNodeIndex;
 		}
 
 		// 再定義
