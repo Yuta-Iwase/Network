@@ -733,6 +733,8 @@ public class Network implements Cloneable{
 
 	/**
 	 *  ReinforcedRandomWalkを実行する。<br>
+	 *  seed値を変えることで開始地点を変えられる。<br>
+	 *  戻り値には、RWで最後にいた頂点番号が返される。<br>
 	 *  無向グラフのみ実行可能<br>
 	 * (注)<br>
 	 * 以下の状況が必要<br>
@@ -740,19 +742,20 @@ public class Network implements Cloneable{
 	 * ●setEdge()適用済み<br>
 	 * @param step
 	 * @param deltaW
+	 * @param firstNode
 	 */
-	static int cNode;
-	public void ReinforcedRandomWalk(int step, double deltaW){
+	public int ReinforcedRandomWalk(int step, double deltaW, int seed){
 		weight = new double[M];
 
 		// 作業変数定義
 		int currentNodeIndex;
-		do{
-			currentNodeIndex = (int)(N * Math.random());
-		}while(degree[currentNodeIndex]==0);
-		currentNodeIndex=0;
+		currentNodeIndex=seed;
+		while(degree[currentNodeIndex]==0){
+			currentNodeIndex = (currentNodeIndex+1)%N ;
+		}
 		int selectedEdge,nextNodeIndex;
-		int sumW;
+		double[] sumW = new double[N];
+		for(int i=0;i<N;i++) sumW[i]=1.0;
 		double r,threshold;
 		double[] newWeight = new double[M];
 		for(int i=0;i<M;i++) newWeight[i]=1.0;
@@ -760,9 +763,7 @@ public class Network implements Cloneable{
 			Network.Node currentNode = nodeList.get(currentNodeIndex);
 
 			// ここが各ランダムウォークで変化する内容(辺の選択方法)
-			sumW = 0;
-			for(int i=0;i<currentNode.eList.size();i++) sumW+=newWeight[currentNode.eList.get(i).index];
-			r = (sumW*Math.random());
+			r = (sumW[currentNodeIndex]*Math.random());
 			selectedEdge = 0;
 			threshold = newWeight[currentNode.eList.get(0).index];
 			while(r > threshold){
@@ -772,6 +773,8 @@ public class Network implements Cloneable{
 
 			// 加重
 			newWeight[currentNode.eList.get(selectedEdge).index] += deltaW;
+			sumW[currentNode.eList.get(selectedEdge).node[0]] += deltaW;
+			sumW[currentNode.eList.get(selectedEdge).node[1]] += deltaW;
 
 			// nextNodeIndexの決定
 			if(currentNode.eList.get(selectedEdge).node[0]!=currentNodeIndex){
@@ -780,15 +783,30 @@ public class Network implements Cloneable{
 				nextNodeIndex = currentNode.eList.get(selectedEdge).node[1];
 			}
 			currentNodeIndex = nextNodeIndex;
-			cNode = currentNodeIndex;
 		}
-
-		// 再定義
-		for(int i=0;i<M;i++){
-			weight[i] = newWeight[i];
-		}
-		weighted = true;
-
+		
+		return currentNodeIndex;
+	}
+	
+	/**
+	 *  ReinforcedRandomWalkを実行する。<br>
+	 *  戻り値には、RWで最後にいた頂点番号が返される。<br>
+	 *  無向グラフのみ実行可能<br>
+	 * (注)<br>
+	 * 以下の状況が必要<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 * @param step
+	 * @param deltaW
+	 * @param firstNode
+	 */
+	public int ReinforcedRandomWalk(int step, double deltaW){
+			// 作業変数定義
+			int currentNodeIndex;
+			do{
+				currentNodeIndex = (int)(N * Math.random());
+			}while(degree[currentNodeIndex]==0);
+			return ReinforcedRandomWalk(step, deltaW, currentNodeIndex);
 	}
 
 	// Networkｵﾌﾞｼﾞｪｸﾄを複製できるようにメソッド追加
