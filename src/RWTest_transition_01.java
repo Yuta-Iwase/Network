@@ -102,6 +102,12 @@ public class RWTest_transition_01 {
 			System.out.println(currentDeltaW + "\t" + (w_max2/(currentDeltaW*transientStep)));
 			System.out.println();
 		}
+		
+		System.out.println();
+		double[][] s = new Comprator2dim().sort(net.weight, 1, false);
+		for(int i=0;i<s.length;i++){
+			System.out.println(s[i][0] + "\t" + s[i][1]);
+		}
 
 		w_max_pw.close();
 		N_B_pw.close();
