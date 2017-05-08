@@ -1,12 +1,20 @@
+import java.util.ArrayList;
+
 public class テスト用 {
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception{
-		double a =  5.217257E+00;
-
-		System.out.println(a);
+		ArrayList<String> x = new ArrayList<String>();
+		
+		for(int i=0;i<10;i++) x.add(Character.toString(((char)('a'+i))));
+		x.add(0, "あああ");
+		
+		for(int i=0;i<x.size();i++){
+			System.out.println(x.get(i));
+		}
+		
 	}
 
 }

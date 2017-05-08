@@ -775,7 +775,6 @@ public class Network implements Cloneable{
 			newWeight[currentNode.eList.get(selectedEdge).index] += deltaW;
 			sumW[currentNode.eList.get(selectedEdge).node[0]] += deltaW;
 			sumW[currentNode.eList.get(selectedEdge).node[1]] += deltaW;
-
 			// nextNodeIndexの決定
 			if(currentNode.eList.get(selectedEdge).node[0]!=currentNodeIndex){
 				nextNodeIndex = currentNode.eList.get(selectedEdge).node[0];
@@ -783,6 +782,10 @@ public class Network implements Cloneable{
 				nextNodeIndex = currentNode.eList.get(selectedEdge).node[1];
 			}
 			currentNodeIndex = nextNodeIndex;
+		}
+		
+		for(int i=0;i<M;i++){
+			weight[i] = newWeight[i];
 		}
 		
 		return currentNodeIndex;
