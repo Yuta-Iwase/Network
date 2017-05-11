@@ -2,8 +2,6 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import javax.print.attribute.ResolutionSyntax;
-
 public class RWTest_transition_01 {
 
 	public static void main(String[] args) throws Exception{
@@ -47,7 +45,7 @@ public class RWTest_transition_01 {
 		int rank; //新入りの順位
 		double[] newWList = new double[net.M];
 		int[] N_B_list = new int[net.N]; //遭遇済みか検証
-		double inverse_s = 1.0/transientStep; //inverse_s
+//		double inverse_s = 1.0/transientStep; //inverse_s
 		PrintWriter w_max_pw = new PrintWriter(new File(dir + "w_max.csv"));
 		PrintWriter N_B_pw = new PrintWriter(new File(dir + "N_B.csv"));
 		
