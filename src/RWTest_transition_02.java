@@ -12,7 +12,7 @@ public class RWTest_transition_02 {
 		// 平均じ数に
 		p =0.015;
 		
-		int times = 10;
+		int times = 100;
 		
 		DistributionGanerator dg = new DistributionGanerator();
 		int[] degree = dg.ganeratePowerLaw(N, 2.7);
@@ -20,14 +20,14 @@ public class RWTest_transition_02 {
 		RandomNetwork net = new RandomNetwork(N, 0.000387);
 		
 		// ステップ数
-		int step = 1000 * N;
+		int step = 100 * N;
 		// プロット範囲
 		double left = 0.1;//start
 		double right = 10.1;//finish
 		// 刻み数
 		int sectionN = 10; //(注):プロットは、(その数+1)個で出力されます。
 		// 指標2でのステップ数
-		int transientStep = 100*N; //transientStep
+		int transientStep = 10*N; //transientStep
 		// 上位の比率(指標4で使用)
 		double topRate = 0.01;
 		// ディレクトリ名
@@ -185,7 +185,7 @@ public class RWTest_transition_02 {
 					}
 
 //					w_max_pw.println(currentDeltaW + "\t" + (w_max/(currentDeltaW*step+1)));
-//					System.out.println(currentDeltaW + "\t" + (w_max/(currentDeltaW*step+1)) + "perTimes");
+//					System.out.println(currentDeltaW + "\t" + (w_max/(currentDeltaW*step+1)) + "\tperTimes");
 //					N_B_pw.println(currentDeltaW + "\t" + (N_B*1.0/N));
 //					System.out.println(currentDeltaW + "\t" + (N_B*1.0/N));
 //					System.out.println(currentDeltaW + "\t" + (w_max2/(currentDeltaW*transientStep)));
@@ -205,6 +205,10 @@ public class RWTest_transition_02 {
 //				}
 				System.out.println();
 				
+				net.LinkSalience();
+				for(int ii=0;ii<net.M;ii++){
+					System.out.println(ii+"\t"+net.edgeList.get(ii).linkSalience);
+				}
 			}
 				
 				

@@ -631,6 +631,9 @@ public class Network implements Cloneable{
 
 	/**
 	 * 辺のsalienceを計算しプロットする(Brandesを書き換えGradyが作った方法)<br>
+	 * 
+	 * ↑なにが「プロットする」だ、edgeクラスへ受け渡すだけだわぼけ<br>
+	 * 
 	 * 無向グラフのみ実行可能<br>
 	 * (注)<br>
 	 * 以下の状況が必要<br>
@@ -755,7 +758,9 @@ public class Network implements Cloneable{
 		}
 		int selectedEdge,nextNodeIndex;
 		double[] sumW = new double[N];
-		for(int i=0;i<N;i++) sumW[i]=1.0;
+		for(int i=0;i<N;i++){
+			sumW[i]= (double)degree[i];
+		}
 		double r,threshold;
 		double[] newWeight = new double[M];
 		for(int i=0;i<M;i++) newWeight[i]=1.0;
@@ -770,6 +775,9 @@ public class Network implements Cloneable{
 				selectedEdge++;
 				threshold += newWeight[currentNode.eList.get(selectedEdge).index];
 			}
+			
+			//degag
+//			System.out.print(currentNodeIndex + ":" + degree[currentNodeIndex] + ",");
 
 			// 加重
 			newWeight[currentNode.eList.get(selectedEdge).index] += deltaW;
@@ -788,6 +796,7 @@ public class Network implements Cloneable{
 			weight[i] = newWeight[i];
 		}
 		
+//		System.out.println();
 		return currentNodeIndex;
 	}
 	
