@@ -1,14 +1,33 @@
+// 2017/05/31
+// ・独立したクラスではなく呼び出しに対応できるクラスに変更した。
 
 public class MakePowerLaw {
-
-	public static void main(String[] args) {
-		// 作りたいネットワークの設定
-		int N = 1000;
-		double gamma = 2.5;
-		int minDegree = 2;
-		int maxDegree = N-1;
-
-
+	int[] degree;
+	
+	int N;
+	double gamma;
+	int minDegree,maxDegree;
+	
+	public MakePowerLaw(int input_N,double input_gamma,int input_minDegree,int input_maxDegree) {
+		N = input_N;
+		gamma = input_gamma;
+		minDegree = input_minDegree;
+		maxDegree = input_maxDegree;
+		
+		generate();
+	}
+	
+	
+	public MakePowerLaw(int input_N,double input_gamma) {
+		N = input_N;
+		gamma = input_gamma;
+		minDegree = 2;
+		maxDegree = N-1;
+		
+		generate();
+	}
+	
+	public void generate(){
 		// 離散量の確率分布を定義
 		double[] p = new double[N];
 		double sum = 0.0;
@@ -29,7 +48,7 @@ public class MakePowerLaw {
 		}
 
 		// c[i]に従い次数列degree[i]生成
-		int[] degree = new int[N];
+		degree = new int[N];
 		int currentIndex;
 		double r;
 		double nextLeft,nextRight;
@@ -45,11 +64,14 @@ public class MakePowerLaw {
 			}
 			degree[i] = minDegree + currentIndex;
 		}
-
-		// 完成した次数列degree[i]を出力
+		
+	}
+	
+	// 完成した次数列degree[i]を出力
+	public void printList(){
 		for(int i=0;i<N;i++){
 			System.out.println(i + "\t" + degree[i]);
 		}
-
 	}
+	
 }
