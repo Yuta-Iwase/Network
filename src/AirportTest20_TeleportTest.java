@@ -20,6 +20,8 @@ public class AirportTest20_TeleportTest {
 		// RW
 		PrintWriter pw1 = new PrintWriter(new File("s_gamma2.7_teleport.csv"));
 		PrintWriter pw2 = new PrintWriter(new File("s_gamma2.7.csv"));
+		PrintWriter pw3 = new PrintWriter(new File("w_gamma2.7_teleport.csv"));
+		PrintWriter pw4 = new PrintWriter(new File("w_gamma2.7.csv"));
 
 		net.setNode(false);
 		net.setEdge();
@@ -29,6 +31,7 @@ public class AirportTest20_TeleportTest {
 		for(int i=0;i<net.M;i++){
 			System.out.println(i + "\t" + net.edgeList.get(i).linkSalience);
 			pw1.println(i + "," + net.edgeList.get(i).linkSalience);
+			pw3.println(i + "," + net.weight[i]);
 		}
 
 		for(int i=0;i<net.M;i++){
@@ -40,10 +43,13 @@ public class AirportTest20_TeleportTest {
 		for(int i=0;i<net.M;i++){
 			System.out.println(i + "\t" + net.edgeList.get(i).linkSalience);
 			pw2.println(i + "," + net.edgeList.get(i).linkSalience);
+			pw4.println(i + "," + net.weight[i]);
 		}
 
 		pw1.close();
 		pw2.close();
+		pw3.close();
+		pw4.close();
 
 	}
 
