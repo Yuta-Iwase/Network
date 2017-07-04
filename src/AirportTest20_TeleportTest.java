@@ -5,7 +5,7 @@ public class AirportTest20_TeleportTest {
 
 	public static void main(String[] args) throws Exception{
 		int N = 1000;
-		double deltaW = 20.0;
+		double deltaW = 10000.0;
 
 		// 生成
 		MakePowerLaw dist;
@@ -14,8 +14,8 @@ public class AirportTest20_TeleportTest {
 			dist = new MakePowerLaw(N, 2.7, 2, N-1);
 			net = new ConfigrationNetwork(dist.degree, 50);
 		}while(!net.success);
-
 		System.out.println("生成完了");
+//		RandomNetwork net = new RandomNetwork(100, 0.05);
 
 		// RW
 		PrintWriter pw1 = new PrintWriter(new File("s_gamma2.7_teleport.csv"));
