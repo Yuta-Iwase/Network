@@ -345,12 +345,16 @@ public class Network implements Cloneable{
 		}
 	}
 
-	/** ボンド・パーコレーションを実行
-	 * 無向,ダブルカウントのとき不具合があるかも？(16/12/14)*/
+	/** ボンド・パーコレーションを実行<br>
+	 * 確率fで残り、1-fで故障<br>
+	 * 無向,ダブルカウントのとき不具合があるかも？(16/12/14)<br>
+	 * 次数を更新させる処理を追加(17/07/05)<br>
+	 * */
 	public void BondPercolation(double f){
 		if(success){
 			double x;
 			int newM=0;
+			int[] newDegree = new int[N];
 			int[][] newList = new int[list.length][2];
 			for(int m=0 ; m<list.length ; m++){
 				x = Math.random();
@@ -358,6 +362,9 @@ public class Network implements Cloneable{
 				if(x<f){
 					newList[newM][0] = list[m][0];
 					newList[newM][1] = list[m][1];
+					newDegree[ newList[newM][0] ]++;
+					newDegree[ newList[newM][1] ]++;
+					System.out.println(newDegree[ newList[newM][0] ]);
 					newM++;
 				}
 			}
@@ -366,6 +373,10 @@ public class Network implements Cloneable{
 			for(int m=0 ; m<newM ; m++){
 				list[m][0] = newList[m][0];
 				list[m][1] = newList[m][1];
+			}
+			// degree更新
+			for(int i=0 ; i<N ; i++){
+				degree[i] = newDegree[i];
 			}
 
 			// 変数更新

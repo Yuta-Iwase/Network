@@ -21,7 +21,8 @@ public class HistogramPlot {
 		// 入力情報
 //		String fileName = "NodeBC.txt";
 //		String fileName = "EdgeBC.txt";
-		String fileName = "Salience_dist.txt";
+//		String fileName = "Salience_dist.txt";
+		String fileName = "PercolationTest3/after.txt";
 		double lengthRate = 0.05; //刻み幅(割合表記)
 		
 		// 情報読み込み
