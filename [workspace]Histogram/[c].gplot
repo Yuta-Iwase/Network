@@ -1,0 +1,10 @@
+cd 'D:\Java\Network\[workspace]Histogram'
+plot "hist.txt" w lp
+set terminal postscript eps enhanced color
+set output "hist.eps"
+replot
+set output
+set terminal png
+set output "hist.png"
+replot
+set output

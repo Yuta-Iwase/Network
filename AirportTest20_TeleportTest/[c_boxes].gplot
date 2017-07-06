@@ -1,0 +1,6 @@
+cd 'D:\Java\Network\AirportTest20_TeleportTest'
+plot "hist_s.txt" w boxes
+set terminal png
+set output "hist.png"
+replot
+set output
