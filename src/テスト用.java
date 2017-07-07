@@ -1,23 +1,46 @@
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 
 public class テスト用 {
+	int[] a ;
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception{
-//		ArrayList<String> x = new ArrayList<String>();
-//		
-//		for(int i=0;i<10;i++) x.add(Character.toString(((char)('a'+i))));
-//		x.add(0, "あああ");
-//		
-//		for(int i=0;i<x.size();i++){
-//			System.out.println(x.get(i));
-//		}
+		int N = 100;
+		double deltaW = Double.MAX_VALUE;
+
+		// 生成
+		MakePowerLaw dist;
+		ConfigrationNetwork net;
+		do{
+			dist = new MakePowerLaw(N, 2.7, 2, N-1);
+			net = new ConfigrationNetwork(dist.degree, 50);
+		}while(!net.success);
+		System.out.println("生成完了");
 		
-		method(1);
-		String s = "";
-		method(0);
+
+		net.setNode(false);
+		net.setEdge();
+		net.ReinforcedRandomWalk(10000, 3.0);
+		net.LinkSalience();
+		
+		double[] linkSalience = new double[net.M];
+		for(int i=0;i<net.M;i++){
+			linkSalience[i] = net.edgeList.get(i).linkSalience;
+		}
+		
+		GEXFStylePrinter pr = new GEXFStylePrinter(net.N,net.list,net.directed,"GEXF_test.gexf");
+		pr.init();
+		pr.printNode(null, null, new double[0]);
+		pr.printEdge(net.weight, "LinkSalience", linkSalience);
+		pr.terminal();
+		
+		System.out.println();
+		for(int i=0;i<net.M;i++){
+			System.out.println(i + "\t" + net.weight[i]);
+		}
 	}
 	
 	static void method(Object o){
@@ -27,6 +50,12 @@ public class テスト用 {
 		if(o.equals(Integer.class)){
 			System.out.println(o + "is Int");
 		}
+	}
+	
+	static String objectLoader(Object o){
+		String s = o.getClass().getName();
+		System.out.println(s);
+		return s;
 	}
 
 }
