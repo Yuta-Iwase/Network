@@ -42,9 +42,9 @@ public class AirportTest20_TeleportTest {
 		HistogramPloter hist = new HistogramPloter();
 //		folderPath = "[workspace]Histogram/";
 		hist.load(net.weight);
-		hist.double_plot(100, true, folderPath+"hist_w.txt");
+		hist.double_plot(100, false, true, folderPath+"hist_w.txt");
 		hist.load(salience);
-		hist.double_plot(100, true, folderPath+"hist_s.txt");
+		hist.double_plot(100, true , true, folderPath+"hist_s.txt");
 
 		for(int i=0;i<net.M;i++){
 			net.edgeList.get(i).linkSalience = 0;

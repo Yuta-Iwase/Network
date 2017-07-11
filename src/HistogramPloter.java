@@ -17,8 +17,6 @@ public class HistogramPloter {
 
 	public HistogramPloter() {
 	}
-	public static void main(String[] args) throws Exception{
-	}
 
 	public void load(int[] input_list){
 		int_list = new int[input_list.length][2];
@@ -41,7 +39,7 @@ public class HistogramPloter {
 		double_list = input_list;
 	}
 
-	public void int_plot(boolean normalize,String outputFilePath)throws Exception{
+	public void int_plot(boolean boxes, boolean normalize, String outputFilePath)throws Exception{
 		// 出力ファイル設定
 		PrintWriter pw = null;
 		if(outputFilePath.length()>0){
@@ -79,7 +77,8 @@ public class HistogramPloter {
 			double maxY_inverse = 1.0/maxY;
 			// 出力
 			double length = ticks_inverse;
-			double currentPos = length*0.5;
+			double currentPos = 0.0;
+			if(boxes) currentPos += length*0.5;
 			for(int i=0;i<frequency.length;i++){
 				if(frequency[i]>0){
 					if(outputFilePath.length()>0) pw.println(currentPos + "\t" + frequency[i]*maxY_inverse);
@@ -90,7 +89,8 @@ public class HistogramPloter {
 		}else{
 			// 出力
 			double length = 1.0;
-			double currentPos = length*0.5+minX;
+			double currentPos = minX;
+			if(boxes) currentPos += length*0.5;
 			for(int i=0;i<frequency.length;i++){
 				if(frequency[i]>0){
 					if(outputFilePath.length()>0) pw.println(currentPos + "\t" + frequency[i]);
@@ -103,7 +103,7 @@ public class HistogramPloter {
 		if(outputFilePath.length()>0) pw.close();
 	}
 
-	public void double_plot(int ticks,boolean normalize,String outputFilePath)throws Exception{
+	public void double_plot(int ticks, boolean boxes, boolean normalize,String outputFilePath)throws Exception{
 		// 出力ファイル設定
 		PrintWriter pw = null;
 		if(outputFilePath.length()>0){
@@ -144,7 +144,8 @@ public class HistogramPloter {
 			double maxY_inverse = 1.0/maxY;
 			// 出力
 			double length = ticks_inverse;
-			double currentPos = length*0.5;
+			double currentPos = 0.0;
+			if(boxes) currentPos += length*0.5;
 			for(int i=0;i<frequency.length;i++){
 				if(frequency[i]>0){
 					if(outputFilePath.length()>0) pw.println(currentPos + "\t" + frequency[i]*maxY_inverse);
@@ -155,7 +156,8 @@ public class HistogramPloter {
 		}else{
 			// 出力
 			double length = maxX-minX;
-			double currentPos = length*0.5 + minX;
+			double currentPos = minX;
+			if(boxes) currentPos += length*0.5;
 			for(int i=0;i<frequency.length;i++){
 				if(frequency[i]>0){
 					if(outputFilePath.length()>0) pw.println(currentPos + "\t" + frequency[i]);

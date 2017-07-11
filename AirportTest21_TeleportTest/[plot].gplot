@@ -1,0 +1,20 @@
+cd 'D:\Java\Network\AirportTest21_TeleportTest'
+set logscale
+
+set terminal postscript eps enhanced color
+
+set output "hist_v.eps"
+plot "hist_v.txt" w p
+set output
+set output "hist_w.eps"
+plot "hist_w.txt" w p
+set output
+
+set terminal png
+
+set output "hist_v.png"
+plot "hist_v.txt" w p
+set output
+set output "hist_w.png"
+plot "hist_w.txt" w p
+set output
