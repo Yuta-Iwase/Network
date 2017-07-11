@@ -4,22 +4,27 @@ public class AirportTest21_TeleportTest {
 
 	public static void main(String[] args) throws Exception{
 		int N = 1000;
-		double deltaW = 100.0;
+		double deltaW = 0.01;
 //		double deltaW = Double.MAX_VALUE;
 		int digits = 6;
 		int walks = 1;
 		for(int i=0;i<digits;i++) walks*=10;
-		double teleportP = 0.45;
+		double teleportP = 0.0;
 
 		// 生成
-		MakePowerLaw dist;
-		ConfigrationNetwork net;
-		do{
-			dist = new MakePowerLaw(N, 2.7, 2, N-1);
-			net = new ConfigrationNetwork(dist.degree, 50);
-		}while(!net.success);
-		System.out.println("生成完了");
-//		RandomNetwork net = new RandomNetwork(100, 0.05);
+//		MakePowerLaw dist;
+//		ConfigrationNetwork net;
+//		do{
+//			dist = new MakePowerLaw(N, 2.7, 2, N-1);
+//			net = new ConfigrationNetwork(dist.degree, 50);
+//		}while(!net.success);
+//		System.out.println("生成完了");
+		
+		double p = 0.0038738738738738738;
+		RandomNetwork net = new RandomNetwork(N, p);
+		
+		
+
 
 		// RW
 		String folderPath = "AirportTest21_TeleportTest/";
@@ -52,6 +57,16 @@ public class AirportTest21_TeleportTest {
 		gexf.printNode_2nd(null, null, new int[0]);
 		gexf.printEdge_3rd(net.weight, "Visit", cntVisit);
 		gexf.terminal_4th();
+		
+		// salienceプロット
+		net.LinkSalience();
+		double[] s = new double[net.M];
+		for(int i=0;i<net.M;i++){
+			s[i] = net.edgeList.get(i).linkSalience;
+		}
+		HistogramPloter h = new HistogramPloter();
+		h.load(s);
+		h.double_plot(100, true, false, folderPath+"hist_s.txt");
 
 	}
 
