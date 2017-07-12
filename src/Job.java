@@ -53,6 +53,9 @@ public abstract class Job {
 	public final String gnuplot_plot(String file, String with){
 		return ("plot \"" + file + "\" w " + with);
 		}
+	public final String gnuplot_plot(String xRange, String file, String with){
+		return ("plot " + xRange + " \"" + file + "\" w " + with);
+		}
 	public final String gnuplot_terminalPostscript(){return "set terminal postscript eps enhanced color";}
 	public final String gnuplot_terminalPNG(){return "set terminal png";}
 	public final String gnuplot_outputMathod(String output){
@@ -65,9 +68,9 @@ public abstract class Job {
 	/*
 	 * .gplotファイルをcommandListに従い作成します。
 	 */
-	public final void make_gplot(String filePath, ArrayList<String> commandList){
+	public final void make_gplot(String filePath_relative, ArrayList<String> commandList){
 		try{
-			PrintWriter pw = new PrintWriter(new File(filePath));
+			PrintWriter pw = new PrintWriter(new File(filePath_relative));
 			for(int i=0;i<commandList.size();i++){
 				pw.println(commandList.get(i));
 			}
@@ -79,12 +82,12 @@ public abstract class Job {
 	/*
 	 * .gplotファイルをcommandListに従い作成します。
 	 */
-	public final void make_gplot(String filePath, String[] commandList){
+	public final void make_gplot(String filePath_relative, String[] commandList){
 		ArrayList<String> commandList_alt = new ArrayList<String>();
 		for(int i=0;i<commandList.length;i++){
 			commandList_alt.add(commandList[i]);
 		}
-		make_gplot(filePath, commandList_alt);
+		make_gplot(filePath_relative, commandList_alt);
 	}
 
 	/*
@@ -103,6 +106,10 @@ public abstract class Job {
 		}catch(IOException e){
 			System.out.println(e);
 		}
+	}
+
+	public final void makeFolder(String folderName){
+		new File(folderName).mkdirs();
 	}
 
 
