@@ -155,7 +155,7 @@ public class HistogramPloter {
 			}
 		}else{
 			// 出力
-			double length = maxX-minX;
+			double length = (maxX-minX)*ticks_inverse;
 			double currentPos = minX;
 			if(boxes) currentPos += length*0.5;
 			for(int i=0;i<frequency.length;i++){
