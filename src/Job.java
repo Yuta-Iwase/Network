@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -60,6 +62,30 @@ public abstract class Job {
 		String br = "\r\n";
 		return (line1 + br + line2 + br + line3);
 	}
+	/*
+	 * .gplotファイルをcommandListに従い作成します。
+	 */
+	public final void make_gplot(String filePath, ArrayList<String> commandList){
+		try{
+			PrintWriter pw = new PrintWriter(new File(filePath));
+			for(int i=0;i<commandList.size();i++){
+				pw.println(commandList.get(i));
+			}
+			pw.close();
+		}catch(Exception e){
+			System.out.println(e);
+		}
+	}
+	/*
+	 * .gplotファイルをcommandListに従い作成します。
+	 */
+	public final void make_gplot(String filePath, String[] commandList){
+		ArrayList<String> commandList_alt = new ArrayList<String>();
+		for(int i=0;i<commandList.length;i++){
+			commandList_alt.add(commandList[i]);
+		}
+		make_gplot(filePath, commandList_alt);
+	}
 
 	/*
 	 * その他コマンドセット
@@ -67,4 +93,17 @@ public abstract class Job {
 	public final String workDirectory(){
 		return System.getProperty("user.dir").replaceAll("\\\\", "/");
 	}
+
+	/*
+	 * 与えられた.gplotファイルのパスをgnuplotで実行する
+	 */
+	public final void execution_gnuplot(String commandFilePath_relative){
+		try{
+			Runtime.getRuntime().exec(gnuplotPath + " " + commandFilePath_relative);
+		}catch(IOException e){
+			System.out.println(e);
+		}
+	}
+
+
 }
