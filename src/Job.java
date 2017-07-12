@@ -1,35 +1,70 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public abstract class Job {
+	final String gnuplotPath = "D:/Program Files (x86)/gnuplot/bin/wgnuplot.exe";
 
-	public static void main(String[] args) {
-		// TODO 自動生成されたメソッド・スタブ
-
+	// 直接打ち込む手法
+	final void run(ArrayList<Object> controlParameterList){
+		job(controlParameterList);
 	}
-	
+
+	// iniファイルを読み込む手法
 	final void run(String ini_FilePath){
 		Scanner scan;
 		Scanner currentLine;
 		try{
+			// ファイルをload
 			scan = new Scanner(new File(ini_FilePath));
 			scan.nextLine();
-			
+
+			// 変数をiniファイルから読み込み
+			ArrayList<ArrayList<Object>> controlParrameterMatrix = new ArrayList<ArrayList<Object>>();
 			while(scan.hasNextLine()){
 				currentLine = new Scanner(scan.nextLine());
-				currentLine.useDelimiter(" " + "|" + "¥t" + "|" + ",");// |は「または」の意味
+				currentLine.useDelimiter(" " + "|" + "\t" + "|" + ",");// |は「または」の意味
+
+				ArrayList<Object> currentControlParameterList = new ArrayList<Object>();
 				while(currentLine.hasNext()){
-					// add
+					currentControlParameterList.add(currentLine.next());
 				}
+				controlParrameterMatrix.add(currentControlParameterList);
+			}
+
+			for(int i=0;i<controlParrameterMatrix.size();i++){
+				job(controlParrameterMatrix.get(i));
 			}
 		}catch(FileNotFoundException e){
-			
+			System.out.println(e);
 		}
-		
 	}
-	
-	
-	public abstract void job();
 
+	public abstract void job(ArrayList<Object> controlParameterList);
+
+	/*
+	 * gnuplotコマンドセット
+	 */
+	public final String gnuplot_cd_Absorute(String absotutePath){return ("cd \"" + absotutePath + "\"");}
+	public final String gnuplot_cd_Relative(String folderName){return ("cd \"" + workDirectory() + "/" + folderName + "\"");}
+	public final String gnuplot_plot(String file, String with){
+		return ("plot \"" + file + "\" w " + with);
+		}
+	public final String gnuplot_terminalPostscript(){return "set terminal postscript eps enhanced color";}
+	public final String gnuplot_terminalPNG(){return "set terminal png";}
+	public final String gnuplot_outputMathod(String output){
+		String line1 = "set output\"" + output + "\"";
+		String line2 = "replot";
+		String line3 = "set output";
+		String br = "\r\n";
+		return (line1 + br + line2 + br + line3);
+	}
+
+	/*
+	 * その他コマンドセット
+	 */
+	public final String workDirectory(){
+		return System.getProperty("user.dir").replaceAll("\\\\", "/");
+	}
 }
