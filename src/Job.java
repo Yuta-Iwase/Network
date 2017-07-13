@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public abstract class Job extends JFrame{
+	private static final long serialVersionUID = 1L;
 	final String gnuplotPath = "D:/Program Files (x86)/gnuplot/bin/wgnuplot.exe";
 	int progress;
 
@@ -154,6 +155,8 @@ public abstract class Job extends JFrame{
 			img.setIcon(new ImageIcon("pola.gif"));
 		}else if(new File("D://java/Network/src/pola.gif").exists()){
 			img.setIcon(new ImageIcon("D://java/Network/src/pola.gif"));
+		}else if(new File("/Users/Owner/eclipse/Network/src/pola.gif").exists()){
+			img.setIcon(new ImageIcon("/Users/Owner/eclipse/Network/src/pola.gif"));
 		}
 		img.setLayout(null);
 		img.setBounds(0, 10, 155, 117);
