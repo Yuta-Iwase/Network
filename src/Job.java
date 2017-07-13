@@ -135,7 +135,8 @@ public abstract class Job extends JFrame{
 	}
 
 	/*
-	 * gui定義用
+	 * gui定義用<br>
+	 * gifは「http://nlst1.blog.fc2.com/blog-entry-219.html」でマジメなやつが取れます。<br>
 	 */
 	private JLabel progressLabel;
 	private int works;
