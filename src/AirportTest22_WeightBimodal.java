@@ -39,7 +39,6 @@ public class AirportTest22_WeightBimodal extends Job{
 		net.setNode(false);
 		net.setEdge();
 		net.LinkSalience();
-//		int[] salience = new int[net.M];
 		double[] salience = new double[net.M];
 		for(int i=0;i<net.M;i++){
 			salience[i] = net.edgeList.get(i).linkSalience;
@@ -56,7 +55,6 @@ public class AirportTest22_WeightBimodal extends Job{
 			String histgramName = "salience.txt";
 			HistogramPloter hist = new HistogramPloter();
 			hist.load(salience);
-//			hist.int_plot(true, false, folderPath+histgramName);
 			hist.double_plot(50, true, false, folderPath+histgramName);
 
 			// コマンド作成
