@@ -15,15 +15,17 @@ public class AirportTest22_WeightBimodal extends Job{
 		// 変数読み込み
 		int N = Integer.parseInt(controlParameterList.get(0).toString());
 		double a = Double.parseDouble(controlParameterList.get(1).toString());
+		double p = Double.parseDouble(controlParameterList.get(2).toString());
 
 		// Network生成
-		MakePowerLaw dist;
-		ConfigrationNetwork net;
-		do{
-			dist = new MakePowerLaw(N, 2.7, 2, N-1);
-			net = new ConfigrationNetwork(dist.degree, 50);
-		}while(!net.success);
-		System.out.println("生成完了");
+//		MakePowerLaw dist;
+//		ConfigrationNetwork net;
+//		do{
+//			dist = new MakePowerLaw(N, 2.7, 2, N-1);
+//			net = new ConfigrationNetwork(dist.degree, 50);
+//		}while(!net.success);
+//		System.out.println("生成完了");
+		RandomNetwork net = new RandomNetwork(N, p);
 
 		// weight割り振り
 		net.weight = new double[net.M];
@@ -68,6 +70,13 @@ public class AirportTest22_WeightBimodal extends Job{
 			};
 			String commandName = "command.gplot";
 			make_gplot(folderPath+commandName, command);
+			
+			// gexf出力
+			GEXFStylePrinter gexf = new GEXFStylePrinter(net.N, net.list, false, folderPath+"network.gexf");
+			gexf.init_1st();
+			gexf.printNode_2nd(null, null, new int[0]);
+			gexf.printEdge_3rd(net.weight, "Salience", salience);
+			gexf.terminal_4th();
 
 			// コマンド起動
 			execution_gnuplot(folderPath+commandName);
