@@ -1,3 +1,6 @@
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -5,8 +8,14 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public abstract class Job {
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+public abstract class Job extends JFrame{
 	final String gnuplotPath = "D:/Program Files (x86)/gnuplot/bin/wgnuplot.exe";
+	int progress;
 
 	// 直接打ち込む手法
 	final void run(ArrayList<Object> controlParameterList){
@@ -15,6 +24,8 @@ public abstract class Job {
 
 	// iniファイルを読み込む手法
 	final void run(String ini_FilePath){
+		init();
+
 		Scanner scan;
 		Scanner currentLine;
 		try{
@@ -35,12 +46,19 @@ public abstract class Job {
 				controlParrameterMatrix.add(currentControlParameterList);
 			}
 
+			// ジョブを実行
+			progress=0;
+			works=controlParrameterMatrix.size();
 			for(int i=0;i<controlParrameterMatrix.size();i++){
+				progressLabel.setText("Job: " + progress + "/" + works);
+				repaint();
 				job(controlParrameterMatrix.get(i));
+				progress++;
 			}
 		}catch(FileNotFoundException e){
 			System.out.println(e);
 		}
+		System.exit(0);
 	}
 
 	public abstract void job(ArrayList<Object> controlParameterList);
@@ -108,8 +126,52 @@ public abstract class Job {
 		}
 	}
 
+	/*
+	 * フォルダ作成メソッド
+	 */
 	public final void makeFolder(String folderName){
 		new File(folderName).mkdirs();
+	}
+
+	/*
+	 * gui定義用
+	 */
+	private JLabel progressLabel;
+	private int works;
+	private void init(){
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle(getClass().getSimpleName());
+		setResizable(false);
+		setSize(165, 190);
+		setLayout(null);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		int w = screenSize.width;
+		setLocation((int)(w*0.7), 100);
+
+
+		JLabel img = new JLabel();
+		if(new File("pola.gif").exists()){
+			img.setIcon(new ImageIcon("pola.gif"));
+		}else if(new File("D://java/Network/src/pola.gif").exists()){
+			img.setIcon(new ImageIcon("D://java/Network/src/pola.gif"));
+		}
+		img.setLayout(null);
+		img.setBounds(0, 10, 155, 117);
+		add(img);
+
+		progress=0;
+		works=0;
+		progressLabel = new JLabel();
+		progressLabel.setText("Job: " + progress + "/" + works);
+		progressLabel.setBounds(50, 130, 100, 30);
+		add(progressLabel);
+
+		JPanel bg = new JPanel();
+		bg.setBackground(Color.WHITE);
+		bg.setBounds(0, 0, 1500, 1500);
+		add(bg);
+
+		setVisible(true);
 	}
 
 
