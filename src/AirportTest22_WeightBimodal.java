@@ -62,7 +62,7 @@ public class AirportTest22_WeightBimodal extends Job{
 			// コマンド作成
 			String[] command ={
 					gnuplot_cd_Relative(folderName),
-					gnuplot_plot("[0:1000]",histgramName, "boxes"),
+					gnuplot_plot(("[0:"+N+"]"),histgramName, "boxes"),
 					gnuplot_terminalPostscript(),
 					gnuplot_outputMathod("salience.eps"),
 					gnuplot_terminalPNG(),
