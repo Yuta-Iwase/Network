@@ -1,12 +1,13 @@
 import java.util.ArrayList;
 
 public class AirportTest22_WeightBimodal extends Job{
+	private static final long serialVersionUID = 1L;
 
 	public static void main(String[] args) {
 		AirportTest22_WeightBimodal job = new AirportTest22_WeightBimodal();
 		job.run("param.ini");
 //		ArrayList<Object> param = new ArrayList<Object>();
-//		param.add(1000);	param.add(0.5);
+//		param.add(1000);	param.add(0.5);	param.add(0.004);
 //		job.run(param);
 	}
 
