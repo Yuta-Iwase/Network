@@ -154,10 +154,14 @@ public abstract class Job extends JFrame{
 		JLabel img = new JLabel();
 		if(new File("pola.gif").exists()){
 			img.setIcon(new ImageIcon("pola.gif"));
+		}else if(new File("src/pola.gif").exists()){
+			img.setIcon(new ImageIcon("src/pola.gif"));
 		}else if(new File("D://java/Network/src/pola.gif").exists()){
 			img.setIcon(new ImageIcon("D://java/Network/src/pola.gif"));
 		}else if(new File("/Users/Owner/eclipse/Network/src/pola.gif").exists()){
 			img.setIcon(new ImageIcon("/Users/Owner/eclipse/Network/src/pola.gif"));
+		}else if(new File("/home/yuta/workspace/Network/src/pola.gif").exists()){
+			img.setIcon(new ImageIcon("/home/yuta/workspace/Network/src/pola.gif"));
 		}
 		img.setLayout(null);
 		img.setBounds(0, 10, 155, 117);
