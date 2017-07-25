@@ -54,7 +54,7 @@ public class AirportTest23_2_WeightTrimodal_OnRandom extends Job{
 			r = Math.random();
 			if(r < p_w_s){
 				net.weight[i] = w_s-0.5+Math.random();
-			}else if(p_w_s<=r && r<p_w_l){
+			}else if(r<p_w_s+p_w_l){
 				net.weight[i] = w_l-0.5+Math.random();
 			}else{
 				net.weight[i] = w_ll-0.5+Math.random();

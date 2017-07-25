@@ -25,7 +25,7 @@ public class AirportTest23_3_WeightTrimodal_OnConfig_withoutPoworlaw extends Job
 		int N = Integer.parseInt(controlParameterList.get(0).toString());
 		double w_s = Double.parseDouble(controlParameterList.get(1).toString());
 		double w_l = Double.parseDouble(controlParameterList.get(2).toString());
-		double w_ll = Double.parseDouble(controlParameterList.get(3).toString());		
+		double w_ll = Double.parseDouble(controlParameterList.get(3).toString());
 		double p_w_s = Double.parseDouble(controlParameterList.get(4).toString());
 		double p_w_l = Double.parseDouble(controlParameterList.get(5).toString());
 		double p_w_ll = 1.0 -(p_w_s+p_w_l);
@@ -48,7 +48,7 @@ public class AirportTest23_3_WeightTrimodal_OnConfig_withoutPoworlaw extends Job
 			r = Math.random();
 			if(r < p_w_s){
 				net.weight[i] = w_s-0.5+Math.random();
-			}else if(p_w_s<=r && r<p_w_l){
+			}else if(r<p_w_s+p_w_l){
 				net.weight[i] = w_l-0.5+Math.random();
 			}else{
 				net.weight[i] = w_ll-0.5+Math.random();

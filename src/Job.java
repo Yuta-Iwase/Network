@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 
 public abstract class Job extends JFrame{
 	private static final long serialVersionUID = 1L;
-	final String gnuplotPath = "D:/Program Files (x86)/gnuplot/bin/wgnuplot.exe";
+	String gnuplotPath;
 	int progress;
 
 	// 直接打ち込む手法
@@ -154,6 +154,7 @@ public abstract class Job extends JFrame{
 		}
 	}
 
+
 	/*
 	 * フォルダ作成メソッド
 	 */
@@ -209,6 +210,14 @@ public abstract class Job extends JFrame{
 		add(bg);
 
 		setVisible(true);
+
+		// ここからgnuplotのパス設定
+		if(new File("D:/Program Files (x86)/gnuplot/bin/wgnuplot.exe").exists()) {
+			gnuplotPath = "D:/Program Files (x86)/gnuplot/bin/wgnuplot.exe";
+		}else if(new File("C:/Program Files (x86)/gnuplot/bin/wgnuplot.exe").exists()) {
+			gnuplotPath = "C:/Program Files (x86)/gnuplot/bin/wgnuplot.exe";
+		}
+
 	}
 
 
