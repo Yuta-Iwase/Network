@@ -80,7 +80,7 @@ public class HistogramPloter {
 			double currentPos = 0.0;
 			if(boxes) currentPos += length*0.5;
 			for(int i=0;i<frequency.length;i++){
-				if(frequency[i]>0){
+				if(frequency[i]>0||boxes){
 					if(outputFilePath.length()>0) pw.println(currentPos + "\t" + frequency[i]*maxY_inverse);
 					System.out.println(currentPos + "\t" + frequency[i]*maxY_inverse);
 				}
@@ -92,7 +92,7 @@ public class HistogramPloter {
 			double currentPos = minX;
 			if(boxes) currentPos += length*0.5;
 			for(int i=0;i<frequency.length;i++){
-				if(frequency[i]>0){
+				if(frequency[i]>0||boxes){
 					if(outputFilePath.length()>0) pw.println(currentPos + "\t" + frequency[i]);
 					System.out.println(currentPos + "\t" + frequency[i]);
 				}
@@ -147,7 +147,7 @@ public class HistogramPloter {
 			double currentPos = 0.0;
 			if(boxes) currentPos += length*0.5;
 			for(int i=0;i<frequency.length;i++){
-				if(frequency[i]>0){
+				if(frequency[i]>0||boxes){
 					if(outputFilePath.length()>0) pw.println(currentPos + "\t" + frequency[i]*maxY_inverse);
 					System.out.println(currentPos + "\t" + frequency[i]*maxY_inverse);
 				}
@@ -159,7 +159,7 @@ public class HistogramPloter {
 			double currentPos = minX;
 			if(boxes) currentPos += length*0.5;
 			for(int i=0;i<frequency.length;i++){
-				if(frequency[i]>0){
+				if(frequency[i]>0||boxes){
 					if(outputFilePath.length()>0) pw.println(currentPos + "\t" + frequency[i]);
 					System.out.println(currentPos + "\t" + frequency[i]);
 				}

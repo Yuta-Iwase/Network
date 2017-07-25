@@ -20,7 +20,17 @@ public abstract class Job extends JFrame{
 
 	// 直接打ち込む手法
 	final void run(ArrayList<Object> controlParameterList){
+//		job(controlParameterList);
+
+		init();
+
+		// ジョブを実行
+		progress=0;
+		works=1;
+		progressLabel.setText("Job: " + progress + "/" + works);
+		repaint();
 		job(controlParameterList);
+		System.exit(0);
 	}
 
 	// iniファイルを読み込む手法
@@ -35,7 +45,7 @@ public abstract class Job extends JFrame{
 			scan.nextLine();
 
 			// 変数をiniファイルから読み込み
-			ArrayList<ArrayList<Object>> controlParrameterMatrix = new ArrayList<ArrayList<Object>>();
+			ArrayList<ArrayList<Object>> controlParameterMatrix = new ArrayList<ArrayList<Object>>();
 			while(scan.hasNextLine()){
 				currentLine = new Scanner(scan.nextLine());
 				currentLine.useDelimiter(" " + "|" + "\t" + "|" + ",");// |は「または」の意味
@@ -44,16 +54,16 @@ public abstract class Job extends JFrame{
 				while(currentLine.hasNext()){
 					currentControlParameterList.add(currentLine.next());
 				}
-				controlParrameterMatrix.add(currentControlParameterList);
+				controlParameterMatrix.add(currentControlParameterList);
 			}
 
 			// ジョブを実行
 			progress=0;
-			works=controlParrameterMatrix.size();
-			for(int i=0;i<controlParrameterMatrix.size();i++){
+			works=controlParameterMatrix.size();
+			for(int i=0;i<controlParameterMatrix.size();i++){
 				progressLabel.setText("Job: " + progress + "/" + works);
 				repaint();
-				job(controlParrameterMatrix.get(i));
+				job(controlParameterMatrix.get(i));
 				progress++;
 			}
 		}catch(FileNotFoundException e){
@@ -110,10 +120,27 @@ public abstract class Job extends JFrame{
 	}
 
 	/*
-	 * その他コマンドセット
+	 * ワークディレクトリを返すコマンドセット
 	 */
 	public final String workDirectory(){
 		return System.getProperty("user.dir").replaceAll("\\\\", "/");
+	}
+
+	/*
+	 *
+	 */
+	public final void plotControlParameter(String filePath_Relative, ArrayList<String> parameterLabels, ArrayList<Object> controlParameterList){
+		try{
+			PrintWriter pw = new PrintWriter(new File(filePath_Relative));
+			for(int i=0;i<parameterLabels.size();i++){
+				pw.print(parameterLabels.get(i) + "\t");
+			}
+			pw.println();
+			for(int i=0;i<parameterLabels.size();i++){
+				pw.print(controlParameterList.get(i) + "\t");
+			}
+			pw.close();
+		}catch(Exception e){}
 	}
 
 	/*
