@@ -183,6 +183,8 @@ public abstract class Job extends JFrame{
 			img.setIcon(new ImageIcon("pola.gif"));
 		}else if(new File("src/pola.gif").exists()){
 			img.setIcon(new ImageIcon("src/pola.gif"));
+		}else if(new File("C://java/Network/src/pola.gif").exists()){
+			img.setIcon(new ImageIcon("C://java/Network/src/pola.gif"));
 		}else if(new File("D://java/Network/src/pola.gif").exists()){
 			img.setIcon(new ImageIcon("D://java/Network/src/pola.gif"));
 		}else if(new File("/Users/Owner/eclipse/Network/src/pola.gif").exists()){
