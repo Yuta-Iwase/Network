@@ -29,7 +29,7 @@ public class AirportTest23_2_WeightTrimodal_OnRandom extends Job{
 		double p_w_l = Double.parseDouble(controlParameterList.get(4).toString());
 		double gamma_w = -Math.log(p_w_l/p_w_s)/Math.log(w_l/w_s);
 		controlParameterList.add(5,gamma_w);
-//		double p = Double.parseDouble(controlParameterList.get(6).toString());
+		double p = Double.parseDouble(controlParameterList.get(6).toString());
 
 		double p_w_ll = 1.0 - (p_w_s+p_w_l);
 		double w_ll = Math.pow(p_w_ll*Math.pow(w_s, -gamma_w)/p_w_s, 1/(-gamma_w));
@@ -38,14 +38,14 @@ public class AirportTest23_2_WeightTrimodal_OnRandom extends Job{
 
 
 		// Network生成
-		MakePowerLaw dist;
-		ConfigrationNetwork net;
-		do{
-			dist = new MakePowerLaw(N, 2.7, 2, N-1);
-			net = new ConfigrationNetwork(dist.degree, 50);
-		}while(!net.success);
-		System.out.println("生成完了");
-//		RandomNetwork net = new RandomNetwork(N, p);
+//		MakePowerLaw dist;
+//		ConfigrationNetwork net;
+//		do{
+//			dist = new MakePowerLaw(N, 2.7, 2, N-1);
+//			net = new ConfigrationNetwork(dist.degree, 50);
+//		}while(!net.success);
+//		System.out.println("生成完了");
+		RandomNetwork net = new RandomNetwork(N, p);
 
 		// weight割り振り
 		net.weight = new double[net.M];
@@ -85,7 +85,7 @@ public class AirportTest23_2_WeightTrimodal_OnRandom extends Job{
 			parameterLabels.add("N");parameterLabels.add("w_s");parameterLabels.add("w_l");parameterLabels.add("(w_ll)");
 			parameterLabels.add("p_w_s");parameterLabels.add("p_w_l");parameterLabels.add("(p_w_ll)");
 			parameterLabels.add("(gamma_w)");
-//			parameterLabels.add("p");
+			parameterLabels.add("p");
 			plotControlParameter(paramLabel_file, parameterLabels, controlParameterList);
 
 			// ヒストグラム作成
