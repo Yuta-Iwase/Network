@@ -169,4 +169,32 @@ public class HistogramPloter {
 
 		if(outputFilePath.length()>0) pw.close();
 	}
+
+	public int[][] returnIntFrequency(){
+		// 横軸の最小値,最高値を取得
+		int minX = Integer.MAX_VALUE;
+		int maxX = int_list[0][1];
+		for(int i=0;i<int_list.length;i++){
+			if(minX>int_list[i][1]){
+				minX=int_list[i][1];
+			}
+			if(maxX<int_list[i][1]){
+				maxX=int_list[i][1];
+			}
+		}
+		// 区間数は(maxX-minX)+1個
+		int ticks = (maxX-minX)+1;
+
+		// 度数をカウント
+		int[][] fr = new int[ticks][2];
+		for(int i=0;i<fr.length;i++) {
+			fr[i][0] = minX+i;
+			fr[i][1] = 0;
+		}
+		for(int i=0;i<int_list.length;i++){
+			fr[int_list[i][1]-minX][1]++;
+		}
+
+		return fr;
+	}
 }
