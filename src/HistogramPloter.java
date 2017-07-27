@@ -170,18 +170,7 @@ public class HistogramPloter {
 		if(outputFilePath.length()>0) pw.close();
 	}
 
-	public int[][] returnIntFrequency(){
-		// 横軸の最小値,最高値を取得
-		int minX = Integer.MAX_VALUE;
-		int maxX = int_list[0][1];
-		for(int i=0;i<int_list.length;i++){
-			if(minX>int_list[i][1]){
-				minX=int_list[i][1];
-			}
-			if(maxX<int_list[i][1]){
-				maxX=int_list[i][1];
-			}
-		}
+	public int[][] returnIntFrequency(int minX, int maxX){
 		// 区間数は(maxX-minX)+1個
 		int ticks = (maxX-minX)+1;
 
@@ -196,5 +185,73 @@ public class HistogramPloter {
 		}
 
 		return fr;
+	}
+
+	public int[][] returnIntFrequency(){
+		// 横軸の最小値,最高値を取得
+		int minX = Integer.MAX_VALUE;
+		int maxX = int_list[0][1];
+		for(int i=0;i<int_list.length;i++){
+			if(minX>int_list[i][1]){
+				minX=int_list[i][1];
+			}
+			if(maxX<int_list[i][1]){
+				maxX=int_list[i][1];
+			}
+		}
+
+		return returnIntFrequency(maxX, minX);
+	}
+
+	public void plot_BoxesStyle(int[][] int_frequency, String outputFilePath) throws Exception{
+		// 出力ファイル設定
+		PrintWriter pw = null;
+		if(outputFilePath.length()>0){
+			pw = new PrintWriter(new File(outputFilePath));
+		}
+
+
+		int minX = int_frequency[0][0];
+		double length = 1.0;
+		double currentPos = minX + length*0.5;
+		for(int i=0;i<int_frequency.length;i++){
+			if(outputFilePath.length()>0) pw.println(currentPos + "\t" + int_frequency[i][1]);
+			System.out.println(currentPos + "\t" + int_frequency[i][1]);
+			currentPos += length;
+		}
+
+		if(outputFilePath.length()>0) pw.close();
+
+	}
+
+	public void plot_BoxesStyle(int[][] int_frequency, int ticks, String outputFilePath) throws Exception{
+		// 出力ファイル設定
+		PrintWriter pw = null;
+		if(outputFilePath.length()>0){
+			pw = new PrintWriter(new File(outputFilePath));
+		}
+
+
+		int minX = int_frequency[0][0];
+		double length = ((double)int_frequency.length)/ticks;
+		double currentPos = minX + length*0.5;
+		double currentLineNumber = 0.0;
+		double nextLineNumber;
+		int sumFrequency;
+		for(int i=0;i<ticks;i++){
+			nextLineNumber = currentLineNumber + length;
+
+			sumFrequency = 0;
+			for(int j=(int)currentLineNumber ; j<(int)nextLineNumber ; j++) {
+				sumFrequency += int_frequency[j][1];
+			}
+
+			if(outputFilePath.length()>0) pw.println(currentPos + "\t" + sumFrequency);
+			System.out.println(currentPos + "\t" + sumFrequency);
+			currentPos += length;
+			currentLineNumber = nextLineNumber;
+		}
+
+		if(outputFilePath.length()>0) pw.close();
 	}
 }
