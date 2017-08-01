@@ -50,14 +50,15 @@ public class AirportTest23_1_WeightTrimodal_OnConfig extends Job{
 		// weight割り振り
 		net.weight = new double[net.M];
 		double r;
+		double width = Math.pow(10, -6);
 		for(int i=0;i<net.M;i++){
 			r = Math.random();
 			if(r < p_w_s){
-				net.weight[i] = w_s-0.5+Math.random();
+				net.weight[i] = w_s+width*(Math.random()-0.5);
 			}else if(r<p_w_s+p_w_l){
-				net.weight[i] = w_l-0.5+Math.random();
+				net.weight[i] = w_l+width*(Math.random()-0.5);
 			}else{
-				net.weight[i] = w_ll-0.5+Math.random();
+				net.weight[i] = w_ll+width*(Math.random()-0.5);
 			}
 		}
 
