@@ -865,7 +865,7 @@ public class Network implements Cloneable{
 		for(int i=0;i<M;i++) newWeight[i]=1.0;
 		for(int t=0;t<step;t++){
 			Network.Node currentNode = nodeList.get(currentNodeIndex);
-			
+
 			// ここが各ランダムウォークで変化する内容(辺の選択方法)
 			r = (sumW[currentNodeIndex]*Math.random());
 			selectedEdge = 0;
@@ -894,7 +894,7 @@ public class Network implements Cloneable{
 			if(Math.random() < teleportP){
 				currentNodeIndex = (int)(N*Math.random());
 			}
-			
+
 		}
 
 		for(int i=0;i<M;i++){
@@ -926,6 +926,144 @@ public class Network implements Cloneable{
 		}while(degree[currentNodeIndex]==0);
 		return ReinforcedRandomWalk(step, deltaW, currentNodeIndex, teleportP);
 }
+
+	/**
+	 *  ReinforcedRandomWalkを<b>テレポートありで</b>実行する。<br>
+	 *  <b>テレポート確率はteleportP</b><br>
+	 *  disturbをtrueにすることで重みにブレを生じさせることができる。<br>
+	 *  戻り値には、RWで最後にいた頂点番号が返される。<br>
+	 *  無向グラフのみ実行可能<br>
+	 * (注)<br>
+	 * 以下の状況が必要<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 * @param step
+	 * @param deltaW
+	 * @param seed
+	 * @param teleportP
+	 */
+	public int ReinforcedRandomWalk(int step, double deltaW, int seed, double teleportP, boolean disturb){
+		weight = new double[M];
+
+		// 作業変数定義
+		int currentNodeIndex;
+		currentNodeIndex=seed;
+		while(degree[currentNodeIndex]==0){
+			currentNodeIndex = (currentNodeIndex+1)%N ;
+		}
+		int selectedEdge,nextNodeIndex;
+		double[] sumW = new double[N];
+		for(int i=0;i<N;i++){
+			sumW[i]= (double)degree[i];
+		}
+		double r,threshold;
+		double[] newWeight = new double[M];
+		for(int i=0;i<M;i++) newWeight[i]=1.0;
+		for(int t=0;t<step;t++){
+			Network.Node currentNode = nodeList.get(currentNodeIndex);
+
+			// ここが各ランダムウォークで変化する内容(辺の選択方法)
+			r = (sumW[currentNodeIndex]*Math.random());
+			selectedEdge = 0;
+			threshold = newWeight[currentNode.eList.get(0).index];
+			while(r > threshold){
+				selectedEdge++;
+				threshold += newWeight[currentNode.eList.get(selectedEdge).index];
+			}
+
+			//degag
+//			System.out.print(currentNodeIndex + ":" + degree[currentNodeIndex] + ",");
+
+			// 加重
+			newWeight[currentNode.eList.get(selectedEdge).index] += deltaW;
+			sumW[currentNode.eList.get(selectedEdge).node[0]] += deltaW;
+			sumW[currentNode.eList.get(selectedEdge).node[1]] += deltaW;
+			// nextNodeIndexの決定
+			if(currentNode.eList.get(selectedEdge).node[0]!=currentNodeIndex){
+				nextNodeIndex = currentNode.eList.get(selectedEdge).node[0];
+			}else{
+				nextNodeIndex = currentNode.eList.get(selectedEdge).node[1];
+			}
+			currentNodeIndex = nextNodeIndex;
+
+			// テレポート判定
+			if(Math.random() < teleportP){
+				currentNodeIndex = (int)(N*Math.random());
+			}
+
+		}
+
+		for(int i=0;i<M;i++){
+			weight[i] = newWeight[i];
+		}
+
+		if(disturb)disturb();
+
+//		System.out.println();
+		return currentNodeIndex;
+	}
+
+	/**
+	 *  ReinforcedRandomWalkを<b>テレポートありで</b>実行する。<br>
+	 *  <b>テレポート確率はteleportP</b><br>
+	 *  戻り値には、RWで最後にいた頂点番号が返される。<br>
+	 *  無向グラフのみ実行可能<br>
+	 * (注)<br>
+	 * 以下の状況が必要<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 * @param step
+	 * @param deltaW
+	 * @param teleportP
+	 */
+	public int ReinforcedRandomWalk(int step, double deltaW, double teleportP, boolean disturb){
+		// 作業変数定義
+		int currentNodeIndex;
+		do{
+			currentNodeIndex = (int)(N * Math.random());
+		}while(degree[currentNodeIndex]==0);
+		return ReinforcedRandomWalk(step, deltaW, currentNodeIndex, teleportP, disturb);
+	}
+
+	/**
+	 *  ReinforcedRandomWalkを<b>テレポートありで</b>実行する。<br>
+	 *  <b>テレポート確率はteleportP</b><br>
+	 *  戻り値には、RWで最後にいた頂点番号が返される。<br>
+	 *  無向グラフのみ実行可能<br>
+	 * (注)<br>
+	 * 以下の状況が必要<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 * @param step
+	 * @param deltaW
+	 * @param teleportP
+	 */
+	public int ReinforcedRandomWalk(int step, double deltaW, int seed, boolean disturb){
+		double teleportP = 0.0;
+		return ReinforcedRandomWalk(step, deltaW, seed, teleportP, disturb);
+	}
+
+	/**
+	 *  ReinforcedRandomWalkを実行する。<br>
+	 *  戻り値には、RWで最後にいた頂点番号が返される。<br>
+	 *  無向グラフのみ実行可能<br>
+	 * (注)<br>
+	 * 以下の状況が必要<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 * @param step
+	 * @param deltaW
+	 */
+	public int ReinforcedRandomWalk(int step, double deltaW, boolean disturb){
+			// 作業変数定義
+			int currentNodeIndex;
+			do{
+				currentNodeIndex = (int)(N * Math.random());
+			}while(degree[currentNodeIndex]==0);
+			return ReinforcedRandomWalk(step, deltaW, currentNodeIndex, disturb);
+	}
+
+
 
 	/**
 	 *  頂点についてReinforcedRandomWalkを実行する。<br>
@@ -1081,12 +1219,12 @@ public class Network implements Cloneable{
 				nextNodeIndex = currentNode.eList.get(selectedNode).node[1];
 			}
 			currentNodeIndex = nextNodeIndex;
-			
+
 			// テレポート判定
 			if(Math.random() < teleportP){
 				currentNodeIndex = (int)(N*Math.random());
 			}
-			
+
 		}
 
 		for(int i=0;i<M;i++){
@@ -1095,6 +1233,13 @@ public class Network implements Cloneable{
 
 //		System.out.println();
 		return vWeight;
+	}
+
+	private void disturb() {
+		double width = Math.pow(10, -6);
+		for(int i=0 ; i<weight.length ; i++) {
+			weight[i] = weight[i] + (Math.random()-0.5)*width;
+		}
 	}
 
 	/**
