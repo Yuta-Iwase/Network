@@ -11,14 +11,14 @@ public class AirportTest23_4_WeightTrimodal_OnRandom_withoutPoworlaw extends Job
 
 		// 直接実行用
 //		ArrayList<Object> param = new ArrayList<Object>();
-//		int times = 1;					param.add(times);
+//		int times = 2;					param.add(times);
 //		int N = 1000;					param.add(N);
 //		double w_s = 1.0;				param.add(w_s);
 //		double w_l = 100.0;			param.add(w_l);
 //		double w_ll = 10000.0;			param.add(w_ll);
-//		double p_w_s = 0.70;			param.add(p_w_s);
-//		double p_w_l = 0.29;			param.add(p_w_l);
-//		double p = 0.004;				param.add(p);
+//		double p_w_s = 1.00;			param.add(p_w_s);
+//		double p_w_l = 0.00;			param.add(p_w_l);
+//		double p = 0.010;				param.add(p);
 //		job.run(param);
 	}
 
@@ -130,14 +130,12 @@ public class AirportTest23_4_WeightTrimodal_OnRandom_withoutPoworlaw extends Job
 			String commandName = "command.gplot";
 			make_gplot(folderPath+commandName, command);
 
-			// gexf出力
-			if(times==1) {
-				GEXFStylePrinter gexf = new GEXFStylePrinter(net.N, net.list, false, folderPath+"network.gexf");
-				gexf.init_1st();
-				gexf.printNode_2nd(null, null, new int[0]);
-				gexf.printEdge_3rd(net.weight, "Salience", salience);
-				gexf.terminal_4th();
-			}
+			// gexf出力(複数回行う場合は、最後のネットワークを代表にする。)
+			GEXFStylePrinter gexf = new GEXFStylePrinter(net.N, net.list, false, folderPath+"network.gexf");
+			gexf.init_1st();
+			gexf.printNode_2nd(null, null, new int[0]);
+			gexf.printEdge_3rd(net.weight, "Salience", salience);
+			gexf.terminal_4th();
 
 			// コマンド起動
 			execution_gnuplot(folderPath+commandName);

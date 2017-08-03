@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 // 読み
 // int[] int[][] double[] double[][] "FileName"
@@ -170,6 +171,16 @@ public class HistogramPloter {
 		if(outputFilePath.length()>0) pw.close();
 	}
 
+	public void arrayList_double_plot(ArrayList<Double> input_list, int ticks, boolean boxes, boolean y_normalize,String outputFilePath) throws Exception{
+		double[] list = new double[input_list.size()];
+		for(int i=0;i<input_list.size();i++) {
+			list[i] = input_list.get(i);
+		}
+
+		load(list);
+		double_plot(ticks, boxes, y_normalize, outputFilePath);
+	}
+
 	public int[][] returnIntFrequency(int minX, int maxX){
 		// 区間数は(maxX-minX)+1個
 		int ticks = (maxX-minX)+1;
@@ -224,6 +235,42 @@ public class HistogramPloter {
 
 	}
 
+	public void plot_BoxesStyle(int[][] int_frequency, String outputFilePath, boolean y_normalize) throws Exception{
+		// 出力ファイル設定
+		PrintWriter pw = null;
+		if(outputFilePath.length()>0){
+			pw = new PrintWriter(new File(outputFilePath));
+		}
+
+		// 縦軸の合計値を計算
+		int sumY = 0;
+		for(int i=0;i<int_frequency.length;i++) {
+			sumY += int_frequency[1][i];
+		}
+		double sumY_inverse = 1.0/sumY;
+
+		int minX = int_frequency[0][0];
+		double length = 1.0;
+		double currentPos = minX + length*0.5;
+		if(y_normalize) {
+			for(int i=0;i<int_frequency.length;i++){
+				if(outputFilePath.length()>0) pw.println(currentPos + "\t" + int_frequency[i][1]*sumY_inverse);
+				System.out.println(currentPos + "\t" + int_frequency[i][1]*sumY_inverse);
+				currentPos += length;
+			}
+		}else {
+			for(int i=0;i<int_frequency.length;i++){
+				if(outputFilePath.length()>0) pw.println(currentPos + "\t" + int_frequency[i][1]);
+				System.out.println(currentPos + "\t" + int_frequency[i][1]);
+				currentPos += length;
+			}
+		}
+
+
+		if(outputFilePath.length()>0) pw.close();
+
+	}
+
 	public void plot_BoxesStyle(int[][] int_frequency, int ticks, String outputFilePath) throws Exception{
 		// 出力ファイル設定
 		PrintWriter pw = null;
@@ -237,8 +284,9 @@ public class HistogramPloter {
 		double currentPos = minX + length*0.5;
 		double currentLineNumber = 0.0;
 		double nextLineNumber;
+		int testAllSum = 0;	//debag
 		int sumFrequency;
-		for(int i=0;i<ticks;i++){
+		for(int i=0;i<ticks-1;i++){
 			nextLineNumber = currentLineNumber + length;
 
 			sumFrequency = 0;
@@ -250,7 +298,25 @@ public class HistogramPloter {
 			System.out.println(currentPos + "\t" + sumFrequency);
 			currentPos += length;
 			currentLineNumber = nextLineNumber;
+
+			testAllSum += sumFrequency; //debag
 		}
+
+		sumFrequency = 0;
+		for(int j=(int)currentLineNumber ; j<int_frequency.length ; j++) {
+			sumFrequency += int_frequency[j][1];
+		}
+		if(outputFilePath.length()>0) pw.println(currentPos + "\t" + sumFrequency);
+		System.out.println(currentPos + "\t" + sumFrequency);
+		testAllSum += sumFrequency; //debag
+
+		// debag start
+		int testSum = 0;
+		for(int i=0;i<int_frequency.length;i++) {
+			testSum += int_frequency[i][1];
+		}
+		if(testSum != testAllSum)System.out.println("******************error***********************");
+		// debag end
 
 		if(outputFilePath.length()>0) pw.close();
 	}
