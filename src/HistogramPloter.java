@@ -39,7 +39,7 @@ public class HistogramPloter {
 		double_list = input_list;
 	}
 
-	public void int_plot(boolean boxes, boolean normalize, String outputFilePath)throws Exception{
+	public void int_plot(boolean boxes, boolean y_normalize, String outputFilePath)throws Exception{
 		// 出力ファイル設定
 		PrintWriter pw = null;
 		if(outputFilePath.length()>0){
@@ -60,7 +60,7 @@ public class HistogramPloter {
 
 		// 区間数は(maxX-minX)+1個
 		int ticks = (maxX-minX)+1;
-		double ticks_inverse = 1.0/ticks;
+//		double ticks_inverse = 1.0/ticks;
 
 		// 度数をカウント
 		frequency = new int[ticks];
@@ -68,21 +68,21 @@ public class HistogramPloter {
 			frequency[int_list[i][1]-minX]++;
 		}
 
-		if(normalize){
-			// 縦軸の最大値を取得
-			int maxY = 0;
+		if(y_normalize){
+			// 縦軸の総和を計算
+			int sumY = 0;
 			for(int i=0;i<frequency.length;i++){
-				if(maxY<frequency[i])maxY=frequency[i];
+				sumY += frequency[i];
 			}
-			double maxY_inverse = 1.0/maxY;
+			double sumY_inverse = 1.0/sumY;
 			// 出力
-			double length = ticks_inverse;
-			double currentPos = 0.0;
+			double length = 1.0;
+			double currentPos = minX;
 			if(boxes) currentPos += length*0.5;
 			for(int i=0;i<frequency.length;i++){
 				if(frequency[i]>0||boxes){
-					if(outputFilePath.length()>0) pw.println(currentPos + "\t" + frequency[i]*maxY_inverse);
-					System.out.println(currentPos + "\t" + frequency[i]*maxY_inverse);
+					if(outputFilePath.length()>0) pw.println(currentPos + "\t" + frequency[i]*sumY_inverse);
+					System.out.println(currentPos + "\t" + frequency[i]*sumY_inverse);
 				}
 				currentPos += length;
 			}
@@ -103,7 +103,7 @@ public class HistogramPloter {
 		if(outputFilePath.length()>0) pw.close();
 	}
 
-	public void double_plot(int ticks, boolean boxes, boolean normalize,String outputFilePath)throws Exception{
+	public void double_plot(int ticks, boolean boxes, boolean y_normalize,String outputFilePath)throws Exception{
 		// 出力ファイル設定
 		PrintWriter pw = null;
 		if(outputFilePath.length()>0){
@@ -135,21 +135,21 @@ public class HistogramPloter {
 			frequency[index]++;
 		}
 
-		if(normalize){
+		if(y_normalize){
 			// 縦軸の最大値を取得
-			int maxY = 0;
+			int sumY = 0;
 			for(int i=0;i<frequency.length;i++){
-				if(maxY<frequency[i])maxY=frequency[i];
+				sumY += frequency[i];
 			}
-			double maxY_inverse = 1.0/maxY;
+			double sumY_inverse = 1.0/sumY;
 			// 出力
-			double length = ticks_inverse;
-			double currentPos = 0.0;
+			double length = (maxX-minX)*ticks_inverse;
+			double currentPos = minX;
 			if(boxes) currentPos += length*0.5;
 			for(int i=0;i<frequency.length;i++){
 				if(frequency[i]>0||boxes){
-					if(outputFilePath.length()>0) pw.println(currentPos + "\t" + frequency[i]*maxY_inverse);
-					System.out.println(currentPos + "\t" + frequency[i]*maxY_inverse);
+					if(outputFilePath.length()>0) pw.println(currentPos + "\t" + frequency[i]*sumY_inverse);
+					System.out.println(currentPos + "\t" + frequency[i]*sumY_inverse);
 				}
 				currentPos += length;
 			}
