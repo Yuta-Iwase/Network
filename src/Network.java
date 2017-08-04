@@ -959,6 +959,7 @@ public class Network implements Cloneable{
 		double r,threshold;
 		double[] newWeight = new double[M];
 		for(int i=0;i<M;i++) newWeight[i]=1.0;
+//		for(int i=0;i<M;i++) newWeight[i]=Math.pow(10, -6);
 		for(int t=0;t<step;t++){
 			Network.Node currentNode = nodeList.get(currentNodeIndex);
 

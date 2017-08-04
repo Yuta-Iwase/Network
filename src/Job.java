@@ -68,6 +68,7 @@ public abstract class Job extends JFrame{
 			}
 		}catch(FileNotFoundException e){
 			System.out.println(e);
+			System.exit(1);
 		}
 		System.exit(0);
 	}

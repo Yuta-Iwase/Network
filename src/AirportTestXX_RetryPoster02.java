@@ -2,10 +2,10 @@ import java.util.ArrayList;
 
 // RRW、テレポ付き、disturbあり
 
-public class AirportTestXX_RetryPoster01 extends Job{
+public class AirportTestXX_RetryPoster02 extends Job{
 
 	public static void main(String[] args) {
-		AirportTestXX_RetryPoster01 job = new AirportTestXX_RetryPoster01();
+		AirportTestXX_RetryPoster02 job = new AirportTestXX_RetryPoster02();
 		job.run("param.ini");
 
 	}
@@ -15,8 +15,7 @@ public class AirportTestXX_RetryPoster01 extends Job{
 		int index=0;
 		int times = Integer.parseInt(controlParameterList.get(index++).toString());
 		int N = Integer.parseInt(controlParameterList.get(index++).toString());
-		int minDegree = Integer.parseInt(controlParameterList.get(index++).toString());
-		double gamma = Double.parseDouble(controlParameterList.get(index++).toString());
+		double p = Double.parseDouble(controlParameterList.get(index++).toString());
 		double deltaW = Double.parseDouble(controlParameterList.get(index++).toString());
 		double teleportP = Double.parseDouble(controlParameterList.get(index++).toString());
 
@@ -38,10 +37,8 @@ public class AirportTestXX_RetryPoster01 extends Job{
 		int[] salience = null;
 
 		for(int t=0;t<times;t++) {
-			do {
-				MakePowerLaw dist = new MakePowerLaw(N, gamma, minDegree, N-1);
-				net = new ConfigrationNetwork(dist.degree, 100);
-			}while(!net.success);
+			net = new RandomNetwork(N, p);
+
 			net.setNode(false);
 			net.setEdge();
 
@@ -80,7 +77,7 @@ public class AirportTestXX_RetryPoster01 extends Job{
 			String paramLabel_file = folderPath + "paramList.txt";
 			ArrayList<String> parameterLabels = new ArrayList<String>();
 			parameterLabels.add("times");
-			parameterLabels.add("N");parameterLabels.add("minDegree");parameterLabels.add("gamma");
+			parameterLabels.add("N");parameterLabels.add("p");
 			parameterLabels.add("deltaW");parameterLabels.add("teleportP");
 			plotControlParameter(paramLabel_file, parameterLabels, controlParameterList);
 
