@@ -4,11 +4,15 @@ import java.util.ArrayList;
 
 // RRW、テレポ付き、disturbあり
 
-public class AirportTestXX_RetryPoster01 extends Job{
+public class AirportTestXX_RetryPoster03 extends Job{
 
 	public static void main(String[] args) {
-		AirportTestXX_RetryPoster01 job = new AirportTestXX_RetryPoster01();
+		AirportTestXX_RetryPoster03 job = new AirportTestXX_RetryPoster03();
 		job.run("param.ini");
+
+//		ArrayList<Object> list = new ArrayList<Object>();
+//		list.add(1);	list.add(10);	list.add(0.01);
+//		job.run(list);
 
 	}
 
@@ -16,18 +20,23 @@ public class AirportTestXX_RetryPoster01 extends Job{
 	public void job(ArrayList<Object> controlParameterList) {
 		int index=0;
 		int times = Integer.parseInt(controlParameterList.get(index++).toString());
-		int N = Integer.parseInt(controlParameterList.get(index++).toString());
-		int minDegree = Integer.parseInt(controlParameterList.get(index++).toString());
-		double gamma = Double.parseDouble(controlParameterList.get(index++).toString());
 		double deltaW = Double.parseDouble(controlParameterList.get(index++).toString());
 		double teleportP = Double.parseDouble(controlParameterList.get(index++).toString());
 
+		NetworkForCSVFile net = new NetworkForCSVFile("S10b-14_BetAport_LabelRemoved_and_Weighted.csv",false,true,true,true);
+		net.setNode();
+		new AirportNetworkTransformer().makeUndirectedEdge(net);
+		net.setEdge();
 
 		HistogramPloter hist = new HistogramPloter();
-		Network net = null;
+
+		double N = net.N;
+		double averageDegree = net.averageDegree();
+		controlParameterList.add(1,N);
+		controlParameterList.add(2,averageDegree);
 
 		// 集計用配列
-		int[][] resultFrequency = new int[N+1][2];
+		int[][] resultFrequency = new int[net.N+1][2];
 		for(int i=0;i<resultFrequency.length;i++) {
 			resultFrequency[i][0] = i;
 			resultFrequency[i][1] = 0;
@@ -40,14 +49,8 @@ public class AirportTestXX_RetryPoster01 extends Job{
 		int[] salience = null;
 
 		for(int t=0;t<times;t++) {
-			do {
-				MakePowerLaw dist = new MakePowerLaw(N, gamma, minDegree, N-1);
-				net = new ConfigrationNetwork(dist.degree, 100);
-			}while(!net.success);
-			net.setNode(false);
-			net.setEdge();
 
-			int step = N*1000;
+			int step = net.N*1000;
 			net.ReinforcedRandomWalk(step, deltaW, teleportP, true);
 			net.LinkSalience();
 
@@ -62,7 +65,7 @@ public class AirportTestXX_RetryPoster01 extends Job{
 			}
 
 			hist.load(salience);
-			currentFrequency = hist.returnIntFrequency(0, N);
+			currentFrequency = hist.returnIntFrequency(0, net.N);
 			for(int i=0;i<currentFrequency.length;i++) {
 				resultFrequency[i][1] += currentFrequency[i][1];
 			}
@@ -82,7 +85,7 @@ public class AirportTestXX_RetryPoster01 extends Job{
 			String paramLabel_file = folderPath + "paramList.txt";
 			ArrayList<String> parameterLabels = new ArrayList<String>();
 			parameterLabels.add("times");
-			parameterLabels.add("N");parameterLabels.add("minDegree");parameterLabels.add("gamma");
+			parameterLabels.add("N");parameterLabels.add("<k>");
 			parameterLabels.add("deltaW");parameterLabels.add("teleportP");
 			plotControlParameter(paramLabel_file, parameterLabels, controlParameterList);
 

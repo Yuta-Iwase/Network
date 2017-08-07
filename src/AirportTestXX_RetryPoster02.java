@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 // RRW、テレポ付き、disturbあり
@@ -8,6 +10,11 @@ public class AirportTestXX_RetryPoster02 extends Job{
 		AirportTestXX_RetryPoster02 job = new AirportTestXX_RetryPoster02();
 		job.run("param.ini");
 
+//		ArrayList<Object> pList = new ArrayList<Object>();
+//		pList.add(1);	pList.add(1000);	pList.add(2);
+//		pList.add(2.7);	pList.add(2);		pList.add(0.01);
+//		job.run(pList);
+
 	}
 
 	@Override
@@ -15,13 +22,18 @@ public class AirportTestXX_RetryPoster02 extends Job{
 		int index=0;
 		int times = Integer.parseInt(controlParameterList.get(index++).toString());
 		int N = Integer.parseInt(controlParameterList.get(index++).toString());
-		double p = Double.parseDouble(controlParameterList.get(index++).toString());
+		int minDegree = Integer.parseInt(controlParameterList.get(index++).toString());
+		double gamma = Double.parseDouble(controlParameterList.get(index++).toString());
 		double deltaW = Double.parseDouble(controlParameterList.get(index++).toString());
 		double teleportP = Double.parseDouble(controlParameterList.get(index++).toString());
 
 
 		HistogramPloter hist = new HistogramPloter();
 		Network net = null;
+		MakePowerLaw dist = new MakePowerLaw(N, gamma, minDegree, N-1);
+
+		double averageDegree = dist.averageDegree();
+		controlParameterList.add(4,averageDegree);
 
 		// 集計用配列
 		int[][] resultFrequency = new int[N+1][2];
@@ -37,12 +49,11 @@ public class AirportTestXX_RetryPoster02 extends Job{
 		int[] salience = null;
 
 		for(int t=0;t<times;t++) {
-			net = new RandomNetwork(N, p);
-
+			net = new RandomNetwork(N, dist);
 			net.setNode(false);
 			net.setEdge();
 
-			int step = N*1000*100;
+			int step = N*1000;
 			net.ReinforcedRandomWalk(step, deltaW, teleportP, true);
 			net.LinkSalience();
 
@@ -77,9 +88,19 @@ public class AirportTestXX_RetryPoster02 extends Job{
 			String paramLabel_file = folderPath + "paramList.txt";
 			ArrayList<String> parameterLabels = new ArrayList<String>();
 			parameterLabels.add("times");
-			parameterLabels.add("N");parameterLabels.add("p");
+			parameterLabels.add("N");parameterLabels.add("minDegree");parameterLabels.add("gamma");
+			parameterLabels.add("<k>");
 			parameterLabels.add("deltaW");parameterLabels.add("teleportP");
 			plotControlParameter(paramLabel_file, parameterLabels, controlParameterList);
+
+			// 辺の各パラメータを出力
+			String property_file = folderPath + "property.txt";
+			PrintWriter pw = new PrintWriter(new File(property_file));
+			net.EdgeBetweenness();
+			for(int i=0;i<net.M;i++) {
+				pw.println(i + "\t" + net.edgeList.get(i).linkSalience + "\t" + Math.round(net.weight[i]) + "\t" + (int)net.edgeList.get(i).betweenCentrality);
+			}
+			pw.close();
 
 			// ヒストグラム作成
 			String histgramName = "salience.txt";

@@ -977,26 +977,34 @@ public class Network implements Cloneable{
 			// ここが各ランダムウォークで変化する内容(辺の選択方法)
 			r = (sumW[currentNodeIndex]*Math.random());
 			selectedEdge = 0;
-			threshold = newWeight[currentNode.eList.get(0).index];
-			while(r > threshold){
-				selectedEdge++;
-				threshold += newWeight[currentNode.eList.get(selectedEdge).index];
+			if(currentNode.eList.size()>=1) {
+				threshold = newWeight[currentNode.eList.get(0).index];
+				while(r > threshold){
+					selectedEdge++;
+					threshold += newWeight[currentNode.eList.get(selectedEdge).index];
+				}
+
+				//degag
+//				System.out.print(currentNodeIndex + ":" + degree[currentNodeIndex] + ",");
+
+				// 加重
+				newWeight[currentNode.eList.get(selectedEdge).index] += deltaW;
+				sumW[currentNode.eList.get(selectedEdge).node[0]] += deltaW;
+				sumW[currentNode.eList.get(selectedEdge).node[1]] += deltaW;
+				// nextNodeIndexの決定
+				if(currentNode.eList.get(selectedEdge).node[0]!=currentNodeIndex){
+					nextNodeIndex = currentNode.eList.get(selectedEdge).node[0];
+				}else{
+					nextNodeIndex = currentNode.eList.get(selectedEdge).node[1];
+				}
+				currentNodeIndex = nextNodeIndex;
+			}else {
+				// 次数0なら確定ワープ
+				t--;
+				currentNodeIndex = (int)(N*Math.random());
+				continue;
 			}
 
-			//degag
-//			System.out.print(currentNodeIndex + ":" + degree[currentNodeIndex] + ",");
-
-			// 加重
-			newWeight[currentNode.eList.get(selectedEdge).index] += deltaW;
-			sumW[currentNode.eList.get(selectedEdge).node[0]] += deltaW;
-			sumW[currentNode.eList.get(selectedEdge).node[1]] += deltaW;
-			// nextNodeIndexの決定
-			if(currentNode.eList.get(selectedEdge).node[0]!=currentNodeIndex){
-				nextNodeIndex = currentNode.eList.get(selectedEdge).node[0];
-			}else{
-				nextNodeIndex = currentNode.eList.get(selectedEdge).node[1];
-			}
-			currentNodeIndex = nextNodeIndex;
 
 			// テレポート判定
 			if(Math.random() < teleportP){

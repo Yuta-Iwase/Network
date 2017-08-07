@@ -1,0 +1,2 @@
+times	N	<k>	deltaW	teleportP	
+1	86.0	5.5813953488372094	10	0.01	

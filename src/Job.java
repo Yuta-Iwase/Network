@@ -2,7 +2,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -39,6 +38,8 @@ public abstract class Job extends JFrame{
 
 		Scanner scan;
 		Scanner currentLine;
+
+		PrintWriter errorReport;
 		try{
 			// ファイルをload
 			scan = new Scanner(new File(ini_FilePath));
@@ -66,7 +67,12 @@ public abstract class Job extends JFrame{
 				job(controlParameterMatrix.get(i));
 				progress++;
 			}
-		}catch(FileNotFoundException e){
+		}catch(Exception e){
+			try {
+				errorReport=new PrintWriter(new File("ErrorReport.txt"));
+				errorReport.println(e);
+				errorReport.close();
+			}catch(Exception e2) {}
 			System.out.println(e);
 			System.exit(1);
 		}
