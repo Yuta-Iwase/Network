@@ -2,9 +2,19 @@ import java.util.ArrayList;
 
 public class RandomNetwork extends Network{
 	public RandomNetwork(int input_N,double input_p) {
+		init(input_N, input_p);
+	}
+
+	public RandomNetwork(int input_N, MakePowerLaw input_dist) {
+		double p;
+		p = input_dist.averageDegree()/(input_N-1);
+		init(input_N,p);
+	}
+
+	public void init(int input_N,double input_p) {
 		N = input_N;
 		double p = input_p;
-		
+
 		ArrayList<Integer> left = new ArrayList<Integer>();
 		ArrayList<Integer> right = new ArrayList<Integer>();
 		degree = new int[N];
@@ -19,13 +29,12 @@ public class RandomNetwork extends Network{
 				}
 			}
 		}
-		
+
 		list = new int[M][2];
 		for(int i=0;i<M;i++){
 			list[i][0] = left.get(i);
 			list[i][1] = right.get(i);
 		}
-		
 	}
 
 }

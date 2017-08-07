@@ -85,6 +85,17 @@ public class Network implements Cloneable{
 		}
 	}
 
+	/**
+	 * 平均次数を返す
+	 */
+	public double averageDegree() {
+		double sumDegree = 0.0;
+		for(int i=0;i<degree.length;i++) {
+			sumDegree += degree[i];
+		}
+		return (sumDegree/(double)degree.length);
+	}
+
 	/** 隣接リストをcsv形式で保存
 	次数0などの特別な頂点に対応(nodeListを定義しないと使えない) */
 	public void printListExtention(String fileName){

@@ -3,30 +3,32 @@
 
 public class MakePowerLaw {
 	int[] degree;
-	
+
 	int N;
 	double gamma;
 	int minDegree,maxDegree;
-	
+
+	double[] c;
+
 	public MakePowerLaw(int input_N,double input_gamma,int input_minDegree,int input_maxDegree) {
 		N = input_N;
 		gamma = input_gamma;
 		minDegree = input_minDegree;
 		maxDegree = input_maxDegree;
-		
+
 		generate();
 	}
-	
-	
+
+
 	public MakePowerLaw(int input_N,double input_gamma) {
 		N = input_N;
 		gamma = input_gamma;
 		minDegree = 2;
 		maxDegree = N-1;
-		
+
 		generate();
 	}
-	
+
 	public void generate(){
 		// 離散量の確率分布を定義
 		double[] p = new double[N];
@@ -41,11 +43,12 @@ public class MakePowerLaw {
 		}
 
 		// p[i]の累積分布c[i]を定義
-		double[] c = new double[N];
+		c = new double[N];
 		c[minDegree] = p[minDegree];
 		for(int i=minDegree+1 ; i<maxDegree ; i++){
 			c[i] = c[i-1] + p[i];
 		}
+		c[maxDegree] = 1.0;
 
 		// c[i]に従い次数列degree[i]生成
 		degree = new int[N];
@@ -64,14 +67,23 @@ public class MakePowerLaw {
 			}
 			degree[i] = minDegree + currentIndex;
 		}
-		
+
 	}
-	
+
 	// 完成した次数列degree[i]を出力
 	public void printList(){
 		for(int i=0;i<N;i++){
 			System.out.println(i + "\t" + degree[i]);
 		}
 	}
-	
+
+	public double averageDegree() {
+		double average = 0.0;
+		average += minDegree * (c[minDegree]-0);
+		for(int k=minDegree+1 ; k<=maxDegree ; k++) {
+			average += k*(c[k]-c[k-1]);
+		}
+		return average;
+	}
+
 }
