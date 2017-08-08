@@ -2,10 +2,10 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-public class AirportTest25_1_trimodal extends Job {
+public class AirportTest25_1_trimodal_RandomGraph extends Job {
 
 	public static void main(String[] args) {
-		AirportTest25_1_trimodal job = new AirportTest25_1_trimodal();
+		AirportTest25_1_trimodal_RandomGraph job = new AirportTest25_1_trimodal_RandomGraph();
 		job.run("param.ini");
 
 	}
