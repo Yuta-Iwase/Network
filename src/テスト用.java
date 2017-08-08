@@ -15,7 +15,7 @@ public class テスト用 {
 //
 //			System.out.println(dist.averageDegree());
 //			System.out.println();
-//			
+//
 ////			for(int i=0;i<dist.c.length;i++) {
 ////				System.out.println(i + "\t" + dist.c[i]);
 ////			}
@@ -33,21 +33,32 @@ public class テスト用 {
 //			System.out.println("t=" + t + "\t average=" + average);
 //			generalSum += average;
 //		}
-//		
+//
 //		System.out.println();
 //		System.out.println("result_ave = " + ((double)generalSum)/times);
 //		System.out.println("true_ave = " + dist.averageDegree());
+
+
+
+//		MakePowerLaw dist = new MakePowerLaw(1000, 2.7);
+//		RandomNetwork net = new RandomNetwork(1000, dist);
+//		double sum = 0.0;
+//		for(int i=0;i<net.degree.length;i++) {
+//			sum += net.degree[i];
+//		}
+//		System.out.println(sum/net.degree.length);
+//		System.out.println(dist.averageDegree());
 		
+		NetworkForCSVFile net = new NetworkForCSVFile("S10b-14_BetAport_LabelRemoved_and_Weighted.csv",false,true,true,true);
+		net.setNode();
+		new AirportNetworkTransformer().makeUndirectedEdge(net);
+		net.setEdge();
 		
+		System.out.println(net.weighted);
 		
-		MakePowerLaw dist = new MakePowerLaw(1000, 2.7);
-		RandomNetwork net = new RandomNetwork(1000, dist);
-		double sum = 0.0;
-		for(int i=0;i<net.degree.length;i++) {
-			sum += net.degree[i];
+		for(int i=0;i<net.N;i++) {
+			System.out.println(i + "\t" + net.weight[i]);
 		}
-		System.out.println(sum/net.degree.length);
-		System.out.println(dist.averageDegree());
-		
+
 	}
 }

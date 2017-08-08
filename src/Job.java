@@ -79,7 +79,7 @@ public abstract class Job extends JFrame{
 		System.exit(0);
 	}
 
-	public abstract void job(ArrayList<Object> controlParameterList);
+	public abstract void job (ArrayList<Object> controlParameterList);
 
 	/*
 	 * gnuplotコマンドセット
@@ -159,6 +159,19 @@ public abstract class Job extends JFrame{
 		}catch(IOException e){
 			System.out.println(e);
 		}
+	}
+
+	/*
+	 * エラーレポートを出す
+	 */
+	public void errorReport(String error_message, boolean exit){
+		try {
+			PrintWriter pw = new PrintWriter(new File("ErrorReport.txt"));
+			pw.println(error_message);
+			System.out.println(error_message);
+			pw.close();
+		}catch(Exception e) {}
+		if(exit) System.exit(1);
 	}
 
 

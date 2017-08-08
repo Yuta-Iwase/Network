@@ -20,6 +20,15 @@ public class AirportTestXX_RetryPoster02 extends Job{
 	@Override
 	public void job(ArrayList<Object> controlParameterList) {
 		int index=0;
+		/*
+		 * mode
+		 * 0:uniform weight
+		 * 1:simple RW
+		 * 2:biased RW
+		 * 3:reinforced RW
+		 * 4:original weight
+		 */
+		int mode = Integer.parseInt(controlParameterList.get(index++).toString());
 		int times = Integer.parseInt(controlParameterList.get(index++).toString());
 		int N = Integer.parseInt(controlParameterList.get(index++).toString());
 		int minDegree = Integer.parseInt(controlParameterList.get(index++).toString());
@@ -54,7 +63,27 @@ public class AirportTestXX_RetryPoster02 extends Job{
 			net.setEdge();
 
 			int step = N*1000;
-			net.ReinforcedRandomWalk(step, deltaW, teleportP, true);
+			switch(mode) {
+			case 0:
+				net.weight = new double[net.M];
+				for(int i=0;i<net.M;i++) {
+					net.weight[i] = 1.0;
+				}
+				net.disturb();
+				break;
+			case 1:
+				net.SimpleRandomWalk(step, deltaW, teleportP, true);
+				break;
+			case 2:
+				net.BiasedRandomWalk(step, deltaW, teleportP, true);
+				break;
+			case 3:
+				net.ReinforcedRandomWalk(step, deltaW, teleportP, true);
+				break;
+			case 4:
+				if(!net.weighted) errorReport("mode4:original weight は、重みなしネットワークには使えません。", true);
+				break;
+			}
 			net.LinkSalience();
 
 			for(int i=0;i<net.M;i++) {
@@ -79,14 +108,32 @@ public class AirportTestXX_RetryPoster02 extends Job{
 		// 出力
 		try{
 			// フォルダ設定
-			String folderName = "delta_W" + String.format("%.1f", deltaW);
-			folderName += ("_teleportP" + String.format("%.3f", teleportP));
+			String folderName = null;
+			switch(mode) {
+			case 0:
+				folderName = "uniform";
+				break;
+			case 1:
+				folderName = "simple_RW";
+				break;
+			case 2:
+				folderName = "biased_RW_teleportP" + String.format("%.3f", teleportP);
+				break;
+			case 3:
+				folderName = "reinforced_RW_" + "delta_W" + String.format("%.1f", deltaW);
+				folderName += ("_teleportP" + String.format("%.3f", teleportP));
+				break;
+			case 4:
+				folderName = "original_weight";
+				break;
+			}
 			String folderPath = folderName + "/";
 			makeFolder(folderName);
 
 			// パラメータ出力
 			String paramLabel_file = folderPath + "paramList.txt";
 			ArrayList<String> parameterLabels = new ArrayList<String>();
+			parameterLabels.add("mode");
 			parameterLabels.add("times");
 			parameterLabels.add("N");parameterLabels.add("minDegree");parameterLabels.add("gamma");
 			parameterLabels.add("<k>");

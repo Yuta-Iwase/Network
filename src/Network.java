@@ -758,6 +758,140 @@ public class Network implements Cloneable{
 	}
 
 	/**
+	 * SimpleRandomWalkを実行する。<br>
+	 * 以下の状況が必要<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 *
+	 */
+	public int SimpleRandomWalk(int step, double deltaW, int seed, double teleportP, boolean disturb) {
+		weight = new double[M];
+
+		// 作業変数定義
+		int currentNodeIndex = seed%N;
+
+		int selectedEdge,nextNodeIndex;
+		double[] newWeight = new double[M];
+		for(int i=0;i<M;i++) newWeight[i]=1.0;
+		for(int t=0;t<step;t++){
+			Network.Node currentNode = nodeList.get(currentNodeIndex);
+
+			if(currentNode.eList.size()>=1) {
+				// ここが各ランダムウォークで変化する内容(辺の選択方法)
+				selectedEdge = (int)(currentNode.eList.size()*Math.random());
+
+				// 加重
+				newWeight[currentNode.eList.get(selectedEdge).index] += deltaW;
+
+				// nextNodeIndexの決定
+				if(currentNode.eList.get(selectedEdge).node[0]!=currentNodeIndex){
+					nextNodeIndex = currentNode.eList.get(selectedEdge).node[0];
+				}else{
+					nextNodeIndex = currentNode.eList.get(selectedEdge).node[1];
+				}
+				currentNodeIndex = nextNodeIndex;
+			}else {
+				// 次数0なら確定ワープ
+				t--;
+				currentNodeIndex = (int)(N*Math.random());
+				continue;
+			}
+
+
+
+			// テレポート判定
+			if(Math.random() < teleportP){
+				currentNodeIndex = (int)(N*Math.random());
+			}
+
+		}
+
+		for(int i=0;i<M;i++){
+			weight[i] = newWeight[i];
+		}
+
+		if(disturb) disturb();
+
+		return currentNodeIndex;
+	}
+
+	public int SimpleRandomWalk(int step, double deltaW, double teleportP, boolean disturb) {
+		int currentNodeIndex = (int)(N * Math.random());
+		return SimpleRandomWalk(step, deltaW, currentNodeIndex, teleportP, disturb);
+	}
+
+	/**
+	 * BiasedRandomWalkを実行する。<br>
+	 * 以下の状況が必要<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 *
+	 */
+	public int BiasedRandomWalk(int step, double deltaW, int seed, double teleportP, boolean disturb) {
+		weight = new double[M];
+
+		// 作業変数定義
+		int currentNodeIndex = seed%N;
+
+		int selectedEdge,nextNodeIndex;
+		int sumDegree;
+		double r,threshold;
+		double[] newWeight = new double[M];
+		for(int i=0;i<M;i++) newWeight[i]=1.0;
+		for(int t=0;t<step;t++){
+			Network.Node currentNode = nodeList.get(currentNodeIndex);
+
+			if(currentNode.eList.size()>=1) {
+				// ここが各ランダムウォークで変化する内容(辺の選択方法)
+				sumDegree = 0;
+				for(int i=0;i<currentNode.list.size();i++) sumDegree+=degree[currentNode.list.get(i).index];
+				r = (int)(sumDegree*Math.random());
+				selectedEdge = 0;
+				threshold = degree[currentNode.list.get(0).index];
+				while(r > threshold){
+					selectedEdge++;
+					threshold += degree[currentNode.list.get(selectedEdge).index];
+				}
+
+				// 加重
+				newWeight[currentNode.eList.get(selectedEdge).index] += deltaW;
+
+				// nextNodeIndexの決定
+				if(currentNode.eList.get(selectedEdge).node[0]!=currentNodeIndex){
+					nextNodeIndex = currentNode.eList.get(selectedEdge).node[0];
+				}else{
+					nextNodeIndex = currentNode.eList.get(selectedEdge).node[1];
+				}
+				currentNodeIndex = nextNodeIndex;
+			}else {
+				// 次数0なら確定ワープ
+				t--;
+				currentNodeIndex = (int)(N*Math.random());
+				continue;
+			}
+
+			// テレポート判定
+			if(Math.random() < teleportP){
+				currentNodeIndex = (int)(N*Math.random());
+			}
+
+		}
+
+		for(int i=0;i<M;i++){
+			weight[i] = newWeight[i];
+		}
+
+		if(disturb) disturb();
+
+		return currentNodeIndex;
+	}
+
+	public int BiasedRandomWalk(int step, double deltaW, double teleportP, boolean disturb) {
+		int currentNodeIndex = (int)(N * Math.random());
+		return BiasedRandomWalk(step, deltaW, currentNodeIndex, teleportP, disturb);
+	}
+
+	/**
 	 *  ReinforcedRandomWalkを実行する。<br>
 	 *  seed値を変えることで開始地点を変えられる。<br>
 	 *  戻り値には、RWで最後にいた頂点番号が返される。<br>
@@ -1255,7 +1389,7 @@ public class Network implements Cloneable{
 		return vWeight;
 	}
 
-	private void disturb() {
+	public void disturb() {
 		double width = Math.pow(10, -6);
 		for(int i=0 ; i<weight.length ; i++) {
 			weight[i] = weight[i] + (Math.random()-0.5)*width;

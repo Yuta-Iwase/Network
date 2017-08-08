@@ -1,0 +1,2 @@
+mode	times	N	minDegree	gamma	deltaW	teleportP	
+1	1	1000	2	2.7	1	0.01	

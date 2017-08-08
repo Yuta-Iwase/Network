@@ -1,0 +1,2 @@
+mode	times	N	<k>	deltaW	teleportP	
+0	86.0	5.5813953488372094	1	10	0.01	

@@ -1,0 +1,10 @@
+cd "C:/Java/Network/simple_RW"
+plot [0:1001] "salience.txt" w boxes
+set terminal postscript eps enhanced color
+set output"salience.eps"
+replot
+set output
+set terminal png
+set output"salience.png"
+replot
+set output
