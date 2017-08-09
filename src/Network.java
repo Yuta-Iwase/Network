@@ -1431,12 +1431,14 @@ public class Network implements Cloneable{
 	protected class Node{
 		int index;
 		double betweenCentrality;
+		int visits;
 		ArrayList<Node> list = new ArrayList<Node>();
 		ArrayList<Edge> eList = new ArrayList<Edge>();
 
 		Node(int inputIndex){
 			index = inputIndex;
 			betweenCentrality = 0;
+			visits = 0;
 		}
 
 	}
@@ -1446,6 +1448,7 @@ public class Network implements Cloneable{
 		int[] node = new int[2];
 		double betweenCentrality;
 		int linkSalience;
+		int visits;
 
 		Edge() {
 			init();
@@ -1474,6 +1477,7 @@ public class Network implements Cloneable{
 		private void init(){
 			linkSalience=0;
 			betweenCentrality=0;
+			visits=0;
 		}
 
 	}
