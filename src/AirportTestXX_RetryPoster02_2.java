@@ -4,21 +4,21 @@ import java.util.ArrayList;
 
 // RRW、テレポ付き、disturbあり
 
-public class AirportTestXX_RetryPoster01 extends Job{
+public class AirportTestXX_RetryPoster02_2 extends Job{
 
 	public static void main(String[] args) {
-		AirportTestXX_RetryPoster01 job = new AirportTestXX_RetryPoster01();
+		AirportTestXX_RetryPoster02_2 job = new AirportTestXX_RetryPoster02_2();
 		job.run("param.ini");
 
-//		ArrayList<Object> list = new ArrayList<Object>();
-//		list.add(1);	list.add(1);	list.add(1000);	list.add(2);
-//		list.add(2.7);	list.add(1);	list.add(0.01);
-//		job.run(list);
+//		ArrayList<Object> pList = new ArrayList<Object>();
+//		pList.add(1);	pList.add(1000);	pList.add(2);
+//		pList.add(2.7);	pList.add(2);		pList.add(0.01);
+//		job.run(pList);
 
 	}
 
 	@Override
-	public void job(ArrayList<Object> controlParameterList){
+	public void job(ArrayList<Object> controlParameterList) {
 		int index=0;
 		/*
 		 * mode
@@ -31,15 +31,17 @@ public class AirportTestXX_RetryPoster01 extends Job{
 		int mode = Integer.parseInt(controlParameterList.get(index++).toString());
 		int times = Integer.parseInt(controlParameterList.get(index++).toString());
 		int N = Integer.parseInt(controlParameterList.get(index++).toString());
-		int minDegree = Integer.parseInt(controlParameterList.get(index++).toString());
-		double gamma = Double.parseDouble(controlParameterList.get(index++).toString());
+		double p = Double.parseDouble(controlParameterList.get(index++).toString());
 		double deltaW = Double.parseDouble(controlParameterList.get(index++).toString());
 		double teleportP = Double.parseDouble(controlParameterList.get(index++).toString());
-		boolean shuffle = Boolean.parseBoolean(controlParameterList.get(index++).toString());
 
 
 		HistogramPloter hist = new HistogramPloter();
 		Network net = null;
+//		MakePowerLaw dist = new MakePowerLaw(N, gamma, minDegree, N-1);
+
+//		double averageDegree = dist.averageDegree();
+//		controlParameterList.add(4,averageDegree);
 
 		// 集計用配列
 		int[][] resultFrequency = new int[N+1][2];
@@ -55,15 +57,11 @@ public class AirportTestXX_RetryPoster01 extends Job{
 		int[] salience = null;
 
 		for(int t=0;t<times;t++) {
-			do {
-				MakePowerLaw dist = new MakePowerLaw(N, gamma, minDegree, N-1);
-				net = new ConfigrationNetwork(dist.degree, 100);
-			}while(!net.success);
+			net = new RandomNetwork(N, p);
 			net.setNode(false);
 			net.setEdge();
 
 			int step = N*1000;
-
 			switch(mode) {
 			case 0:
 				net.weight = new double[net.M];
@@ -85,9 +83,6 @@ public class AirportTestXX_RetryPoster01 extends Job{
 				if(!net.weighted) errorReport("mode4:original weight は、重みなしネットワークには使えません。", true);
 				break;
 			}
-
-			if(shuffle) net.weightShuffle();
-
 			net.LinkSalience();
 
 			for(int i=0;i<net.M;i++) {
@@ -139,9 +134,8 @@ public class AirportTestXX_RetryPoster01 extends Job{
 			ArrayList<String> parameterLabels = new ArrayList<String>();
 			parameterLabels.add("mode");
 			parameterLabels.add("times");
-			parameterLabels.add("N");parameterLabels.add("minDegree");parameterLabels.add("gamma");
+			parameterLabels.add("N");parameterLabels.add("p");
 			parameterLabels.add("deltaW");parameterLabels.add("teleportP");
-			parameterLabels.add("shuffle");
 			plotControlParameter(paramLabel_file, parameterLabels, controlParameterList);
 
 			// 辺の各パラメータを出力

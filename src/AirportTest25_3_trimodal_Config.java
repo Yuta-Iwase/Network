@@ -50,7 +50,7 @@ public class AirportTest25_3_trimodal_Config extends Job {
 		for(int t=0;t<times;t++) {
 			// Network生成
 			do{
-				dist = new MakePowerLaw(10, gamma, minDegree, maxDegree);
+				dist = new MakePowerLaw(N, gamma, minDegree, maxDegree);
 				net = new ConfigrationNetwork(dist.degree, 50);
 			}while(!net.success);
 			System.out.println("生成完了");

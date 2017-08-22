@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 // 課題:
@@ -1389,6 +1390,35 @@ public class Network implements Cloneable{
 		return vWeight;
 	}
 
+	/**
+	 * 辺の重みをシャッフルする
+	 */
+	public void weightShuffle(int seed) {
+		if(weight.length>0) {
+			ArrayList<Double>  weightList = new ArrayList<Double>();
+			for(int i=0;i<weight.length;i++) {
+				weightList.add(weight[i]);
+			}
+
+			Random rnd = new Random(seed);
+			int r;
+			for(int i=0;i<weight.length;i++) {
+				r = rnd.nextInt(weightList.size());
+				weight[i] = weightList.get(r);
+				weightList.remove(r);
+			}
+		}
+	}
+	/**
+	 * 辺の重みをシャッフルする
+	 */
+	public void weightShuffle() {
+		weightShuffle((int)(Math.random()*10000));
+	}
+
+	/**
+	 * 重みに僅かなブレwidth分ブレさせる
+	 */
 	public void disturb() {
 		double width = Math.pow(10, -6);
 		for(int i=0 ; i<weight.length ; i++) {
