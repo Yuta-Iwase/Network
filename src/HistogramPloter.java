@@ -320,4 +320,45 @@ public class HistogramPloter {
 
 		if(outputFilePath.length()>0) pw.close();
 	}
+
+	public double[][] logclasePlot(double[] input_list,int ticks, double maxValue){
+		double[][] logscalse_frequency = new double[ticks][2];
+		double minValue = Double.MAX_VALUE;
+		for(int i=0;i<input_list.length;i++) {
+			if(minValue>input_list[i] && input_list[i]>0) minValue=input_list[i];
+		}
+
+		double lengthRate = Math.pow(maxValue/minValue, 1.0/ticks);
+		double currentX = minValue*Math.sqrt(lengthRate);
+		for(int i=0;i<ticks;i++) {
+			currentX *= lengthRate;
+			logscalse_frequency[i][0] = currentX;
+			logscalse_frequency[i][1] = 0;
+		}
+
+		int currentTick;
+		for(int i=0;i<input_list.length;i++) {
+			currentX = minValue*lengthRate;
+			currentTick = 0;
+			while(input_list[i] > currentX) {
+				currentX *= lengthRate;
+				currentTick++;
+			}
+			if(currentTick>=ticks) {
+				System.out.println("error" + currentTick);
+				currentTick = ticks-1;
+			}
+			logscalse_frequency[currentTick][1]++;
+		}
+		return logscalse_frequency;
+	}
+
+	public double[][] logclasePlot(double[] input_list,int ticks){
+		double maxValue = Double.MIN_VALUE;
+		for(int i=0;i<input_list.length;i++) {
+			if(maxValue < input_list[i]) maxValue=input_list[i];
+		}
+		return logclasePlot(input_list, ticks, maxValue);
+	}
+
 }
