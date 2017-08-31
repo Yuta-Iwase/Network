@@ -1,0 +1,10 @@
+cd "/Users/Owner/eclipse/Network/CircuitRW"
+plot [0:87.0] "salience.txt" w boxes
+set terminal postscript eps enhanced color
+set output"salience.eps"
+replot
+set output
+set terminal png
+set output"salience.png"
+replot
+set output

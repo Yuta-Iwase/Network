@@ -1,0 +1,11 @@
+cd "/Users/Owner/eclipse/Network/CircuitRW"
+set logscale
+plot "weight_dist.txt" w lp
+set terminal postscript eps enhanced color
+set output"weight.eps"
+replot
+set output
+set terminal png
+set output"weight.png"
+replot
+set output

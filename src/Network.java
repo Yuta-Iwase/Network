@@ -1447,7 +1447,116 @@ public class Network implements Cloneable{
 			currentNodeIndex = (int)(N * Math.random());
 		}while(degree[currentNodeIndex]==0);
 		return VertexReinforcedRandomWalk(step, deltaW, currentNodeIndex, teleportP);
-}
+	}
+	
+	/**
+	 *  全頂点を巡回するRWを数回実行する。<br>
+	 *  一度、巡回が終了したら、重みを加算する。<br>
+	 *  RWは前回までの重みを参照して歩行する。<br>
+	 *  
+	 * (注)<br>
+	 * 以下の状況が必要<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 * @param step
+	 * @param deltaW
+	 * @param seed
+	 * @param teleportP
+	 */
+	public int CircuitReinforcedRandomWalk(int tryN, double deltaW, int seed, boolean disturb){
+		weight = new double[M];
+		for(int i=0;i<weight.length;i++){
+			weight[i] = 1.0;
+		}
+		
+		int totalStep = 0;
+		
+		int[] resultValueList;
+		int subSpendingStep;
+		
+		int startNodeIndex = seed;
+		for(int i=0;i<tryN;i++){
+			resultValueList = SubCircuitReinforcedRandomWalk(startNodeIndex, deltaW);
+			subSpendingStep = resultValueList[0];
+			
+			totalStep += subSpendingStep;
+			
+			startNodeIndex = (int)(Math.random()*N);
+		}
+		
+		if(disturb) disturb();
+		
+		return totalStep;
+	}
+	
+	private int[] SubCircuitReinforcedRandomWalk(int startNode, double deltaW){
+		ArrayList<Integer> visitedNodeIndexList = new ArrayList<Integer>();
+		visitedNodeIndexList.add(startNode);
+		int visitedNodeN = 1;
+		
+		int currentNodeIndex = startNode;
+		
+		int selectedEdge,nextNodeIndex;
+		
+		double[] sumW = new double[N];
+		for(int i=0;i<N;i++){
+			sumW[i] = 0.0;
+			for(int j=0;j<nodeList.get(i).eList.size();j++){
+				sumW[i] += weight[nodeList.get(i).eList.get(j).index];
+			}
+		}
+		double r,threshold;
+		double[] newWeight = new double[M];
+		for(int i=0;i<M;i++) newWeight[i]=weight[i];
+		int spendingSteps = 0;
+		while(visitedNodeN < N){
+			Network.Node currentNode = nodeList.get(currentNodeIndex);
+
+			// ここが各ランダムウォークで変化する内容(辺の選択方法)
+			r = (sumW[currentNodeIndex]*Math.random());
+			selectedEdge = 0;
+			if(currentNode.eList.size()>=1) {
+				threshold = weight[currentNode.eList.get(0).index];
+				
+				while(r > threshold){
+					selectedEdge++;
+					threshold += weight[currentNode.eList.get(selectedEdge).index];
+				}
+
+				//degag
+//				System.out.print(currentNodeIndex + ":" + degree[currentNodeIndex] + ",");
+
+				// 加重
+				newWeight[currentNode.eList.get(selectedEdge).index] += deltaW;
+				
+				// nextNodeIndexの決定
+				if(currentNode.eList.get(selectedEdge).node[0]!=currentNodeIndex){
+					nextNodeIndex = currentNode.eList.get(selectedEdge).node[0];
+				}else{
+					nextNodeIndex = currentNode.eList.get(selectedEdge).node[1];
+				}
+				
+				// 未訪問だったときの処理
+				if(!visitedNodeIndexList.contains(nextNodeIndex)){
+					visitedNodeIndexList.add(nextNodeIndex);
+					visitedNodeN++;
+				}
+				
+				spendingSteps++;
+				
+				currentNodeIndex = nextNodeIndex;
+			}else{
+				System.out.println("次数0の頂点があります。");
+			}
+		}
+		
+		for(int i=0;i<M;i++){
+			weight[i] = newWeight[i];
+		}
+		
+		int[] resultValueList = {spendingSteps, currentNodeIndex};
+		return resultValueList;
+	}
 
 	// Networkｵﾌﾞｼﾞｪｸﾄを複製できるようにメソッド追加
 	public Network clone(){
