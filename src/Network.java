@@ -1463,7 +1463,7 @@ public class Network implements Cloneable{
 	 * @param seed
 	 * @param teleportP
 	 */
-	public int CircuitReinforcedRandomWalk(int tryN, double deltaW, int seed, boolean disturb){
+	public int CircuitReinforcedRandomWalk(int tryN, double deltaW, int seed,boolean multiCount, boolean disturb){
 		weight = new double[M];
 		for(int i=0;i<weight.length;i++){
 			weight[i] = 1.0;
@@ -1476,12 +1476,13 @@ public class Network implements Cloneable{
 		
 		int startNodeIndex = seed;
 		for(int i=0;i<tryN;i++){
-			resultValueList = SubCircuitReinforcedRandomWalk(startNodeIndex, deltaW);
+			resultValueList = SubCircuitReinforcedRandomWalk(startNodeIndex, deltaW, multiCount);
 			subSpendingStep = resultValueList[0];
 			
 			totalStep += subSpendingStep;
 			
-			startNodeIndex = (int)(Math.random()*N);
+//			startNodeIndex = (int)(Math.random()*N);
+			startNodeIndex = seed;
 		}
 		
 		if(disturb) disturb();
@@ -1489,7 +1490,7 @@ public class Network implements Cloneable{
 		return totalStep;
 	}
 	
-	private int[] SubCircuitReinforcedRandomWalk(int startNode, double deltaW){
+	private int[] SubCircuitReinforcedRandomWalk(int startNode, double deltaW,boolean multiCount){
 		ArrayList<Integer> visitedNodeIndexList = new ArrayList<Integer>();
 		visitedNodeIndexList.add(startNode);
 		int visitedNodeN = 1;
@@ -1525,9 +1526,6 @@ public class Network implements Cloneable{
 
 				//degag
 //				System.out.print(currentNodeIndex + ":" + degree[currentNodeIndex] + ",");
-
-				// 加重
-				newWeight[currentNode.eList.get(selectedEdge).index] += deltaW;
 				
 				// nextNodeIndexの決定
 				if(currentNode.eList.get(selectedEdge).node[0]!=currentNodeIndex){
@@ -1536,10 +1534,14 @@ public class Network implements Cloneable{
 					nextNodeIndex = currentNode.eList.get(selectedEdge).node[1];
 				}
 				
+				// multiCountがONになっているなら多重回加算
+				if(multiCount) newWeight[currentNode.eList.get(selectedEdge).index] += deltaW;
+				
 				// 未訪問だったときの処理
 				if(!visitedNodeIndexList.contains(nextNodeIndex)){
 					visitedNodeIndexList.add(nextNodeIndex);
 					visitedNodeN++;
+					if(!multiCount) newWeight[currentNode.eList.get(selectedEdge).index] += deltaW;
 				}
 				
 				spendingSteps++;

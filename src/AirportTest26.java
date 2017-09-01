@@ -12,8 +12,8 @@ public class AirportTest26 extends Job{
 
 		ArrayList<Object> list = new ArrayList<Object>();
 		list.add(1);
-		list.add(100);	
-		list.add(5.0);
+		list.add(100000);	
+		list.add(1000.0);
 		
 		job.run(list);
 
@@ -53,9 +53,9 @@ public class AirportTest26 extends Job{
 
 		for(int t=0;t<times;t++) {
 
-			int step = net.N*1000;
+//			int step = net.N*1000;
 			
-			net.CircuitReinforcedRandomWalk(tryN, deltaW, (int)(Math.random()*net.N), true);
+			net.CircuitReinforcedRandomWalk(tryN, deltaW, 42, false ,true);
 			net.LinkSalience();
 
 			for(int i=0;i<net.M;i++) {
