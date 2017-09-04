@@ -1453,7 +1453,7 @@ public class Network implements Cloneable{
 	 *  全頂点を巡回するRWを数回実行する。<br>
 	 *  一度、巡回が終了したら、重みを加算する。<br>
 	 *  RWは前回までの重みを参照して歩行する。<br>
-	 *  
+	 *  startNodeを負の数にした場合は、ランダムにstartを決定する<br>
 	 * (注)<br>
 	 * 以下の状況が必要<br>
 	 * ●setNode()またはsetNode(false)適用済み<br>
@@ -1463,7 +1463,7 @@ public class Network implements Cloneable{
 	 * @param seed
 	 * @param teleportP
 	 */
-	public int CircuitReinforcedRandomWalk(int tryN, double deltaW, int seed,boolean multiCount, boolean disturb){
+	public int CircuitReinforcedRandomWalk(int tryN, double deltaW, int input_startNodeIndex, boolean multiCount, boolean disturb){
 		weight = new double[M];
 		for(int i=0;i<weight.length;i++){
 			weight[i] = 1.0;
@@ -1474,15 +1474,19 @@ public class Network implements Cloneable{
 		int[] resultValueList;
 		int subSpendingStep;
 		
-		int startNodeIndex = seed;
+		int startNodeIndex;
+		if(input_startNodeIndex<0){
+			startNodeIndex = (int)(N*Math.random());
+		}else{
+			startNodeIndex = input_startNodeIndex%N;
+		}
 		for(int i=0;i<tryN;i++){
 			resultValueList = SubCircuitReinforcedRandomWalk(startNodeIndex, deltaW, multiCount);
 			subSpendingStep = resultValueList[0];
 			
 			totalStep += subSpendingStep;
 			
-//			startNodeIndex = (int)(Math.random()*N);
-			startNodeIndex = seed;
+			if(startNodeIndex<0) startNodeIndex = (int)(N*Math.random());
 		}
 		
 		if(disturb) disturb();
