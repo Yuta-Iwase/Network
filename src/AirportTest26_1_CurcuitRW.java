@@ -4,17 +4,17 @@ import java.util.ArrayList;
 
 // RRW、テレポ付き、disturbあり
 
-public class AirportTest26 extends Job{
+public class AirportTest26_1_CurcuitRW extends Job{
 
 	public static void main(String[] args) {
-		AirportTest26 job = new AirportTest26();
+		AirportTest26_1_CurcuitRW job = new AirportTest26_1_CurcuitRW();
 //		job.run("param.ini");
 
 		ArrayList<Object> list = new ArrayList<Object>();
 		list.add(1);
-		list.add(100000);	
+		list.add(100000);
 		list.add(1000.0);
-		
+
 		job.run(list);
 
 	}
@@ -54,7 +54,7 @@ public class AirportTest26 extends Job{
 		for(int t=0;t<times;t++) {
 
 //			int step = net.N*1000;
-			
+
 			net.CircuitReinforcedRandomWalk(tryN, deltaW, 42, false ,true);
 			net.LinkSalience();
 
@@ -147,6 +147,6 @@ public class AirportTest26 extends Job{
 		}catch(Exception e){
 			System.out.println(e);
 		}
-		
+
 	}
 }

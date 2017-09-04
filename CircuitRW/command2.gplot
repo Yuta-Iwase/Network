@@ -1,4 +1,4 @@
-cd "/Users/Owner/eclipse/Network/CircuitRW"
+cd "D:/Java/Network/CircuitRW"
 set logscale
 plot "weight_dist.txt" w lp
 set terminal postscript eps enhanced color
