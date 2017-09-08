@@ -828,14 +828,14 @@ public class Network implements Cloneable{
 	 * ●setEdge()適用済み<br>
 	 *
 	 */
-	public int BiasedRandomWalk(int step, double deltaW, int seed, double teleportP, boolean disturb) {
+	public int BiasedRandomWalk(int step, double deltaW, double alpha, int seed, double teleportP, boolean disturb) {
 		weight = new double[M];
 
 		// 作業変数定義
 		int currentNodeIndex = seed%N;
 
 		int selectedEdge,nextNodeIndex;
-		int sumDegree;
+		double sumDegree;
 		double r,threshold;
 		double[] newWeight = new double[M];
 		for(int i=0;i<M;i++) newWeight[i]=1.0;
@@ -844,14 +844,14 @@ public class Network implements Cloneable{
 
 			if(currentNode.eList.size()>=1) {
 				// ここが各ランダムウォークで変化する内容(辺の選択方法)
-				sumDegree = 0;
-				for(int i=0;i<currentNode.list.size();i++) sumDegree+=degree[currentNode.list.get(i).index];
+				sumDegree = 0.0;
+				for(int i=0;i<currentNode.list.size();i++) sumDegree+=Math.pow(degree[currentNode.list.get(i).index], alpha);
 				r = (int)(sumDegree*Math.random());
 				selectedEdge = 0;
-				threshold = degree[currentNode.list.get(0).index];
+				threshold = Math.pow(degree[currentNode.list.get(0).index], alpha);
 				while(r > threshold){
 					selectedEdge++;
-					threshold += degree[currentNode.list.get(selectedEdge).index];
+					threshold += Math.pow(degree[currentNode.list.get(selectedEdge).index], alpha);
 				}
 
 				// 加重
@@ -887,9 +887,14 @@ public class Network implements Cloneable{
 		return currentNodeIndex;
 	}
 
+	public int BiasedRandomWalk(int step, double deltaW, double alpha, double teleportP, boolean disturb) {
+		int currentNodeIndex = (int)(N * Math.random());
+		return BiasedRandomWalk(step, deltaW, alpha, currentNodeIndex, teleportP, disturb);
+	}
+	
 	public int BiasedRandomWalk(int step, double deltaW, double teleportP, boolean disturb) {
 		int currentNodeIndex = (int)(N * Math.random());
-		return BiasedRandomWalk(step, deltaW, currentNodeIndex, teleportP, disturb);
+		return BiasedRandomWalk(step, deltaW, 1, currentNodeIndex, teleportP, disturb);
 	}
 
 	/**
