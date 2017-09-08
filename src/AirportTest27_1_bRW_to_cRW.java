@@ -9,11 +9,11 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 
 	public static void main(String[] args) {
 		AirportTest27_1_bRW_to_cRW job = new AirportTest27_1_bRW_to_cRW();
-		job.run("param.ini");
+//		job.run("param.ini");
 
-//		ArrayList<Object> list = new ArrayList<Object>();
-//		list.add(3237000);	list.add(1);	list.add(100);	list.add(1.0);
-//		job.run(list);
+		ArrayList<Object> list = new ArrayList<Object>();
+		list.add(3237000);	list.add(1);	list.add(100);	list.add(1.0);
+		job.run(list);
 
 	}
 
@@ -24,7 +24,7 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 		double alpha = Double.parseDouble(controlParameterList.get(index++).toString());
 		int tryNum = Integer.parseInt(controlParameterList.get(index++).toString());
 		double deltaW = Double.parseDouble(controlParameterList.get(index++).toString());
-		
+
 		NetworkForCSVFile net = new NetworkForCSVFile("WorldAir_w.csv",false,true,false,false);
 		net.setNode(false);
 		net.setEdge();
@@ -48,14 +48,17 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 
 		// その回でのsalience
 		int[] salience = null;
-		
+
 //		int step = net.N*1000;
 
 		// 計算領域
 		net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
 		int start = (int)(Math.random()*net.N);
+		System.out.println("cRW mae");
 		net.CircuitReinforcedRandomWalk(tryNum, deltaW, start, false, true);
+		System.out.println("salience keusann mae");
 		net.LinkSalience();
+		System.out.println("salience keusann ato");
 
 		for(int i=0;i<net.M;i++) {
 			resultWeight.add(net.weight[i]);
@@ -72,6 +75,7 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 		for(int i=0;i<currentFrequency.length;i++) {
 			resultFrequency[i][1] += currentFrequency[i][1];
 		}
+
 
 
 
@@ -107,7 +111,7 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 			// weight分布生成
 			String distributionName = "weight_dist.txt";
 			hist.arrayList_double_plot(resultWeight, 50, false, true, folderPath+distributionName);
-			
+
 			// weight-salience相関図
 			double maxWeight = -1.0;
 			for(int i=0;i<net.M;i++){
@@ -115,8 +119,8 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 					maxWeight = net.weight[i];
 				}
 			}
-			String cor = folderPath + "correlation.txt";
-			PrintWriter pw2 = new PrintWriter(new File(cor));
+			String cor = "correlation.txt";
+			PrintWriter pw2 = new PrintWriter(new File(folderPath + cor));
 			for(int i=0;i<net.M;i++){
 				pw2.println(net.edgeList.get(i).linkSalience/(double)net.N + "\t" + net.weight[i]/maxWeight);
 			}
@@ -146,7 +150,7 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 			};
 			String commandName2 = "command2.gplot";
 			make_gplot(folderPath+commandName2, command2);
-			
+
 			// コマンド生成
 			String[] command3 ={
 					gnuplot_cd_Relative(folderName),
