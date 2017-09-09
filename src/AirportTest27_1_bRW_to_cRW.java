@@ -9,11 +9,11 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 
 	public static void main(String[] args) {
 		AirportTest27_1_bRW_to_cRW job = new AirportTest27_1_bRW_to_cRW();
-//		job.run("param.ini");
+		job.run("param.ini");
 
-		ArrayList<Object> list = new ArrayList<Object>();
-		list.add(3237000);	list.add(1);	list.add(100);	list.add(1.0);
-		job.run(list);
+//		ArrayList<Object> list = new ArrayList<Object>();
+//		list.add(3237000);	list.add(1);	list.add(100);	list.add(1.0);
+//		job.run(list);
 
 	}
 
