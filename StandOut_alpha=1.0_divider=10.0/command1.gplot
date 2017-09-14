@@ -1,0 +1,10 @@
+cd "C:/Java/Network/StandOut_alpha=1.0_divider=10.0"
+plot [0:101.0] "salience.txt" w boxes
+set terminal postscript eps enhanced color
+set output"salience.eps"
+replot
+set output
+set terminal png
+set output"salience.png"
+replot
+set output

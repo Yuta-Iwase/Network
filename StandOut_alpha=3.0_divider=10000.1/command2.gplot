@@ -1,0 +1,11 @@
+cd "C:/Java/Network/StandOut_alpha=3.0_divider=10000.1"
+set logscale
+plot "weight_dist.txt" w lp
+set terminal postscript eps enhanced color
+set output"weight.eps"
+replot
+set output
+set terminal png
+set output"weight.png"
+replot
+set output

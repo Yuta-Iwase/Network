@@ -1585,9 +1585,11 @@ public class Network implements Cloneable{
 	 * @param teleportP
 	 */
 	public int CircuitReinforcedRandomWalk2(int tryN, double divider, int input_startNodeIndex, boolean disturb){
-		weight = new double[M];
-		for(int i=0;i<weight.length;i++){
-			weight[i] = 1.0;
+		if(weight == null) {
+			weight = new double[M];
+			for(int i=0;i<weight.length;i++){
+				weight[i] = 1.0;
+			}
 		}
 
 		int totalStep = 0;
@@ -1612,6 +1614,9 @@ public class Network implements Cloneable{
 		}
 
 		if(disturb) disturb();
+		for(int i=0;i<M;i++) {
+			if(weight[i] <=0) weight[i]=Math.pow(10, -6);
+		}
 
 		return totalStep;
 	}
@@ -1620,8 +1625,8 @@ public class Network implements Cloneable{
 		ArrayList<Integer> visitedNodeIndexList = new ArrayList<Integer>();
 		visitedNodeIndexList.add(startNode);
 		ArrayList<Integer> visitedEdgeIndexList  = new ArrayList<Integer>();
-		boolean[] visitedEdgeList = new boolean[M];
-		for(int i=0;i<M;i++) visitedEdgeList[i] = false;
+		short[] visitedEdgeList = new short[M];
+		for(int i=0;i<M;i++) visitedEdgeList[i] = 0;
 		int visitedNodeN = 1;
 
 		int currentNodeIndex = startNode;
@@ -1637,7 +1642,9 @@ public class Network implements Cloneable{
 		}
 		double r,threshold;
 		double[] newWeight = new double[M];
-		for(int i=0;i<M;i++) newWeight[i]=weight[i];
+		for(int i=0;i<M;i++) {
+			newWeight[i]=weight[i];
+		}
 		int spendingSteps = 0;
 		while(visitedNodeN < N){
 			Network.Node currentNode = nodeList.get(currentNodeIndex);
@@ -1657,9 +1664,10 @@ public class Network implements Cloneable{
 //				System.out.print(currentNodeIndex + ":" + degree[currentNodeIndex] + ",");
 
 				// 辺が未訪問だった場合、訪問済み辺リストに追加
-				if(!visitedEdgeList[currentNode.eList.get(selectedEdge).index]) {
-					visitedEdgeList[currentNode.eList.get(selectedEdge).index] = true;;
+				if(visitedEdgeList[currentNode.eList.get(selectedEdge).index]==0) {
+					visitedEdgeList[currentNode.eList.get(selectedEdge).index] = 1;
 				}
+
 
 				// nextNodeIndexの決定
 				if(currentNode.eList.get(selectedEdge).node[0]!=currentNodeIndex){
@@ -1686,9 +1694,10 @@ public class Network implements Cloneable{
 
 		// 未訪問の辺をdividerで割る
 		for(int i=0;i<M;i++) {
-			if(!visitedEdgeList[i]) {
+			if(visitedEdgeList[i]==0) {
 				newWeight[i] *= inv_divider;
 			}
+			if(newWeight[i] <= Math.pow(10, -6)) newWeight[i]=0.0;
 		}
 
 		// wieght更新

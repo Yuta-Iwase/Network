@@ -12,7 +12,7 @@ public class AirportTest27_2_bRW_to_cRW extends Job{
 //		job.run("param.ini");
 
 		ArrayList<Object> list = new ArrayList<Object>();
-		list.add(1000*1000);	list.add(1);	list.add(100);	list.add(10.0);
+		list.add(1);	list.add(3);	list.add(100000);	list.add(2.001);
 		job.run(list);
 
 	}
@@ -25,9 +25,11 @@ public class AirportTest27_2_bRW_to_cRW extends Job{
 		int tryNum = Integer.parseInt(controlParameterList.get(index++).toString());
 		double divider = Double.parseDouble(controlParameterList.get(index++).toString());
 
+		double N =100;
+
 		Network net;
 		do {
-			MakePowerLaw dist = new MakePowerLaw(1000, 2.7);
+			MakePowerLaw dist = new MakePowerLaw((int)N, 2.7, 3, (int)N-1);
 			net = new ConfigrationNetwork(dist.degree, 100);
 		}while(!net.success);
 		net.setNode(false);
@@ -35,7 +37,6 @@ public class AirportTest27_2_bRW_to_cRW extends Job{
 
 		HistogramPloter hist = new HistogramPloter();
 
-		double N = net.N;
 		double averageDegree = net.averageDegree();
 		controlParameterList.add(0,N);
 		controlParameterList.add(1,averageDegree);

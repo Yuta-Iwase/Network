@@ -1,0 +1,10 @@
+cd "C:/Java/Network/StandOut_alpha=1.0_divider=1.2"
+plot "correlation.txt" w p
+set terminal postscript eps enhanced color
+set output"correlation.eps"
+replot
+set output
+set terminal png
+set output"correlation.png"
+replot
+set output
