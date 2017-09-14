@@ -9,11 +9,11 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 
 	public static void main(String[] args) {
 		AirportTest27_1_bRW_to_cRW job = new AirportTest27_1_bRW_to_cRW();
-		job.run("param.ini");
+//		job.run("param.ini");
 
-//		ArrayList<Object> list = new ArrayList<Object>();
-//		list.add(3237000);	list.add(1);	list.add(100);	list.add(1.0);
-//		job.run(list);
+		ArrayList<Object> list = new ArrayList<Object>();
+		list.add(3237000);	list.add(1);	list.add(100);	list.add(10.0);
+		job.run(list);
 
 	}
 
@@ -23,7 +23,7 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 		int step = Integer.parseInt(controlParameterList.get(index++).toString());
 		double alpha = Double.parseDouble(controlParameterList.get(index++).toString());
 		int tryNum = Integer.parseInt(controlParameterList.get(index++).toString());
-		double deltaW = Double.parseDouble(controlParameterList.get(index++).toString());
+		double divider = Double.parseDouble(controlParameterList.get(index++).toString());
 
 		NetworkForCSVFile net = new NetworkForCSVFile("WorldAir_w.csv",false,true,false,false);
 		net.setNode(false);
@@ -55,7 +55,8 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 		net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
 		int start = (int)(Math.random()*net.N);
 		System.out.println("cRW mae");
-		net.CircuitReinforcedRandomWalk(tryNum, deltaW, start, false, true);
+//		net.CircuitReinforcedRandomWalk(tryNum, deltaW, start, false, true);
+		net.CircuitReinforcedRandomWalk2(tryNum, divider, start, true);
 		System.out.println("salience keusann mae");
 		net.LinkSalience();
 		System.out.println("salience keusann ato");
@@ -83,7 +84,7 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 		try{
 			// フォルダ設定
 			String folderName = null;
-			folderName = "StandOut_alpha=" + alpha + "_deltaW=" + deltaW;
+			folderName = "StandOut_alpha=" + alpha + "_divider=" + divider;
 			String folderPath = folderName + "/";
 			makeFolder(folderName);
 
