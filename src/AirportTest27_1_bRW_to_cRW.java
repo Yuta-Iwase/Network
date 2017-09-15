@@ -12,7 +12,7 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 //		job.run("param.ini");
 
 		ArrayList<Object> list = new ArrayList<Object>();
-		list.add(3237000);	list.add(1);	list.add(1000);	list.add(10.1);
+		list.add(86*1000);	list.add(1);	list.add(100000);	list.add(100.1);
 		job.run(list);
 
 	}
@@ -25,8 +25,13 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 		int tryNum = Integer.parseInt(controlParameterList.get(index++).toString());
 		double divider = Double.parseDouble(controlParameterList.get(index++).toString());
 
-		NetworkForCSVFile net = new NetworkForCSVFile("WorldAir_w.csv",false,true,false,false);
-		net.setNode(false);
+//		NetworkForCSVFile net = new NetworkForCSVFile("WorldAir_w.csv",false,true,false,false);
+//		net.setNode(false);
+//		net.setEdge();
+
+		NetworkForCSVFile net = new NetworkForCSVFile("S10b-14_BetAport_LabelRemoved_and_Weighted.csv",false,true,true,true);
+		net.setNode();
+		new AirportNetworkTransformer().makeUndirectedEdge(net);
 		net.setEdge();
 
 		HistogramPloter hist = new HistogramPloter();
@@ -52,8 +57,8 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 //		int step = net.N*1000;
 
 		// 計算領域
-		net.turnUniform();
-		net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
+//		net.turnUniform();
+//		net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
 		int start = (int)(Math.random()*net.N);
 		System.out.println("cRW mae");
 //		net.CircuitReinforcedRandomWalk(tryNum, deltaW, start, false, true);
