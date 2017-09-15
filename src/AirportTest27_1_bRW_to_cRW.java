@@ -9,11 +9,12 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 
 	public static void main(String[] args) {
 		AirportTest27_1_bRW_to_cRW job = new AirportTest27_1_bRW_to_cRW();
-//		job.run("param.ini");
+		job.run("param.ini");
 
-		ArrayList<Object> list = new ArrayList<Object>();
-		list.add(86*1000);	list.add(1.0);	list.add(0);	list.add(2.001);
-		job.run(list);
+//		ArrayList<Object> list = new ArrayList<Object>();
+//		list.add(86*1000);	list.add(1.0);	list.add(0);	list.add(2.001);
+//		list.add(true);		list.add(true);	list.add(true);	list.add(true);
+//		job.run(list);
 
 	}
 
@@ -25,7 +26,9 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 		int tryNum = Integer.parseInt(controlParameterList.get(index++).toString());
 		double divider = Double.parseDouble(controlParameterList.get(index++).toString());
 		boolean uniform = Boolean.parseBoolean(controlParameterList.get(index++).toString());
-		
+		boolean biasedRW = Boolean.parseBoolean(controlParameterList.get(index++).toString());
+		boolean circuitRW = Boolean.parseBoolean(controlParameterList.get(index++).toString());
+
 
 //		NetworkForCSVFile net = new NetworkForCSVFile("WorldAir_w.csv",false,true,false,false);
 //		net.setNode(false);
@@ -59,12 +62,13 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 //		int step = net.N*1000;
 
 		// 計算領域
-		net.turnUniform();
-//		net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
-		int start = (int)(Math.random()*net.N);
-		System.out.println("cRW mae");
-//		net.CircuitReinforcedRandomWalk(tryNum, deltaW, start, false, true);
-		net.CircuitReinforcedRandomWalk2(tryNum, divider, start, true);
+		if(uniform) net.turnUniform();
+		if(biasedRW) net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
+		if(circuitRW) {
+			int start = (int)(Math.random()*net.N);
+			System.out.println("cRW mae");
+			net.CircuitReinforcedRandomWalk2(tryNum, divider, start, true);
+		}
 		System.out.println("salience keusann mae");
 		net.LinkSalience();
 		System.out.println("salience keusann ato");
@@ -93,6 +97,9 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 			// フォルダ設定
 			String folderName = null;
 			folderName = "StandOut_alpha=" + alpha + "_divider=" + divider;
+			if(uniform) folderName += "_u";
+			if(biasedRW) folderName += "_b";
+			if(circuitRW) folderName += "_c";
 			String folderPath = folderName + "/";
 			makeFolder(folderName);
 
