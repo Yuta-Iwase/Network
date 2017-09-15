@@ -1,2 +1,0 @@
-N	<k>	step	alpha	tryNum	deltaW	
-1000.0	3.57	1000000	1	2	1.001	

@@ -12,7 +12,7 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 //		job.run("param.ini");
 
 		ArrayList<Object> list = new ArrayList<Object>();
-		list.add(3237000);	list.add(1);	list.add(100);	list.add(10.0);
+		list.add(3237000);	list.add(1);	list.add(1000);	list.add(10.1);
 		job.run(list);
 
 	}
@@ -52,6 +52,7 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 //		int step = net.N*1000;
 
 		// 計算領域
+		net.turnUniform();
 		net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
 		int start = (int)(Math.random()*net.N);
 		System.out.println("cRW mae");
@@ -102,6 +103,7 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 //			net.EdgeBetweenness();
 			for(int i=0;i<net.M;i++) {
 				pw.println(i + "\t" + net.edgeList.get(i).linkSalience + "\t" + Math.round(net.weight[i]));
+//				pw.println(i + "\t" + net.edgeList.get(i).linkSalience + "\t" + Math.round(net.weight[i]) + "\t" + (int)net.edgeList.get(i).betweenCentrality);
 			}
 			pw.close();
 

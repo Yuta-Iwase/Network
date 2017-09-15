@@ -1431,6 +1431,11 @@ public class Network implements Cloneable{
 		}
 	}
 
+	public void turnUniform(){
+		weight = new double[M];
+		for(int i=0;i<M;i++) weight[i]=1.0;
+	}
+
 	/**
 	 *  頂点についてReinforcedRandomWalkを実行する。<br>
 	 *  teleportPにテレポート確率を入力することでテレポートを導入できる。<br>
@@ -1603,9 +1608,16 @@ public class Network implements Cloneable{
 		}else{
 			startNodeIndex = input_startNodeIndex%N;
 		}
+		long startTime = System.currentTimeMillis();
 		for(int i=0;i<tryN;i++){
 			resultValueList = SubCircuitReinforcedRandomWalk2(startNodeIndex, divider);
-			System.out.println("cRW" + i + ":");
+			System.out.println("cRW:" + i);
+			if(i%10==0){
+				System.out.println();
+				System.out.println("rap:"+(System.currentTimeMillis()-startTime)*0.001+"[s]");
+				System.out.println();
+				startTime = System.currentTimeMillis();
+			}
 			subSpendingStep = resultValueList[0];
 
 			totalStep += subSpendingStep;
