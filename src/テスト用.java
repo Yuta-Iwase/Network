@@ -4,15 +4,14 @@ public class テスト用{
 
 	public static void main(String[] args) throws Exception{
 		
-		long s = System.currentTimeMillis();
-
-		NetworkForCSVFile net = new NetworkForCSVFile("WorldAir_w.csv",false,true,false,false);
+		Network net = new GephiNetwork("net.csv", false);
 		net.setNode(false);
-		net.setEdge();
-		net.LinkSalience();
-		
-		long e = System.currentTimeMillis();
-		System.out.println((s-e)/1000);
+//		net.setEdge();
+//		net.EdgeBetweenness();
+//		
+//		for(int i=0;i<net.M;i++) {
+//			System.out.println(net.edgeList.get(i).betweenCentrality);
+//		}
 
 
 	}

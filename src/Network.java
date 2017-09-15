@@ -846,7 +846,7 @@ public class Network implements Cloneable{
 				// ここが各ランダムウォークで変化する内容(辺の選択方法)
 				sumDegree = 0.0;
 				for(int i=0;i<currentNode.list.size();i++) sumDegree+=Math.pow(degree[currentNode.list.get(i).index], alpha);
-				r = (int)(sumDegree*Math.random());
+				r = sumDegree*Math.random();
 				selectedEdge = 0;
 				threshold = Math.pow(degree[currentNode.list.get(0).index], alpha);
 				while(r > threshold){

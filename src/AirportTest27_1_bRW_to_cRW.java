@@ -12,7 +12,7 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 //		job.run("param.ini");
 
 		ArrayList<Object> list = new ArrayList<Object>();
-		list.add(86*1000);	list.add(1);	list.add(100000);	list.add(100.1);
+		list.add(86*1000);	list.add(1.0);	list.add(0);	list.add(2.001);
 		job.run(list);
 
 	}
@@ -24,6 +24,8 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 		double alpha = Double.parseDouble(controlParameterList.get(index++).toString());
 		int tryNum = Integer.parseInt(controlParameterList.get(index++).toString());
 		double divider = Double.parseDouble(controlParameterList.get(index++).toString());
+		boolean uniform = Boolean.parseBoolean(controlParameterList.get(index++).toString());
+		
 
 //		NetworkForCSVFile net = new NetworkForCSVFile("WorldAir_w.csv",false,true,false,false);
 //		net.setNode(false);
@@ -57,7 +59,7 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 //		int step = net.N*1000;
 
 		// 計算領域
-//		net.turnUniform();
+		net.turnUniform();
 //		net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
 		int start = (int)(Math.random()*net.N);
 		System.out.println("cRW mae");
@@ -105,10 +107,10 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 			// 辺の各パラメータを出力
 			String property_file = folderPath + "property.txt";
 			PrintWriter pw = new PrintWriter(new File(property_file));
-//			net.EdgeBetweenness();
+			net.EdgeBetweenness();
 			for(int i=0;i<net.M;i++) {
-				pw.println(i + "\t" + net.edgeList.get(i).linkSalience + "\t" + Math.round(net.weight[i]));
-//				pw.println(i + "\t" + net.edgeList.get(i).linkSalience + "\t" + Math.round(net.weight[i]) + "\t" + (int)net.edgeList.get(i).betweenCentrality);
+//				pw.println(i + "\t" + net.edgeList.get(i).linkSalience + "\t" + Math.round(net.weight[i]));
+				pw.println(i + "\t" + net.edgeList.get(i).linkSalience + "\t" + Math.round(net.weight[i]) + "\t" + (int)net.edgeList.get(i).betweenCentrality);
 			}
 			pw.close();
 
