@@ -17,7 +17,8 @@ public class AirportTest28_biasedRW_moveAlpha extends Job{
 	public void job(ArrayList<Object> controlParameterList) {
 		int index = 0;
 		int times = Integer.parseInt(controlParameterList.get(index++).toString());
-		double alpha = Double.parseDouble(controlParameterList.get(index).toString());
+		double alpha = Double.parseDouble(controlParameterList.get(index++).toString());
+		int step = Integer.parseInt(controlParameterList.get(index++).toString());
 
 		// ネットワーク生成用パラメータ
 		int N = 1000;
@@ -56,7 +57,7 @@ public class AirportTest28_biasedRW_moveAlpha extends Job{
 			net.setNode(false);
 			net.setEdge();
 			// 計算
-			net.BiasedRandomWalk(N*1000, 1.0, alpha, 0.0, true);
+			net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
 			net.LinkSalience();
 			// 集計
 			currentSalience = new int[net.M];
@@ -94,6 +95,7 @@ public class AirportTest28_biasedRW_moveAlpha extends Job{
 			parameterLabels.add("N");parameterLabels.add("<k>");
 			parameterLabels.add("gamma");
 			parameterLabels.add("times");parameterLabels.add("alpha");
+			parameterLabels.add("step");
 			plotControlParameter(paramLabel_file, parameterLabels, controlParameterList);
 
 			// 辺の各パラメータを出力
