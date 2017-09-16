@@ -8,7 +8,7 @@ public class AirportTest28_biasedRW_moveAlpha extends Job{
 		AirportTest28_biasedRW_moveAlpha job = new AirportTest28_biasedRW_moveAlpha();
 		job.run("param.ini");
 
-		ArrayList<Object> list = new ArrayList<Object>();
+//		ArrayList<Object> list = new ArrayList<Object>();
 //		list.add(1);	list.add(1.0);
 //		job.run(list);
 	}
