@@ -2,111 +2,100 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-// RRW、テレポ付き、disturbあり
-
-public class AirportTest27_2_bRW_to_cRW extends Job{
-	private static final long serialVersionUID = 1L;
+public class AirportTest28_2_biasedRW_moveAlpha extends Job{
 
 	public static void main(String[] args) {
-		AirportTest27_2_bRW_to_cRW job = new AirportTest27_2_bRW_to_cRW();
+		AirportTest28_2_biasedRW_moveAlpha job = new AirportTest28_2_biasedRW_moveAlpha();
 		job.run("param.ini");
 
 //		ArrayList<Object> list = new ArrayList<Object>();
-//		list.add(1);	list.add(3);	list.add(100000);	list.add(2.001);
+//		list.add(1);	list.add(1.0);
 //		job.run(list);
-
 	}
 
 	@Override
 	public void job(ArrayList<Object> controlParameterList) {
-		int index=0;
-		int step = Integer.parseInt(controlParameterList.get(index++).toString());
+		int index = 0;
+		int times = Integer.parseInt(controlParameterList.get(index++).toString());
 		double alpha = Double.parseDouble(controlParameterList.get(index++).toString());
-		int tryNum = Integer.parseInt(controlParameterList.get(index++).toString());
-		double divider = Double.parseDouble(controlParameterList.get(index++).toString());
+		int step = Integer.parseInt(controlParameterList.get(index++).toString());
 
-		double N =1000;
+		// ネットワーク生成用パラメータ
+		int N = 100;
 
-		Network net;
-		do {
-			MakePowerLaw dist = new MakePowerLaw((int)N, 2.7, 3, (int)N-1);
-			net = new ConfigrationNetwork(dist.degree, 100);
-		}while(!net.success);
-		net.setNode(false);
-		net.setEdge();
-
-		HistogramPloter hist = new HistogramPloter();
-
-		double averageDegree = net.averageDegree();
+		// パラメータリスト追加
 		controlParameterList.add(0,N);
-		controlParameterList.add(1,averageDegree);
 
-		// 集計用配列
-		int[][] resultFrequency = new int[net.N+1][2];
+		// 集計用
+		double sumHS = 0.0;
+		double averageHS;
+		double currentHS_num;
+		int[] currentSalience = null;
+		HistogramPloter hist = new HistogramPloter();
+		int[][] currentFrequency;
+		int[][] resultFrequency = new int[N+1][2];
 		for(int i=0;i<resultFrequency.length;i++) {
 			resultFrequency[i][0] = i;
 			resultFrequency[i][1] = 0;
 		}
 		ArrayList<Double> resultWeight = new ArrayList<Double>();
-		// その回での度数
-		int[][] currentFrequency;
 
-		// その回でのsalience
-		int[] salience = null;
 
-//		int step = net.N*1000;
+		// 処理
+		Network net = null;
+		for(int t=0;t<times;t++){
+			net = new RandomNetwork(N, 1.0);
+			net.setNode(false);
+			net.setEdge();
+			// 計算
+			net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
+			net.LinkSalience();
+			// 集計
+			currentSalience = new int[net.M];
+			currentHS_num = 0.0;
+			for(int i=0;i<net.M;i++){
+				if(net.edgeList.get(i).linkSalience>=N*0.9){
+					currentHS_num++;
+				}
+				currentSalience[i] = net.edgeList.get(i).linkSalience;
+				resultWeight.add(net.weight[i]);
+			}
+			currentHS_num /= (double)net.M;
+			sumHS += currentHS_num;
 
-		// 計算領域
-		net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
-		int start = (int)(Math.random()*net.N);
-		System.out.println("cRW mae");
-//		net.CircuitReinforcedRandomWalk(tryNum, deltaW, start, false, true);
-		net.CircuitReinforcedRandomWalk2(tryNum, divider, start, true);
-		System.out.println("salience keusann mae");
-		net.LinkSalience();
-		System.out.println("salience keusann ato");
-
-		for(int i=0;i<net.M;i++) {
-			resultWeight.add(net.weight[i]);
+			hist.load(currentSalience);
+			currentFrequency = hist.returnIntFrequency(0, net.N);
+			for(int i=0;i<currentFrequency.length;i++) {
+				resultFrequency[i][1] += currentFrequency[i][1];
+			}
 		}
-
-
-		salience = new int[net.M];
-		for(int i=0;i<net.M;i++){
-			salience[i] = net.edgeList.get(i).linkSalience;
-		}
-
-		hist.load(salience);
-		currentFrequency = hist.returnIntFrequency(0, net.N);
-		for(int i=0;i<currentFrequency.length;i++) {
-			resultFrequency[i][1] += currentFrequency[i][1];
-		}
-
-
+		averageHS = sumHS/(double)times;
 
 
 		// 出力
 		try{
 			// フォルダ設定
 			String folderName = null;
-			folderName = "StandOut_alpha=" + alpha + "_divider=" + divider;
+			folderName = "biasedRW_alpha=" + alpha;
 			String folderPath = folderName + "/";
 			makeFolder(folderName);
 
 			// パラメータ出力
 			String paramLabel_file = folderPath + "paramList.txt";
 			ArrayList<String> parameterLabels = new ArrayList<String>();
-			parameterLabels.add("N");parameterLabels.add("<k>");
-			parameterLabels.add("step");parameterLabels.add("alpha");
-			parameterLabels.add("tryNum");parameterLabels.add("deltaW");
+			parameterLabels.add("N");
+			parameterLabels.add("times");parameterLabels.add("alpha");
+			parameterLabels.add("step");
 			plotControlParameter(paramLabel_file, parameterLabels, controlParameterList);
 
 			// 辺の各パラメータを出力
 			String property_file = folderPath + "property.txt";
 			PrintWriter pw = new PrintWriter(new File(property_file));
-//			net.EdgeBetweenness();
+			pw.println("※最後の1回が代表してプロットされています。");
+			net.EdgeBetweenness();
 			for(int i=0;i<net.M;i++) {
-				pw.println(i + "\t" + net.edgeList.get(i).linkSalience + "\t" + Math.round(net.weight[i]));
+//				pw.println(i + "\t" + net.edgeList.get(i).linkSalience + "\t" + Math.round(net.weight[i]));
+				pw.println(i + "\t" + net.edgeList.get(i).linkSalience + "\t" + Math.round(net.weight[i]) + "\t" + (int)net.edgeList.get(i).betweenCentrality);
 			}
 			pw.close();
 
@@ -131,6 +120,11 @@ public class AirportTest27_2_bRW_to_cRW extends Job{
 				pw2.println(net.edgeList.get(i).linkSalience/(double)net.N + "\t" + net.weight[i]/maxWeight);
 			}
 			pw2.close();
+
+			// HSの割合を出力
+			PrintWriter pw3 = new PrintWriter(new File(folderPath + "averageHS_alpha" + alpha + ".txt"));
+			pw3.println(alpha + "\t" + averageHS);
+			pw3.close();
 
 			// コマンド作成
 			String[] command1 ={
@@ -174,7 +168,7 @@ public class AirportTest27_2_bRW_to_cRW extends Job{
 			GEXFStylePrinter gexf = new GEXFStylePrinter(net.N, net.list, false, folderPath+"network.gexf");
 			gexf.init_1st();
 			gexf.printNode_2nd(null, null, new int[0]);
-			gexf.printEdge_3rd(net.weight, "Salience", salience);
+			gexf.printEdge_3rd(net.weight, "Salience", currentSalience);
 			gexf.terminal_4th();
 
 			// コマンド起動
@@ -184,10 +178,6 @@ public class AirportTest27_2_bRW_to_cRW extends Job{
 		}catch(Exception e){
 			System.out.println(e);
 		}
-
-
-
-
-
 	}
+
 }

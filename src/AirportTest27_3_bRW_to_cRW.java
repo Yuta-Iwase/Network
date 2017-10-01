@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 // RRW、テレポ付き、disturbあり
 
-public class AirportTest27_2_bRW_to_cRW extends Job{
+public class AirportTest27_3_bRW_to_cRW extends Job{
 	private static final long serialVersionUID = 1L;
 
 	public static void main(String[] args) {
-		AirportTest27_2_bRW_to_cRW job = new AirportTest27_2_bRW_to_cRW();
+		AirportTest27_3_bRW_to_cRW job = new AirportTest27_3_bRW_to_cRW();
 		job.run("param.ini");
 
 //		ArrayList<Object> list = new ArrayList<Object>();
@@ -25,13 +25,10 @@ public class AirportTest27_2_bRW_to_cRW extends Job{
 		int tryNum = Integer.parseInt(controlParameterList.get(index++).toString());
 		double divider = Double.parseDouble(controlParameterList.get(index++).toString());
 
-		double N =1000;
+		double N =86;
 
 		Network net;
-		do {
-			MakePowerLaw dist = new MakePowerLaw((int)N, 2.7, 3, (int)N-1);
-			net = new ConfigrationNetwork(dist.degree, 100);
-		}while(!net.success);
+		net = new RandomNetwork((int)N, 1.0);
 		net.setNode(false);
 		net.setEdge();
 
