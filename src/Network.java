@@ -57,6 +57,13 @@ public class Network implements Cloneable{
 	// パーコレーション等により頂点数が変化するとき用の頂点リスト
 	private ArrayList<Integer> existNodeList = new ArrayList<Integer>();
 
+	// MinimumSpanningTreeメソッドで作成された最小生成木の頂点Indexリスト
+	ArrayList<Integer> MST_Nodes = new ArrayList<Integer>();
+	// MinimumSpanningTreeメソッドで作成された最小生成木の辺Indexリスト
+	ArrayList<Integer> MST_Edges = new ArrayList<Integer>();
+	// MinimumSpanningTreeメソッドで作成された最小生成木の隣接リスト
+	int[][] MST_list;
+
 
 	/** 隣接リストをコンソールへプリント */
 	public void printList(){
@@ -1395,6 +1402,117 @@ public class Network implements Cloneable{
 		return vWeight;
 	}
 
+	public void MinimumSpanningTree(boolean isMST) {
+		// 初期頂点は0とする
+		int firstNode = 0;
+
+		// 距離の定義
+		double[] d = new double[weight.length];
+		for(int i=0;i<d.length;i++) {
+			if(isMST) {
+				d[i] = weight[i];
+			}else {
+				d[i] = 1.0/weight[i];
+			}
+		}
+
+		// まだペアが決まってない辺のリスト
+		ArrayList<Integer> stubList = new ArrayList<Integer>();
+		// stubListの各辺がどの頂点の所有物かのリスト
+		ArrayList<Integer> sourceNodeList = new ArrayList<Integer>();
+
+
+		// 初期頂点をリストへ追加
+		MST_Nodes.add(firstNode);
+		int currentMST_N = 1;
+
+		// 初期頂点の所有する辺をリストへ追加(ついでに最小の重みの辺情報を取得)
+		int nextTargetEdge=-1;
+		int nextTargetNode=-1;
+		double shortestPathLength = Double.MAX_VALUE;
+		for(int i=0;i<degree[firstNode];i++) {
+			int currentEdgeIndex = nodeList.get(firstNode).list.get(i).index;
+			// 辺をリストに追加
+			stubList.add(nodeList.get(firstNode).eList.get(i).index);
+			sourceNodeList.add(firstNode);
+			// 最小辺情報を取得
+			if(shortestPathLength > d[currentEdgeIndex]) {
+				shortestPathLength = d[currentEdgeIndex];
+				nextTargetEdge = currentEdgeIndex;
+			}
+		}
+		if(edgeList.get(nextTargetEdge).node[0]==firstNode) {
+			nextTargetNode = edgeList.get(nextTargetEdge).node[1];
+		}else {
+			nextTargetNode = edgeList.get(nextTargetEdge).node[0];
+		}
+
+
+		// プリム法を実行
+		while(currentMST_N < N) {
+			//// ターゲットの頂点と辺をリストに追加
+			MST_Nodes.add(nextTargetNode);
+			MST_Edges.add(nextTargetEdge);
+			currentMST_N++;
+
+			//// 辺情報更新
+			// 辺削除
+			ArrayList<Integer> removeEdgeIndexList = new ArrayList<Integer>();
+			for(int m=0;m<stubList.size();m++) {
+				Edge currentEdge = edgeList.get(stubList.get(m));
+				if(currentEdge.node[0]==nextTargetNode || currentEdge.node[1]==nextTargetNode) {
+					removeEdgeIndexList.add(m);
+				}
+			}
+			for(int i=removeEdgeIndexList.size()-1;i>=0;i--) {
+				stubList.remove			( (int)removeEdgeIndexList.get(i) );
+				sourceNodeList.remove	( (int)removeEdgeIndexList.get(i) );
+			}
+			// 辺追加
+			boolean add;
+			for(int m=0;m<nodeList.get(nextTargetNode).eList.size();m++) {
+				Edge currentEdge = nodeList.get(nextTargetNode).eList.get(m);
+				// MST_Nodesへと続く辺は追加しない
+				add = true;
+				for(int n=0;n<MST_Nodes.size()-1;n++) {
+					if(currentEdge.node[0]==MST_Nodes.get(n) || currentEdge.node[1]==MST_Nodes.get(n)) {
+						add = false;
+						break;
+					}
+				}
+				if(add) {
+					stubList.add(currentEdge.index);
+					sourceNodeList.add(nextTargetNode);
+				}
+			}
+
+			//// 次のターゲットを決める
+			shortestPathLength = Double.MAX_VALUE;
+			int sourceNode = -1;
+			for(int m=0;m<stubList.size();m++) {
+				int currentEdgeIndex = edgeList.get(stubList.get(m)).index;
+				// 最小辺情報を取得
+				if(shortestPathLength > d[currentEdgeIndex]) {
+					shortestPathLength = d[currentEdgeIndex];
+					nextTargetEdge = currentEdgeIndex;
+					sourceNode = sourceNodeList.get(m);
+				}
+			}
+			if(edgeList.get(nextTargetEdge).node[0]==sourceNode) {
+				nextTargetNode = edgeList.get(nextTargetEdge).node[1];
+			}else {
+				nextTargetNode = edgeList.get(nextTargetEdge).node[0];
+			}
+		}
+
+		// 隣接リスト作成
+		MST_list = new int[MST_Edges.size()][2];
+		for(int i=0;i<MST_Edges.size();i++) {
+			MST_list[i][0] = edgeList.get(MST_Edges.get(i)).node[0];
+			MST_list[i][1] = edgeList.get(MST_Edges.get(i)).node[1];
+		}
+	}
+
 	/**
 	 * 辺の重みをシャッフルする
 	 */
@@ -1636,7 +1754,7 @@ public class Network implements Cloneable{
 	private int[] SubCircuitReinforcedRandomWalk2(int startNode, double divider){
 		ArrayList<Integer> visitedNodeIndexList = new ArrayList<Integer>();
 		visitedNodeIndexList.add(startNode);
-		ArrayList<Integer> visitedEdgeIndexList  = new ArrayList<Integer>();
+//		ArrayList<Integer> visitedEdgeIndexList  = new ArrayList<Integer>();
 		short[] visitedEdgeList = new short[M];
 		for(int i=0;i<M;i++) visitedEdgeList[i] = 0;
 		int visitedNodeN = 1;
