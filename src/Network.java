@@ -1402,6 +1402,16 @@ public class Network implements Cloneable{
 		return vWeight;
 	}
 
+	/**
+	 * 最小生成木を計算する。<br>
+	 * isMSTが真なら、距離=重み<br>
+	 * 偽なら、距離=(重みの逆数)と定義する。<br>
+	 * (注)<br>
+	 * 以下の状況が必要<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 * @param isMST
+	 */
 	public void MinimumSpanningTree(boolean isMST) {
 		// 初期頂点は0とする
 		int firstNode = 0;
