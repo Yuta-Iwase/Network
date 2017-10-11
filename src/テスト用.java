@@ -8,7 +8,7 @@ public class テスト用{
 
 	public static void main(String[] args) throws Exception{
 
-		double min=-1.5;
+		double min=-2.5;
 		double width = 0.1;
 		double alpha;
 
