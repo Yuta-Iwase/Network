@@ -31,7 +31,7 @@ public class MakePowerLaw {
 
 	public void generate(){
 		// 離散量の確率分布を定義
-		double[] p = new double[N];
+		double[] p = new double[maxDegree+1];
 		double sum = 0.0;
 		for(int i=minDegree;i<maxDegree;i++){
 			p[i] = Math.pow(i, -gamma);
@@ -43,7 +43,7 @@ public class MakePowerLaw {
 		}
 
 		// p[i]の累積分布c[i]を定義
-		c = new double[N];
+		c = new double[maxDegree+1];
 		c[minDegree] = p[minDegree];
 		for(int i=minDegree+1 ; i<maxDegree ; i++){
 			c[i] = c[i-1] + p[i];

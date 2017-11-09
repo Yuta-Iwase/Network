@@ -1705,7 +1705,7 @@ public class Network implements Cloneable{
 
 	/**
 	 *  全頂点を巡回するRWを数回実行する。<br>
-	 *  一度、巡回が終了したら、重みを加算する。<br>
+	 *  一度、巡回が終了したら、重みを減算する。<br>
 	 *  RWは前回までの重みを参照して歩行する。<br>
 	 *  startNodeを負の数にした場合は、ランダムにstartを決定する<br>
 	 * (注)<br>
@@ -1717,7 +1717,7 @@ public class Network implements Cloneable{
 	 * @param seed
 	 * @param teleportP
 	 */
-	public int CircuitReinforcedRandomWalk2(int tryN, double divider, int input_startNodeIndex, boolean disturb){
+	public int CircuitReinforcedRandomWalk2(int tryN, double divider, int input_startNodeIndex, boolean disturb, boolean consolePlot){
 		if(weight == null) {
 			weight = new double[M];
 			for(int i=0;i<weight.length;i++){
@@ -1737,13 +1737,26 @@ public class Network implements Cloneable{
 			startNodeIndex = input_startNodeIndex%N;
 		}
 		long startTime = System.currentTimeMillis();
+
+		int debag_a=10;
+
 		for(int i=0;i<tryN;i++){
 			resultValueList = SubCircuitReinforcedRandomWalk2(startNodeIndex, divider);
-			System.out.println("cRW:" + i);
-			if(i%10==0){
-				System.out.println();
+			if(consolePlot) {
+				System.out.println("cRW:" + i);
+				if(i%10==0){
+					System.out.println();
+					System.out.println("rap:"+(System.currentTimeMillis()-startTime)*0.001+"[s]");
+					System.out.println();
+					startTime = System.currentTimeMillis();
+				}
+			}
+			if(i==debag_a) {
+				System.out.println("i=" + i);
 				System.out.println("rap:"+(System.currentTimeMillis()-startTime)*0.001+"[s]");
+				System.out.println("remEdge =" + debag_rem());
 				System.out.println();
+				debag_a *=10;
 				startTime = System.currentTimeMillis();
 			}
 			subSpendingStep = resultValueList[0];
@@ -1759,6 +1772,16 @@ public class Network implements Cloneable{
 		}
 
 		return totalStep;
+	}
+
+	private int debag_rem() {
+		int remEdge = 0;
+		for(int i=0;i<M;i++) {
+			if(weight[i] <= 1.0E-6) {
+				remEdge++;
+			}
+		}
+		return (M-remEdge);
 	}
 
 	private int[] SubCircuitReinforcedRandomWalk2(int startNode, double divider){
@@ -1848,6 +1871,11 @@ public class Network implements Cloneable{
 		int[] resultValueList = {spendingSteps, currentNodeIndex};
 		return resultValueList;
 	}
+
+	public int CircuitReinforcedRandomWalk2(int tryN, double divider, int input_startNodeIndex, boolean disturb) {
+		return CircuitReinforcedRandomWalk2(tryN, divider, input_startNodeIndex, disturb, false);
+	}
+
 
 	// Networkｵﾌﾞｼﾞｪｸﾄを複製できるようにメソッド追加
 	public Network clone(){
