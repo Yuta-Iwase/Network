@@ -1,35 +1,56 @@
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class テスト用{
 	static int[] a ;
 
 
 	public static void main(String[] args) throws Exception{
-		int M;
-		int N = 50;
+		Scanner scan1 = new Scanner(new File("Backbone_by_RW.txt"));
+		Scanner scan2 = new Scanner(new File("MST_Edges.txt"));
+		Scanner scan3 = new Scanner(new File("HSS_list.txt"));
+		PrintWriter pw = new PrintWriter(new File("result.txt"));
 
-		RandomNetwork net = new RandomNetwork(N, 1.0);
-		M = net.M;
+		ArrayList<Integer> bList = new ArrayList<>();
+		ArrayList<Integer> mList = new ArrayList<>();
+		ArrayList<Integer> hList = new ArrayList<>();
 
-		int minWeight = 1;
-		int maxWeight = 100;
-		MakePowerLaw dist = new MakePowerLaw(M, 1.5, minWeight, maxWeight);
-
-
-		net.weighted = true;
-		net.weight = new double[M];
-		for(int i=0;i<M;i++) {
-			net.weight[i] = dist.degree[i];
+		while(scan1.hasNextInt()) {
+			bList.add(scan1.nextInt());
+		}
+		while(scan2.hasNextInt()) {
+			mList.add(scan2.nextInt());
+		}
+		while(scan3.hasNextInt()) {
+			hList.add(scan3.nextInt());
 		}
 
-		net.setNode(false);
-		net.setEdge();
-		net.CircuitReinforcedRandomWalk2(1000001, 2.0, -1, true,false);
+		int size = bList.size();
+		int matchM = 0;
+		int matchH = 0;
 
-		int remEdge = 0;
-		for(int i=0;i<M;i++) {
-			if(net.weight[i] <= 1.0E-6) {
-				remEdge++;
+		int currentEdge = -1;
+		for(int i=0;i<bList.size();i++) {
+			currentEdge = bList.get(i);
+			if(mList.contains(currentEdge)) {
+				matchM++;
+			}
+			if(hList.contains(currentEdge)) {
+				matchH++;
 			}
 		}
-		System.out.println(M - remEdge);
+
+		System.out.println("MSSとの一致率:" + ((double)matchM)/size);
+		System.out.println("HSSとの一致率:" + ((double)matchH)/size);
+		pw.println("MSSとの一致率:" + ((double)matchM)/size);
+		pw.println("HSSとの一致率:" + ((double)matchH)/size);
+
+		scan1.close();
+		scan2.close();
+		scan3.close();
+		pw.close();
+
 	}
 }
