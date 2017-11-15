@@ -3,19 +3,82 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class AirportTest30_2_TreeAnalytics{
-	static String folder = "test30_2";
-	static String path = folder + "/";
+// レギュラーランダムグラフでiterative
+
+public class AirportTest30_2_TreeAnalytics extends Job{
 
 	public static void main(String[] args) throws Exception{
-		new File(folder).mkdir();
+		AirportTest30_2_TreeAnalytics job = new AirportTest30_2_TreeAnalytics();
+		job.run("param.ini");
+	}
 
-		int M;
-		int N = 50;
+	private void compare(String path) throws Exception{
+		Scanner scan1 = new Scanner(new File(path+"Backbone.txt"));
+		Scanner scan2 = new Scanner(new File(path+"MST.txt"));
+		Scanner scan3 = new Scanner(new File(path+"HSS.txt"));
+		PrintWriter pw = new PrintWriter(new File(path+"result.txt"));
 
-		RandomRegularNetwork net = new RandomRegularNetwork(N, 4, 50);
-		if(net.success) {
-			M = net.M;
+		ArrayList<Integer> bList = new ArrayList<>();
+		ArrayList<Integer> mList = new ArrayList<>();
+		ArrayList<Integer> hList = new ArrayList<>();
+
+		while(scan1.hasNextInt()) {
+			bList.add(scan1.nextInt());
+		}
+		while(scan2.hasNextInt()) {
+			mList.add(scan2.nextInt());
+		}
+		while(scan3.hasNextInt()) {
+			hList.add(scan3.nextInt());
+		}
+
+		int matchM = 0;
+		int matchH = 0;
+
+		int currentEdge = -1;
+		for(int i=0;i<bList.size();i++) {
+			currentEdge = bList.get(i);
+			if(mList.contains(currentEdge)) {
+				matchM++;
+			}
+			if(hList.contains(currentEdge)) {
+				matchH++;
+			}
+		}
+
+		System.out.println("MSSとの一致率:" + ((double)matchM)/mList.size());
+		System.out.println("HSSとの一致率:" + ((double)matchH)/hList.size());
+		pw.println("MSSとの一致率:" + ((double)matchM)/mList.size());
+		pw.println("HSSとの一致率:" + ((double)matchH)/hList.size());
+
+		scan1.close();
+		scan2.close();
+		scan3.close();
+		pw.close();
+	}
+
+	@Override
+	public void job(ArrayList<Object> controlParameterList) {
+		try {
+			int index=0;
+
+			int jobIndex = Integer.parseInt(controlParameterList.get(index++).toString());
+			int N = Integer.parseInt(controlParameterList.get(index++).toString());
+			int degree = Integer.parseInt(controlParameterList.get(index++).toString());
+			int startNode = Integer.parseInt(controlParameterList.get(index++).toString());
+			int times = Integer.parseInt(controlParameterList.get(index++).toString());
+
+			String folderName = "[" + jobIndex + "]RR_N=" + N + "_degree="+ degree + "_start=" + startNode;
+			String path = folderName + "/";
+			new File(folderName).mkdir();
+
+			int loopLimit = 50;
+			RandomRegularNetwork net = null;
+			do {
+				net = new RandomRegularNetwork(N, degree, loopLimit);
+			}while(!net.success);
+
+			int M = net.M;
 
 			int minWeight = 1;
 			int maxWeight = 100;
@@ -34,7 +97,7 @@ public class AirportTest30_2_TreeAnalytics{
 			net.MinimumSpanningTree(false);
 			net.LinkSalience();
 
-			net.CircuitReinforcedRandomWalk2(1000001, 2.0, -1, true,false);
+			net.CircuitReinforcedRandomWalk2(times, 2.0, startNode, true,false);
 
 			int remEdge = 0;
 			for(int i=0;i<M;i++) {
@@ -76,54 +139,7 @@ public class AirportTest30_2_TreeAnalytics{
 			pw2.close();
 			pw3.close();
 
-			new AirportTest30_2_TreeAnalytics().a();
-		}
-
-	}
-
-	private void a() throws Exception{
-
-		Scanner scan1 = new Scanner(new File(path+"Backbone.txt"));
-		Scanner scan2 = new Scanner(new File(path+"MST.txt"));
-		Scanner scan3 = new Scanner(new File(path+"HSS.txt"));
-		PrintWriter pw = new PrintWriter(new File(path+"result.txt"));
-
-		ArrayList<Integer> bList = new ArrayList<>();
-		ArrayList<Integer> mList = new ArrayList<>();
-		ArrayList<Integer> hList = new ArrayList<>();
-
-		while(scan1.hasNextInt()) {
-			bList.add(scan1.nextInt());
-		}
-		while(scan2.hasNextInt()) {
-			mList.add(scan2.nextInt());
-		}
-		while(scan3.hasNextInt()) {
-			hList.add(scan3.nextInt());
-		}
-
-		int matchM = 0;
-		int matchH = 0;
-
-		int currentEdge = -1;
-		for(int i=0;i<bList.size();i++) {
-			currentEdge = bList.get(i);
-			if(mList.contains(currentEdge)) {
-				matchM++;
-			}
-			if(hList.contains(currentEdge)) {
-				matchH++;
-			}
-		}
-
-		System.out.println("MSTとの一致率:" + ((double)matchM)/mList.size());
-		System.out.println("HSSとの一致率:" + ((double)matchH)/hList.size());
-		pw.println("MSTとの一致率:" + ((double)matchM)/mList.size());
-		pw.println("HSSとの一致率:" + ((double)matchH)/hList.size());
-
-		scan1.close();
-		scan2.close();
-		scan3.close();
-		pw.close();
+			new AirportTest30_2_TreeAnalytics().compare(path);
+		}catch(Exception e) {}
 	}
 }

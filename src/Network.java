@@ -1743,27 +1743,21 @@ public class Network implements Cloneable{
 		for(int i=0;i<tryN;i++){
 			resultValueList = SubCircuitReinforcedRandomWalk2(startNodeIndex, divider);
 			if(consolePlot) {
-				System.out.println("cRW:" + i);
-				if(i%10==0){
-					System.out.println();
+				if((i+1)==debag_a) {
+					System.out.println("i=" + i);
 					System.out.println("rap:"+(System.currentTimeMillis()-startTime)*0.001+"[s]");
+					System.out.println("remEdge =" + debag_rem());
 					System.out.println();
+					debag_a *=10;
 					startTime = System.currentTimeMillis();
 				}
 			}
-			if(i==debag_a) {
-				System.out.println("i=" + i);
-				System.out.println("rap:"+(System.currentTimeMillis()-startTime)*0.001+"[s]");
-				System.out.println("remEdge =" + debag_rem());
-				System.out.println();
-				debag_a *=10;
-				startTime = System.currentTimeMillis();
-			}
+
 			subSpendingStep = resultValueList[0];
 
 			totalStep += subSpendingStep;
 
-			if(startNodeIndex<0) startNodeIndex = (int)(N*Math.random());
+			if(input_startNodeIndex<0) startNodeIndex = (int)(N*Math.random());
 		}
 
 		if(disturb) disturb();
