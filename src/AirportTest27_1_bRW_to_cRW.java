@@ -65,7 +65,10 @@ public class AirportTest27_1_bRW_to_cRW extends Job{
 		if(uniform) net.turnUniform();
 		if(biasedRW) net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
 		if(circuitRW) {
+			// TODO ここでスタート固定を設定できる
 			int start = (int)(Math.random()*net.N);
+			start = -1;
+
 			System.out.println("cRW mae");
 			net.CircuitReinforcedRandomWalk2(tryNum, divider, start, true);
 		}
