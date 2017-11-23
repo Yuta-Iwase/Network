@@ -91,7 +91,7 @@ public class AirportTest30_TreeAnalytics extends Job{
 			net.MinimumSpanningTree(false);
 			net.LinkSalience();
 
-			net.CircuitReinforcedRandomWalk2(times, 2.0, startNode, true,false);
+			net.CircuitReinforcedRandomWalk2(times, 2.0, startNode, true, true);
 
 			int remEdge = 0;
 			for(int i=0;i<M;i++) {

@@ -1,56 +1,34 @@
-import java.io.File;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Scanner;
-
 public class テスト用{
-	static int[] a ;
-
-
 	public static void main(String[] args) throws Exception{
-		Scanner scan1 = new Scanner(new File("Backbone_by_RW.txt"));
-		Scanner scan2 = new Scanner(new File("MST_Edges.txt"));
-		Scanner scan3 = new Scanner(new File("HSS_list.txt"));
-		PrintWriter pw = new PrintWriter(new File("result.txt"));
-
-		ArrayList<Integer> bList = new ArrayList<>();
-		ArrayList<Integer> mList = new ArrayList<>();
-		ArrayList<Integer> hList = new ArrayList<>();
-
-		while(scan1.hasNextInt()) {
-			bList.add(scan1.nextInt());
+		int N = 1000;
+		MakePowerLaw dist = new MakePowerLaw(N, 2.7);
+//		ConfigrationNetwork net = new ConfigrationNetwork(dist.degree, 100);
+//		while(!net.success){
+//			dist = new MakePowerLaw(1000, 2.7);
+//			net = new ConfigrationNetwork(dist.degree, 100);
+//		}
+		RandomNetwork net = new RandomNetwork(N, dist.averageDegree()/N);
+		
+		int[] hist = new int[N+1];
+		for(int i=0;i<net.N;i++){
+			hist[net.degree[i]]++;
 		}
-		while(scan2.hasNextInt()) {
-			mList.add(scan2.nextInt());
-		}
-		while(scan3.hasNextInt()) {
-			hList.add(scan3.nextInt());
-		}
-
-		int size = bList.size();
-		int matchM = 0;
-		int matchH = 0;
-
-		int currentEdge = -1;
-		for(int i=0;i<bList.size();i++) {
-			currentEdge = bList.get(i);
-			if(mList.contains(currentEdge)) {
-				matchM++;
-			}
-			if(hList.contains(currentEdge)) {
-				matchH++;
+		
+		double inv_N = 1.0/N;
+		double cum = 0;
+		for(int i=0;i<hist.length;i++){
+			if(hist[i]>0){
+//				{
+//					cum += hist[i]*inv_N;
+//					System.out.println(i+"\t"+(1.0-cum));
+//				}
+				
+				{
+					System.out.println(i + "\t" + hist[i]*inv_N);
+				}
+				
 			}
 		}
-
-		System.out.println("MSSとの一致率:" + ((double)matchM)/size);
-		System.out.println("HSSとの一致率:" + ((double)matchH)/size);
-		pw.println("MSSとの一致率:" + ((double)matchM)/size);
-		pw.println("HSSとの一致率:" + ((double)matchH)/size);
-
-		scan1.close();
-		scan2.close();
-		scan3.close();
-		pw.close();
 
 	}
 }
