@@ -64,6 +64,11 @@ public class Network implements Cloneable{
 	// MinimumSpanningTreeメソッドで作成された最小生成木の隣接リスト
 	int[][] MST_list;
 
+	// MinimumSpanningTree(s)メソッドで作成された最小生成木の辺Indexリスト
+	ArrayList<Integer> SPT_Edges = new ArrayList<Integer>();
+	// MinimumSpanningTreeメソッドで作成された最小生成木の隣接リスト
+	int[][] SPT_list;
+
 
 	/** 隣接リストをコンソールへプリント */
 	public void printList(){
@@ -1521,6 +1526,84 @@ public class Network implements Cloneable{
 			MST_list[i][0] = edgeList.get(MST_Edges.get(i)).node[0];
 			MST_list[i][1] = edgeList.get(MST_Edges.get(i)).node[1];
 		}
+	}
+
+	/**
+	 *
+	 *
+	 */
+	public ArrayList<Integer> ShortestPathTree(int rootNodeIndex) {
+		// 出力用データ
+		SPT_Edges = new ArrayList<Integer>();
+		SPT_Edges.clear();
+		SPT_list = new int[N-1][2];
+
+		// 作業用変数
+		ArrayList<Integer> queue = new ArrayList<>();
+		boolean[] isVisited = new boolean[N];
+		double[] dist = new double[N];
+		int[] prevNode = new int[N];
+		int[] prevEdge = new int[N]; //要素数Nは間違いではない
+		for(int i=0;i<isVisited.length;i++) {
+			isVisited[i]=false;
+			dist[i] = Double.MAX_VALUE;
+		}
+
+		// rootNodeの処理
+		queue.add(rootNodeIndex);
+		dist[rootNodeIndex] = 0.0;
+		isVisited[rootNodeIndex] = true;
+		prevNode[rootNodeIndex] = -1;
+		prevEdge[rootNodeIndex] = -1;
+
+		while(!queue.isEmpty()) {
+			// queue内でdist[i]が最小の頂点をpop
+			int popIndex = -1;
+			double currentShortestDist = Double.MAX_VALUE;
+			for(int i=0;i<queue.size();i++) {
+				if(dist[queue.get(i)] < currentShortestDist) {
+					currentShortestDist = dist[queue.get(i)];
+					popIndex = i;
+				}
+			}
+			Node currentNode = nodeList.get(queue.get(popIndex));
+			queue.remove(popIndex);
+
+			// 距離の更新
+			for(int i=0;i<currentNode.eList.size();i++) {
+				Edge currentEdge = currentNode.eList.get(i);
+				int targetNodeIndex = -123;
+				if(currentEdge.node[0]==currentNode.index) {
+					targetNodeIndex = currentEdge.node[1];
+				}else if(currentEdge.node[1]==currentNode.index){
+					targetNodeIndex = currentEdge.node[0];
+				}
+
+				double currentDist = dist[currentNode.index] + weight[currentEdge.index];
+				if(currentDist < dist[targetNodeIndex]) {
+					dist[targetNodeIndex] = currentDist;
+					prevNode[targetNodeIndex] = currentNode.index;
+					prevEdge[targetNodeIndex] = currentEdge.index;
+				}
+
+				if(!isVisited[targetNodeIndex]) {
+					isVisited[targetNodeIndex] = true;
+					queue.add(targetNodeIndex);
+				}
+			}
+		}
+
+		// 計算したSPTのデータを集計
+		int currentLine = 0;
+		for(int i=0;i<N;i++) {
+			if(prevEdge[i] >= 0) {
+				SPT_Edges.add(prevEdge[i]);
+				SPT_list[currentLine][0] = list[prevEdge[i]][0];
+				SPT_list[currentLine][1] = list[prevEdge[i]][1];
+				currentLine++;
+			}
+		}
+		return SPT_Edges;
 	}
 
 	/**
