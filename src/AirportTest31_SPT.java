@@ -104,7 +104,7 @@ public class AirportTest31_SPT extends Job{
 			ArrayList<Integer> HSS = new ArrayList<>();
 			net.LinkSalience();
 			for(int i=0;i<net.M;i++) {
-				if(net.edgeList.get(i).linkSalience > 0.9) {
+				if(net.edgeList.get(i).linkSalience > 0.5*net.N) {
 					HSS.add(i);
 				}
 			}
