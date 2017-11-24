@@ -97,8 +97,17 @@ public class AirportTest31_SPT extends Job{
 			net.setNode(false);
 			net.setEdge();
 
+			ArrayList<Integer> MST = net.MinimumSpanningTree(false);
+			Collections.sort(MST);
 			ArrayList<Integer> SPT = net.ShortestPathTree(startNode);
 			Collections.sort(SPT);
+			ArrayList<Integer> HSS = new ArrayList<>();
+			net.LinkSalience();
+			for(int i=0;i<net.M;i++) {
+				if(net.edgeList.get(i).linkSalience > 0.9) {
+					HSS.add(i);
+				}
+			}
 
 			net.CircuitReinforcedRandomWalk2(times, 2.0, startNode, true, true);
 			ArrayList<Integer> backbone = new ArrayList<>();
@@ -108,23 +117,32 @@ public class AirportTest31_SPT extends Job{
 				}
 			}
 			System.out.println("backbone's size is" + backbone.size());
-			
-			int matchCount = 0;
-			for(int i=0;i<SPT.size();i++) {
-				boolean match = backbone.contains(SPT.get(i));
-				if(match) {
-					matchCount++;
-				}
+
+			int matchMST = 0;
+			int matchSPT = 0;
+			int matchHSS = 0;
+			for(int i=0;i<backbone.size();i++) {
+				if(MST.contains(backbone.get(i))) matchMST++;
+				if(SPT.contains(backbone.get(i))) matchSPT++;
+				if(HSS.contains(backbone.get(i))) matchHSS++;
 			}
-			
-			System.out.println("SPT");
+
+			System.out.println("MST (size=" + MST.size() + ")");
+			System.out.println(MST);
+			System.out.println("SPT (size=" + SPT.size() + ")");
 			System.out.println(SPT);
-			System.out.println("backbone");
+			System.out.println("HSS (size=" + HSS.size() + ")");
+			System.out.println(HSS);
+			System.out.println("backbone (size=" + backbone.size() + ")");
 			System.out.println(backbone);
-			
-			System.out.println("SPT(" + startNode + ")との一致率:" + (((double)matchCount)/SPT.size()));
-			
-			
+
+			System.out.println();
+
+			System.out.println("MSTとの一致率:" + (((double)matchMST)/backbone.size()));
+			System.out.println("SPT(" + startNode + ")との一致率:" + (((double)matchSPT)/backbone.size()));
+			System.out.println("HSSとの一致率:" + (((double)matchHSS)/backbone.size()) + "\t(分母=backbone.size())");
+			System.out.println("HSSとの一致率:" + (((double)matchHSS)/HSS.size()) + "\t(分母=HSS.size())");
+
 
 
 

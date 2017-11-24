@@ -1417,7 +1417,7 @@ public class Network implements Cloneable{
 	 * ●setEdge()適用済み<br>
 	 * @param isMST
 	 */
-	public void MinimumSpanningTree(boolean isMST) {
+	public ArrayList<Integer> MinimumSpanningTree(boolean isMST) {
 		// 初期頂点は0とする
 		int firstNode = 0;
 
@@ -1526,6 +1526,8 @@ public class Network implements Cloneable{
 			MST_list[i][0] = edgeList.get(MST_Edges.get(i)).node[0];
 			MST_list[i][1] = edgeList.get(MST_Edges.get(i)).node[1];
 		}
+
+		return MST_Edges;
 	}
 
 	/**
@@ -1579,7 +1581,7 @@ public class Network implements Cloneable{
 					targetNodeIndex = currentEdge.node[0];
 				}
 
-				double currentDist = dist[currentNode.index] + weight[currentEdge.index];
+				double currentDist = dist[currentNode.index] + 1.0/weight[currentEdge.index];
 				if(currentDist < dist[targetNodeIndex]) {
 					dist[targetNodeIndex] = currentDist;
 					prevNode[targetNodeIndex] = currentNode.index;
