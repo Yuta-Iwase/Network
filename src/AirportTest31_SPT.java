@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 // 完全グラフでiterative
@@ -15,7 +16,8 @@ public class AirportTest31_SPT extends Job{
 		param.add(0);
 		param.add(50);
 		param.add(0);
-		param.add(1000);
+		int times = (int)Math.pow(10, 5);
+		param.add(times);
 		job.run(param);
 	}
 
@@ -95,54 +97,37 @@ public class AirportTest31_SPT extends Job{
 			net.setNode(false);
 			net.setEdge();
 
-			net.ShortestPathTree(0);
-			for(int i=0;i<net.SPT_Edges.size();i++) {
-				System.out.println(net.SPT_Edges.get(i));
-			}
+			ArrayList<Integer> SPT = net.ShortestPathTree(startNode);
+			Collections.sort(SPT);
 
-//			net.CircuitReinforcedRandomWalk2(times, 2.0, startNode, true, true);
-//
-//			int remEdge = 0;
-//			for(int i=0;i<M;i++) {
-//				if(net.weight[i] <= 1.0E-6) {
-//					remEdge++;
-//				}
-//			}
-//			System.out.println(M - remEdge);
-//
-//
-//			PrintWriter pw = new PrintWriter(new File(path + "Backbone.txt"));
-//			for(int i=0;i<net.M;i++) {
-//				if(net.weight[i] > 1.0E-6) {
-//					pw.println(i);
-//				}
-//			}
-//			pw.close();
-//
-//
-//
-//			PrintWriter pw1 = new PrintWriter(new File(path + "MST.txt"));
-//			PrintWriter pw2 = new PrintWriter(new File(path + "HSS.txt"));
-//			PrintWriter pw3 = new PrintWriter(new File(path + "salience.txt"));
-//
-//			for(int i=0;i<net.MST_Edges.size();i++) {
-//				pw1.println(net.MST_Edges.get(i));
-//			}
-//			int hss_N = 0;
-//			for(int i=0;i<net.M;i++) {
-//				if(net.edgeList.get(i).linkSalience>0.5*net.N) {
-//					pw2.println(net.edgeList.get(i).index);
-//					hss_N++;
-//				}
-//				pw3.println(net.edgeList.get(i).linkSalience);
-//			}
-//			System.out.println("HSS Edge:" + hss_N + "本");
-//
-//			pw1.close();
-//			pw2.close();
-//			pw3.close();
-//
-//			new AirportTest31_SPT().compare(path);
+			net.CircuitReinforcedRandomWalk2(times, 2.0, startNode, true, true);
+			ArrayList<Integer> backbone = new ArrayList<>();
+			for(int i=0;i<M;i++) {
+				if(net.weight[i] > 1.0E-6) {
+					backbone.add(i);
+				}
+			}
+			System.out.println("backbone's size is" + backbone.size());
+			
+			int matchCount = 0;
+			for(int i=0;i<SPT.size();i++) {
+				boolean match = backbone.contains(SPT.get(i));
+				if(match) {
+					matchCount++;
+				}
+			}
+			
+			System.out.println("SPT");
+			System.out.println(SPT);
+			System.out.println("backbone");
+			System.out.println(backbone);
+			
+			System.out.println("SPT(" + startNode + ")との一致率:" + (((double)matchCount)/SPT.size()));
+			
+			
+
+
+
 		}catch(Exception e) {}
 	}
 }
