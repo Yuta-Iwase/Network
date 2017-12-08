@@ -30,7 +30,6 @@ public class WattsStrogatzGridNetwork extends Network{
 				degree[currentNode+width]++;
 				currentEdge++;
 
-
 				currentNode++;
 			}
 			list[currentEdge][0] = currentNode;

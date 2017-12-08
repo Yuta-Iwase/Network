@@ -79,6 +79,7 @@ public class AirportTest31_SPT extends Job{
 			String folderName = "[" + jobIndex + "]CompN=" + N + "_start=" + startNode;
 			String path = folderName + "/";
 			new File(folderName).mkdir();
+			PrintWriter pw = new PrintWriter(new File(path + "result.txt"));
 
 			RandomNetwork net = new RandomNetwork(N, 1.0);
 			int M = net.M;
@@ -138,14 +139,25 @@ public class AirportTest31_SPT extends Job{
 
 			System.out.println();
 
+			System.out.println("backbone.size()=" + backbone.size());
+			System.out.println("MST.size()=" + MST.size());
 			System.out.println("MSTとの一致率:" + (((double)matchMST)/backbone.size()));
+			System.out.println("SPT.size()=" + SPT.size());
 			System.out.println("SPT(" + startNode + ")との一致率:" + (((double)matchSPT)/backbone.size()));
+			System.out.println("HSS.size()=" + HSS.size());
 			System.out.println("HSSとの一致率:" + (((double)matchHSS)/backbone.size()) + "\t(分母=backbone.size())");
 			System.out.println("HSSとの一致率:" + (((double)matchHSS)/HSS.size()) + "\t(分母=HSS.size())");
 
+			pw.println("backbone.size()=" + backbone.size());
+			pw.println("MST.size()=" + MST.size());
+			pw.println("MSTとの一致率:" + (((double)matchMST)/backbone.size()));
+			pw.println("SPT.size()=" + SPT.size());
+			pw.println("SPT(" + startNode + ")との一致率:" + (((double)matchSPT)/backbone.size()));
+			pw.println("HSS.size()=" + HSS.size());
+			pw.println("HSSとの一致率:" + (((double)matchHSS)/backbone.size()) + "\t(分母=backbone.size())");
+			pw.println("HSSとの一致率:" + (((double)matchHSS)/HSS.size()) + "\t(分母=HSS.size())");
 
-
-
+			pw.close();
 		}catch(Exception e) {}
 	}
 }
