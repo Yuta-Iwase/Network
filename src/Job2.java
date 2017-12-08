@@ -208,7 +208,7 @@ public abstract class Job2 extends JFrame{
 			img.setIcon(new ImageIcon(""));
 		}
 		img.setLayout(null);
-		img.setBounds(0, 10, 155, 117);
+		img.setBounds(40, 30, 120, 110);
 		add(img);
 
 		progress=0;
