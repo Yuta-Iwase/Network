@@ -16,7 +16,7 @@ public class AirportTest31_SPT extends Job{
 		param.add(0);
 		param.add(50);
 		param.add(0);
-		int times = (int)Math.pow(10, 5);
+		int times = (int)Math.pow(10, 6);
 		param.add(times);
 		job.run(param);
 	}
