@@ -2,10 +2,10 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-public class AirportTest32_biasedRW_moveAlpha extends Job{
+public class AirportTest32_1_biasedRW_moveAlpha extends Job{
 
 	public static void main(String[] args) {
-		AirportTest32_biasedRW_moveAlpha job = new AirportTest32_biasedRW_moveAlpha();
+		AirportTest32_1_biasedRW_moveAlpha job = new AirportTest32_1_biasedRW_moveAlpha();
 		job.run("param.ini");
 
 //		ArrayList<Object> list = new ArrayList<Object>();
