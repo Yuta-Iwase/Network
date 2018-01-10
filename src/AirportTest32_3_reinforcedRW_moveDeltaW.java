@@ -135,13 +135,13 @@ public class AirportTest32_3_reinforcedRW_moveDeltaW extends Job{
 			pw2.close();
 
 			// HSの割合を出力
-			Scanner scan = new Scanner(new File("HS_frac.txt"));
+			Scanner scan = new Scanner(new File("../HS_frac.txt"));
 			ArrayList<String> lineList = new ArrayList<>();
 			while(scan.hasNextLine()) {
 				lineList.add(scan.nextLine());
 			}
 			scan.close();
-			PrintWriter pw3 = new PrintWriter(new File("HS_frac.txt"));
+			PrintWriter pw3 = new PrintWriter(new File("../HS_frac.txt"));
 			for(int i=0;i<lineList.size();i++) {
 				pw3.println(lineList.get(i));
 			}

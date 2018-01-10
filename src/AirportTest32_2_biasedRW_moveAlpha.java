@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class AirportTest32_2_biasedRW_moveAlpha extends Job{
 
@@ -133,7 +134,16 @@ public class AirportTest32_2_biasedRW_moveAlpha extends Job{
 			pw2.close();
 
 			// HSの割合を出力
-			PrintWriter pw3 = new PrintWriter(new File(folderPath + "averageHS_alpha" + alpha + ".txt"));
+			Scanner scan = new Scanner(new File("../HS_frac.txt"));
+			ArrayList<String> lineList = new ArrayList<>();
+			while(scan.hasNextLine()) {
+				lineList.add(scan.nextLine());
+			}
+			scan.close();
+			PrintWriter pw3 = new PrintWriter(new File("../HS_frac.txt"));
+			for(int i=0;i<lineList.size();i++) {
+				pw3.println(lineList.get(i));
+			}
 			pw3.println(alpha + "\t" + averageHS);
 			pw3.close();
 
