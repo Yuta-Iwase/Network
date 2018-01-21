@@ -7,10 +7,20 @@ import java.util.Random;
 //17/02/13
 //・バグを修正
 // (this.degree = new int[N];が書かれていなかった)
+//18/01/21
+//・生成失敗のメッセージがうっとおしいのでオプションで出さないように修正
 
 public class ConfigrationNetwork extends Network{
 
-	public ConfigrationNetwork(int[] degree,int loopLimit){
+	public ConfigrationNetwork(int[] degree,int loopLimit) {
+		generate(degree, loopLimit);
+	}
+
+	public ConfigrationNetwork(int[] degree,int loopLimit,boolean message){
+		generate(degree, loopLimit, message);
+	}
+
+	private void generate(int[] degree,int loopLimit,boolean message) {
 		directed = false;
 		doubleCount = false;
 		N = degree.length;
@@ -42,7 +52,7 @@ public class ConfigrationNetwork extends Network{
 				targetEdgeB=rnd.nextInt(disconnectedN);
 
 				if(nowLoopLimit<=0){
-					System.out.println("生成に失敗しました。");
+					if(message) System.out.println("生成に失敗しました。");
 					success = false;
 					break generateLoop;
 				}
@@ -74,6 +84,10 @@ public class ConfigrationNetwork extends Network{
 			disconnectedN -= 2;
 			nowLine++;
 		}while(disconnectedN>0);
+	}
+
+	private void generate(int[] degree,int loopLimit) {
+		generate(degree, loopLimit, true);
 	}
 
 }

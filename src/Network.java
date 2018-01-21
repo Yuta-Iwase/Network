@@ -54,6 +54,11 @@ public class Network implements Cloneable{
 	// setLabel(String inputFilePath)メソッドを実行することでラベル設定を読み込むことができる
 	String[] label;
 
+	// ConnectedCompornentにより生成される変数
+	int count_cc;
+	ArrayList<ArrayList<Node>> ccMember;
+	int[] ccID_List;
+
 	// パーコレーション等により頂点数が変化するとき用の頂点リスト
 	private ArrayList<Integer> existNodeList = new ArrayList<Integer>();
 
@@ -300,6 +305,51 @@ public class Network implements Cloneable{
 			}
 		}
 		return index;
+	}
+
+	/**
+	 * 連結成分の解析を行う。
+	 * setNode,setEdgeを実行させておく必要がある。
+	 */
+	public void ConnectedCompornent() {
+		count_cc = 0;
+		ccMember = new ArrayList<>();
+		ccID_List = new int[N];
+
+		boolean[] visit= new boolean[N];
+		for(int i=0;i<N;i++) visit[i]=false;
+		ArrayList<Node> queue = new ArrayList<>();
+		ArrayList<Node> currentMamberList;
+
+		while(true) {
+			currentMamberList = new ArrayList<>();
+			for(int i=0;i<N;i++) {
+				if(!visit[i]) {
+					queue.add(nodeList.get(i));
+					visit[i] = true;
+					break;
+				}
+			}
+
+			if(queue.isEmpty()) break;
+
+			while(!queue.isEmpty()) {
+				Node currentNode = queue.get(0);
+				queue.remove(0);
+				ccID_List[currentNode.index] = count_cc;
+				currentMamberList.add(currentNode);
+				for(int i=0;i<currentNode.list.size();i++) {
+					Node neighborNode = currentNode.list.get(i);
+					if(!visit[neighborNode.index]) {
+						visit[neighborNode.index] = true;
+						queue.add(neighborNode);
+					}
+				}
+			}
+			count_cc++;
+			ccMember.add(currentMamberList);
+		}
+
 	}
 
 	/** サイト・パーコレーションを実行 */
