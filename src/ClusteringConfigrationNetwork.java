@@ -105,7 +105,6 @@ public class ClusteringConfigrationNetwork extends Network{
 		int baseNode,targetNodeA,targetNodeB;
 		boolean conflict;
 		disconnectedN=clusterFragmentArray.size();
-		nowLine=0;
 		success = true;
 		generateLoop: do{
 			nowLoopLimit=loopLimit;
@@ -160,13 +159,13 @@ public class ClusteringConfigrationNetwork extends Network{
 				nowLine++;
 			}
 			Arrays.sort(fragmentList);
-			
+
 			System.out.println(clusterFragmentArray.size());
 			clusterFragmentArray.remove(fragmentList[2]);
 			clusterFragmentArray.remove(fragmentList[1]);
 			clusterFragmentArray.remove(fragmentList[0]);
-			
-			
+
+
 
 		}while(!clusterFragmentArray.isEmpty());
 	}
