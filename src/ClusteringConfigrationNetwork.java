@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 //課題:
@@ -30,7 +31,7 @@ public class ClusteringConfigrationNetwork extends Network{
 		ArrayList<Integer> clusterFragmentArray = new ArrayList<Integer>();
 		int[] clusteringFragmentRemainder = new int[N];
 		int sum_isolatedStub = 0;
-		int sum__clusteringStub = 0;
+		int sum__clusteringFragment = 0;
 		int sumDegree=0;
 		for(int i=0;i<N;i++){
 			this.degree[i] = 0;
@@ -45,11 +46,11 @@ public class ClusteringConfigrationNetwork extends Network{
 				clusterFragmentArray.add(i);
 			}
 			this.degree[i] += 2*cluster_FragmentList[i];
-			sum__clusteringStub += 2*cluster_FragmentList[i];
+			sum__clusteringFragment += cluster_FragmentList[i];
 
 			clusteringFragmentRemainder[i] = cluster_FragmentList[i];
 		}
-		sumDegree = sum_isolatedStub + sum__clusteringStub;
+		sumDegree = sum_isolatedStub + 2*sum__clusteringFragment;
 		M = sumDegree/2;
 
 		Random rnd = new Random();
@@ -103,15 +104,15 @@ public class ClusteringConfigrationNetwork extends Network{
 		int fragment_base,fragment_A,fragment_B;
 		int baseNode,targetNodeA,targetNodeB;
 		boolean conflict;
-		disconnectedN=sum__clusteringStub;
+		disconnectedN=clusterFragmentArray.size();
 		nowLine=0;
 		success = true;
 		generateLoop: do{
 			nowLoopLimit=loopLimit;
 			do{
-				fragment_base = rnd.nextInt(disconnectedN);
-				fragment_A = rnd.nextInt(disconnectedN);
-				fragment_B = rnd.nextInt(disconnectedN);
+				fragment_base = rnd.nextInt(clusterFragmentArray.size());
+				fragment_A = rnd.nextInt(clusterFragmentArray.size());
+				fragment_B = rnd.nextInt(clusterFragmentArray.size());
 
 				baseNode = clusterFragmentArray.get(fragment_base);
 				targetNodeA = clusterFragmentArray.get(fragment_A);
@@ -142,23 +143,32 @@ public class ClusteringConfigrationNetwork extends Network{
 				}
 			}while(conflict || multiple);
 
-
-			// TODO
-			if(targetEdgeA >= targetEdgeB){
-				list[nowLine][1]=isolatedStubArray.get(targetEdgeA);
-				isolatedStubArray.remove(targetEdgeA);
-				list[nowLine][0]=isolatedStubArray.get(targetEdgeB);
-				isolatedStubArray.remove(targetEdgeB);
-			}else{
-				list[nowLine][1]=isolatedStubArray.get(targetEdgeB);
-				isolatedStubArray.remove(targetEdgeB);
-				list[nowLine][0]=isolatedStubArray.get(targetEdgeA);
-				isolatedStubArray.remove(targetEdgeA);
+			int[] fragmentList = new int[3];
+			fragmentList[0] = fragment_base;
+			fragmentList[1] = fragment_A;
+			fragmentList[2] = fragment_B;
+			for(int i=0;i<3;i++) {
+				int currentFragment1 = fragmentList[i%3];
+				int currentFragment2 = fragmentList[(i+1)%3];
+				if(currentFragment1 >= currentFragment2){
+					list[nowLine][1]=clusterFragmentArray.get(currentFragment1);
+					list[nowLine][0]=clusterFragmentArray.get(currentFragment2);
+				}else{
+					list[nowLine][1]=clusterFragmentArray.get(currentFragment2);
+					list[nowLine][0]=clusterFragmentArray.get(currentFragment1);
+				}
+				nowLine++;
 			}
+			Arrays.sort(fragmentList);
+			
+			System.out.println(clusterFragmentArray.size());
+			clusterFragmentArray.remove(fragmentList[2]);
+			clusterFragmentArray.remove(fragmentList[1]);
+			clusterFragmentArray.remove(fragmentList[0]);
+			
+			
 
-			disconnectedN -= 2;
-			nowLine++;
-		}while(disconnectedN>0);
+		}while(!clusterFragmentArray.isEmpty());
 	}
 
 	private void generate(int[] isolated_DegreeList,int[] cluster_FragmentList,int loopLimit) {
