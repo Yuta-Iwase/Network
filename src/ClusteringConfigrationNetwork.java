@@ -12,23 +12,23 @@ import java.util.Random;
 
 public class ClusteringConfigrationNetwork extends Network{
 
-	public ClusteringConfigrationNetwork(int[] isolated_DegreeList,int[] clustering_DegreeList,int loopLimit) {
-		generate(isolated_DegreeList,clustering_DegreeList, loopLimit, true);
+	public ClusteringConfigrationNetwork(int[] isolated_DegreeList,int[] cluster_FragmentList,int loopLimit) {
+		generate(isolated_DegreeList,cluster_FragmentList, loopLimit, true);
 	}
 
-	public ClusteringConfigrationNetwork(int[] isolated_DegreeList,int[] clustering_DegreeList,int loopLimit,boolean message){
-		generate(isolated_DegreeList,clustering_DegreeList, loopLimit, message);
+	public ClusteringConfigrationNetwork(int[] isolated_DegreeList,int[] cluster_FragmentList,int loopLimit,boolean message){
+		generate(isolated_DegreeList,cluster_FragmentList, loopLimit, message);
 	}
 
-	private void generate(int[] isolated_DegreeList,int[] clustering_DegreeList,int loopLimit,boolean message) {
+	private void generate(int[] isolated_DegreeList,int[] cluster_FragmentList,int loopLimit,boolean message) {
 		directed = false;
 		doubleCount = false;
 		N = isolated_DegreeList.length;
 		this.degree = new int[N];
 
-		ArrayList<Integer> isolatedStubList = new ArrayList<Integer>();
-		ArrayList<Integer> clusteringStubList = new ArrayList<Integer>();
-		int[] clusteringStubremainder = new int[N];
+		ArrayList<Integer> isolatedStubArray = new ArrayList<Integer>();
+		ArrayList<Integer> clusterFragmentArray = new ArrayList<Integer>();
+		int[] clusteringFragmentRemainder = new int[N];
 		int sum_isolatedStub = 0;
 		int sum__clusteringStub = 0;
 		int sumDegree=0;
@@ -36,18 +36,18 @@ public class ClusteringConfigrationNetwork extends Network{
 			this.degree[i] = 0;
 
 			for(int j=0;j<isolated_DegreeList[i];j++){
-				isolatedStubList.add(i);
+				isolatedStubArray.add(i);
 			}
 			this.degree[i] += isolated_DegreeList[i];
 			sum_isolatedStub += isolated_DegreeList[i];
 
-			for(int j=0;j<clustering_DegreeList[i];j++){
-				clusteringStubList.add(i);
+			for(int j=0;j<cluster_FragmentList[i];j++){
+				clusterFragmentArray.add(i);
 			}
-			this.degree[i] += clustering_DegreeList[i];
-			sum__clusteringStub += clustering_DegreeList[i];
+			this.degree[i] += 2*cluster_FragmentList[i];
+			sum__clusteringStub += 2*cluster_FragmentList[i];
 
-			clusteringStubremainder[i] = clustering_DegreeList[i];
+			clusteringFragmentRemainder[i] = cluster_FragmentList[i];
 		}
 		sumDegree = sum_isolatedStub + sum__clusteringStub;
 		M = sumDegree/2;
@@ -73,11 +73,11 @@ public class ClusteringConfigrationNetwork extends Network{
 				}
 				nowLoopLimit--;
 
-				selfLoop= isolatedStubList.get(targetEdgeA)==isolatedStubList.get(targetEdgeB);
+				selfLoop= isolatedStubArray.get(targetEdgeA)==isolatedStubArray.get(targetEdgeB);
 				multiple=false;
 				cheakMultiple:for(int i=0;i<nowLine;i++){
-					if((isolatedStubList.get(targetEdgeA)==list[i][0]&&isolatedStubList.get(targetEdgeB)==list[i][1])||
-					   (isolatedStubList.get(targetEdgeA)==list[i][1]&&isolatedStubList.get(targetEdgeB)==list[i][0])){
+					if((isolatedStubArray.get(targetEdgeA)==list[i][0]&&isolatedStubArray.get(targetEdgeB)==list[i][1])||
+					   (isolatedStubArray.get(targetEdgeA)==list[i][1]&&isolatedStubArray.get(targetEdgeB)==list[i][0])){
 						multiple=true;
 						break cheakMultiple;
 					}
@@ -85,32 +85,37 @@ public class ClusteringConfigrationNetwork extends Network{
 			}while(selfLoop || multiple);
 
 			if(targetEdgeA >= targetEdgeB){
-				list[nowLine][1]=isolatedStubList.get(targetEdgeA);
-				isolatedStubList.remove(targetEdgeA);
-				list[nowLine][0]=isolatedStubList.get(targetEdgeB);
-				isolatedStubList.remove(targetEdgeB);
+				list[nowLine][1]=isolatedStubArray.get(targetEdgeA);
+				isolatedStubArray.remove(targetEdgeA);
+				list[nowLine][0]=isolatedStubArray.get(targetEdgeB);
+				isolatedStubArray.remove(targetEdgeB);
 			}else{
-				list[nowLine][1]=isolatedStubList.get(targetEdgeB);
-				isolatedStubList.remove(targetEdgeB);
-				list[nowLine][0]=isolatedStubList.get(targetEdgeA);
-				isolatedStubList.remove(targetEdgeA);
+				list[nowLine][1]=isolatedStubArray.get(targetEdgeB);
+				isolatedStubArray.remove(targetEdgeB);
+				list[nowLine][0]=isolatedStubArray.get(targetEdgeA);
+				isolatedStubArray.remove(targetEdgeA);
 			}
 
 			disconnectedN -= 2;
 			nowLine++;
 		}while(disconnectedN>0);
 
-		int baseNodeOfCluster_relIndex;
-		int baseNodeOfCluster_absIndex;
+		int fragment_base,fragment_A,fragment_B;
+		int baseNode,targetNodeA,targetNodeB;
+		boolean conflict;
 		disconnectedN=sum__clusteringStub;
 		nowLine=0;
 		success = true;
 		generateLoop: do{
 			nowLoopLimit=loopLimit;
 			do{
-				// TODO
-				baseNodeOfCluster_relIndex = rnd.nextInt(disconnectedN);
-				baseNodeOfCluster_absIndex = clusteringStubList.get(baseNodeOfCluster_relIndex);
+				fragment_base = rnd.nextInt(disconnectedN);
+				fragment_A = rnd.nextInt(disconnectedN);
+				fragment_B = rnd.nextInt(disconnectedN);
+
+				baseNode = clusterFragmentArray.get(fragment_base);
+				targetNodeA = clusterFragmentArray.get(fragment_A);
+				targetNodeB = clusterFragmentArray.get(fragment_B);
 
 				if(nowLoopLimit<=0){
 					if(message) System.out.println("生成に失敗しました。");
@@ -119,36 +124,36 @@ public class ClusteringConfigrationNetwork extends Network{
 				}
 				nowLoopLimit--;
 
-//				selfLoop= isolatedStubList.get(targetEdgeA)==isolatedStubList.get(targetEdgeB);
+				conflict = (baseNode==targetNodeA || baseNode==targetEdgeB || targetNodeA==targetNodeB);
 				multiple=false;
-//				int
 				boolean malti_Base_A,malti_Base_B,malti_A_B;
 				cheakMultiple:for(int i=0;i<nowLine;i++){
-//					int node_a = ;
-//					malti_Base_A = ((clusteringStubList.get(targetEdgeA)==list[i][0]&&clusteringStubList.get(targetEdgeB)==list[i][1])||
-//							   (clusteringStubList.get(targetEdgeA)==list[i][1]&&clusteringStubList.get(targetEdgeB)==list[i][0]));
+					malti_Base_A = ((baseNode==list[i][0]&&targetNodeA==list[i][1])||
+							   (baseNode==list[i][1]&&targetNodeA==list[i][0]));
+					malti_Base_B = ((baseNode==list[i][0]&&targetNodeB==list[i][1])||
+							   (baseNode==list[i][1]&&targetNodeB==list[i][0]));
+					malti_A_B = ((targetNodeA==list[i][0]&&targetNodeB==list[i][1])||
+							   (targetNodeA==list[i][1]&&targetNodeB==list[i][0]));
 
-
-
-
-					if((isolatedStubList.get(targetEdgeA)==list[i][0]&&isolatedStubList.get(targetEdgeB)==list[i][1])||
-					   (isolatedStubList.get(targetEdgeA)==list[i][1]&&isolatedStubList.get(targetEdgeB)==list[i][0])){
+					if(malti_Base_A || malti_Base_B || malti_A_B){
 						multiple=true;
 						break cheakMultiple;
 					}
 				}
-			}while(multiple);
+			}while(conflict || multiple);
 
+
+			// TODO
 			if(targetEdgeA >= targetEdgeB){
-				list[nowLine][1]=isolatedStubList.get(targetEdgeA);
-				isolatedStubList.remove(targetEdgeA);
-				list[nowLine][0]=isolatedStubList.get(targetEdgeB);
-				isolatedStubList.remove(targetEdgeB);
+				list[nowLine][1]=isolatedStubArray.get(targetEdgeA);
+				isolatedStubArray.remove(targetEdgeA);
+				list[nowLine][0]=isolatedStubArray.get(targetEdgeB);
+				isolatedStubArray.remove(targetEdgeB);
 			}else{
-				list[nowLine][1]=isolatedStubList.get(targetEdgeB);
-				isolatedStubList.remove(targetEdgeB);
-				list[nowLine][0]=isolatedStubList.get(targetEdgeA);
-				isolatedStubList.remove(targetEdgeA);
+				list[nowLine][1]=isolatedStubArray.get(targetEdgeB);
+				isolatedStubArray.remove(targetEdgeB);
+				list[nowLine][0]=isolatedStubArray.get(targetEdgeA);
+				isolatedStubArray.remove(targetEdgeA);
 			}
 
 			disconnectedN -= 2;
@@ -156,8 +161,8 @@ public class ClusteringConfigrationNetwork extends Network{
 		}while(disconnectedN>0);
 	}
 
-	private void generate(int[] isolated_DegreeList,int[] clustering_DegreeList,int loopLimit) {
-		generate(isolated_DegreeList,clustering_DegreeList, loopLimit, true);
+	private void generate(int[] isolated_DegreeList,int[] cluster_FragmentList,int loopLimit) {
+		generate(isolated_DegreeList,cluster_FragmentList, loopLimit, true);
 	}
 
 }
