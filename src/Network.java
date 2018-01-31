@@ -59,6 +59,10 @@ public class Network implements Cloneable{
 	ArrayList<ArrayList<Node>> ccMember;
 	int[] ccID_List;
 
+	// Direct,In-direct破壊でのN,D,I,DI,NIの各連結成分データ
+	ArrayList<ArrayList<Node>> CompNDI_Member;
+	int maxCC_NID;
+
 	// パーコレーション等により頂点数が変化するとき用の頂点リスト
 	private ArrayList<Integer> existNodeList = new ArrayList<Integer>();
 
@@ -352,6 +356,93 @@ public class Network implements Cloneable{
 
 	}
 
+	/**
+	 * 連鎖故障のメソッドSitePercolation2018での連結成分を調べる。
+	 */
+	public void ConnectedCompornentNDI(boolean compN,boolean compD,boolean compI) {
+		int code = 0;
+		if(compN) code += 4;
+		if(compD) code += 2;
+		if(compI) code += 1;
+		boolean valid = true;
+		CompNDI_Member = new ArrayList<>();
+
+		switch(code) {
+		case 0:
+			System.out.println("不正な引数です。");
+			valid=false;
+			break;
+		case 6:
+			System.out.println("不正な引数です。");
+			valid=false;
+			break;
+		case 7:
+			System.out.println("これでは全頂点での連結成分を調べてしまいます。");
+			System.out.println("ConnectedCompornentメソッドを使ってください。");
+			valid=false;
+			break;
+		}
+
+		maxCC_NID = 0;
+		if(valid) {
+			boolean[] visitList = new boolean[N];
+			for(int i=0;i<N;i++) visitList[i]=true;
+
+			if(compN) {
+				for(int i=0;i<N;i++) {
+					if(!nodeList.get(i).directDeleted && !nodeList.get(i).indirectDeleted) {
+						visitList[i] = false;
+					}
+				}
+			}
+			if(compD) {
+				for(int i=0;i<N;i++) {
+					if(nodeList.get(i).directDeleted) {
+						visitList[i] = false;
+					}
+				}
+			}
+			if(compI) {
+				for(int i=0;i<N;i++) {
+					if(nodeList.get(i).indirectDeleted) {
+						visitList[i] = false;
+					}
+				}
+			}
+
+			ArrayList<Node> queue = new ArrayList<>();
+			ArrayList<Node> currentMamberList;
+			while(true) {
+				currentMamberList = new ArrayList<>();
+				for(int i=0;i<N;i++) {
+					if(!visitList[i]) {
+						queue.add(nodeList.get(i));
+						visitList[i] = true;
+						break;
+					}
+				}
+
+				if(queue.isEmpty()) break;
+
+				while(!queue.isEmpty()) {
+					Node currentNode = queue.get(0);
+					queue.remove(0);
+					currentMamberList.add(currentNode);
+					for(int i=0;i<currentNode.list.size();i++) {
+						Node neighborNode = currentNode.list.get(i);
+						if(!visitList[neighborNode.index]) {
+							visitList[neighborNode.index] = true;
+							queue.add(neighborNode);
+						}
+					}
+				}
+				CompNDI_Member.add(currentMamberList);
+				if(maxCC_NID < currentMamberList.size()) maxCC_NID = currentMamberList.size();
+			}
+		}
+
+	}
+
 	/** サイト・パーコレーションを実行 */
 	public void SitePercolation(double f){
 		if(success){
@@ -515,6 +606,40 @@ public class Network implements Cloneable{
 			return 0;
 		}
 	}
+
+	/**
+	 * 2017-8版 サイトパーコレーション<br>
+	 * 頂点は破壊されてもデータ上は存在していて、Nodeクラスのフラグがtrueとなる。<br>
+	 * このvisitを使うことで、各種の故障に対しての連結成分を調べることができる。<br>
+	 * (注)<br>
+	 * setNode()またはsetNode(false)を使う必要がある<br>
+	 * @param f 故障確率
+	 * @param chain 連鎖故障させるか?
+	 */
+	public void SitePercolation2018(double f,boolean chain) {
+		for(int i=0;i<N;i++) {
+			Node currentNode =nodeList.get(i);
+			if(Math.random() < f) {
+				currentNode.directDeleted = true;
+				if(chain) {
+					for(int j=0;j<currentNode.list.size();j++) {
+						Node neighborNode = currentNode.list.get(j);
+						neighborNode.indirectDeleted = true;
+					}
+				}
+			}
+		}
+		for(int i=0;i<N;i++) {
+			Node currentNode =nodeList.get(i);
+			if(currentNode.directDeleted && currentNode.indirectDeleted) {
+				currentNode.indirectDeleted = false;
+			}
+		}
+
+
+	}
+
+
 
 	/** 頂点の媒介中心性を計算しプロットする(Brandesらの方法)<br>
 	* (注)<br>
@@ -2018,7 +2143,11 @@ public class Network implements Cloneable{
 	protected class Node{
 		int index;
 		double betweenCentrality;
+
 		int visits;
+		boolean directDeleted;
+		boolean indirectDeleted;
+
 		ArrayList<Node> list = new ArrayList<Node>();
 		ArrayList<Edge> eList = new ArrayList<Edge>();
 

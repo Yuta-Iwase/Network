@@ -22,7 +22,7 @@ public class MakePoisson {
 	public MakePoisson(int input_N,double input_average) {
 		N = input_N;
 		average = input_average;
-		minDegree = 1;
+		minDegree = 0;
 		maxDegree = N-1;
 
 		generate();

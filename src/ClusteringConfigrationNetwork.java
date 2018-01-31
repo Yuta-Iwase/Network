@@ -14,7 +14,7 @@ import java.util.Random;
 public class ClusteringConfigrationNetwork extends Network{
 
 	public ClusteringConfigrationNetwork(int[] isolated_DegreeList,int[] cluster_FragmentList,int loopLimit) {
-		generate(isolated_DegreeList,cluster_FragmentList, loopLimit, true);
+		generate(isolated_DegreeList,cluster_FragmentList, loopLimit);
 	}
 
 	public ClusteringConfigrationNetwork(int[] isolated_DegreeList,int[] cluster_FragmentList,int loopLimit,boolean message){
@@ -50,6 +50,21 @@ public class ClusteringConfigrationNetwork extends Network{
 
 			clusteringFragmentRemainder[i] = cluster_FragmentList[i];
 		}
+
+		switch(sum__clusteringFragment%3){
+		case 1:
+			clusterFragmentArray.add(0);
+			clusterFragmentArray.add(1);
+			sum__clusteringFragment += 2;
+			break;
+
+		case 2:
+			clusterFragmentArray.add(0);
+			sum__clusteringFragment += 1;
+			break;
+		}
+
+
 		sumDegree = sum_isolatedStub + 2*sum__clusteringFragment;
 		M = sumDegree/2;
 
@@ -124,7 +139,7 @@ public class ClusteringConfigrationNetwork extends Network{
 				}
 				nowLoopLimit--;
 
-				conflict = (baseNode==targetNodeA || baseNode==targetEdgeB || targetNodeA==targetNodeB);
+				conflict = (baseNode==targetNodeA || baseNode==targetNodeB || targetNodeA==targetNodeB);
 				multiple=false;
 				boolean malti_Base_A,malti_Base_B,malti_A_B;
 				cheakMultiple:for(int i=0;i<nowLine;i++){
@@ -159,14 +174,9 @@ public class ClusteringConfigrationNetwork extends Network{
 				nowLine++;
 			}
 			Arrays.sort(fragmentList);
-
-			System.out.println(clusterFragmentArray.size());
 			clusterFragmentArray.remove(fragmentList[2]);
 			clusterFragmentArray.remove(fragmentList[1]);
 			clusterFragmentArray.remove(fragmentList[0]);
-
-
-
 		}while(!clusterFragmentArray.isEmpty());
 	}
 
