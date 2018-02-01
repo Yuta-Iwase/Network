@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 public class AirportTest33_NDIComp_Caida {
 
 	public static void main(String[] args) throws Exception{
-		int tmax = 100;
+		int tmax = 1;
 		int imax = 100;
 
 		NetworkForCSVFile net = new NetworkForCSVFile("caida.csv", false, false, false, false);

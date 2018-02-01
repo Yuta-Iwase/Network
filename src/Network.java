@@ -618,6 +618,10 @@ public class Network implements Cloneable{
 	 */
 	public void SitePercolation2018(double f,boolean chain) {
 		for(int i=0;i<N;i++) {
+			nodeList.get(i).directDeleted = false;
+			nodeList.get(i).indirectDeleted = false;
+		}
+		for(int i=0;i<N;i++) {
 			Node currentNode =nodeList.get(i);
 			if(Math.random() < f) {
 				currentNode.directDeleted = true;
