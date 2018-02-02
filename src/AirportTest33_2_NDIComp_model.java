@@ -17,18 +17,26 @@ public class AirportTest33_2_NDIComp_model extends Job {
 			int N = 10000;
 			Network net;
 
+			// sfn
+			String folderName = "test33/sfn";
+			new File(folderName).mkdirs();
+			folderName = folderName + "/";
 			 do {
 				 MakePowerLaw dist = new MakePowerLaw(N, 2.7,2,N/10);
 				 net = new ConfigrationNetwork(dist.degree,100,false);
 			 }while(!net.success);
 
+			 // rnd
+//			 String folderName = "test33/rnd";
+//			 new File(folderName).mkdirs();
+//				folderName = folderName + "/";
 //			 MakePowerLaw p = new MakePowerLaw(N, 2.7,2,N/10);
 //			 System.out.println("average=" + p.averageDegree());
 //			 do {
 //				 MakePoisson dist = new MakePoisson(N, p.averageDegree());
 //				 net = new ConfigrationNetwork(dist.degree,100,false);
 //			 }while(!net.success);
-//			 net.printList("test33/net.csv");
+//			 net.printList(folderName + "rnd.csv");
 
 			net.setNode(false);
 
@@ -38,7 +46,6 @@ public class AirportTest33_2_NDIComp_model extends Job {
 			double sum_NI = 0.0;
 			double sum_DI = 0.0;
 
-			String folderName = "test33/sfn";
 			new File(folderName).mkdirs();
 			folderName = folderName + "/";
 
