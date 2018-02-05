@@ -121,24 +121,39 @@ public class Network implements Cloneable{
 	/** 隣接リストをcsv形式で保存
 	次数0などの特別な頂点に対応(nodeListを定義しないと使えない) */
 	public void printListExtention(String fileName){
-		fileName = "[Extention]" + fileName;
 		PrintWriter pw;
-		if(success && existNodeList.size()>0){
-			try{
-				pw = new PrintWriter(new File(fileName));
-				for(int i=0 ; i<existNodeList.size() ; i++){
-					pw.println(existNodeList.get(i));
+		if(success) {
+			if(existNodeList.size()>0) {
+				try{
+					pw = new PrintWriter(new File(fileName));
+					for(int i=0 ; i<existNodeList.size() ; i++){
+						pw.println(existNodeList.get(i));
+					}
+					for(int i=0;i<list.length;i++){
+						pw.println(list[i][0] + "," + list[i][1]);
+					}
+					pw.close();
+				}catch(Exception e){
+					System.out.println(e);
 				}
-				for(int i=0;i<list.length;i++){
-					pw.println(list[i][0] + "," + list[i][1]);
+			}else {
+				try{
+					pw = new PrintWriter(new File(fileName));
+					for(int i=0 ; i<N ; i++){
+						pw.println(i);
+					}
+					for(int i=0;i<list.length;i++){
+						pw.println(list[i][0] + "," + list[i][1]);
+					}
+					pw.close();
+				}catch(Exception e){
+					System.out.println(e);
 				}
-				pw.close();
-			}catch(Exception e){
-				System.out.println(e);
 			}
 		}else{
 			System.out.println("条件を満たさないため表示できません。");
 		}
+
 	}
 
 	// sort()メソッドのためのメソッド

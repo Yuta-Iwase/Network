@@ -31,8 +31,8 @@ public class MakePoisson {
 	public void generate(){
 		// 離散量の確率分布を定義
 		double[] p = new double[maxDegree+1];
-		double sum = 0.0;
 		p[minDegree] = (Math.pow(average, minDegree)*Math.exp(-average))/factorial(minDegree);
+		double sum = p[minDegree];
 		for(int i=minDegree+1;i<=maxDegree;i++){
 			p[i] = p[i-1]*(average/i);
 			sum += p[i];

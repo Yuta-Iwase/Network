@@ -8,12 +8,12 @@ public class AirportTest33_3_NDIComp_cluster extends Job {
 		AirportTest33_3_NDIComp_cluster job = new AirportTest33_3_NDIComp_cluster();
 
 		// input .ini file
-		job.run("param.ini");
+//		job.run("param.ini");
 
 		// debag
-//		ArrayList<Object> list = new ArrayList<>();
-//		list.add(1000); list.add(2.0); list.add(3.0); list.add(2); list.add(100);
-//		job.run(list);
+		ArrayList<Object> list = new ArrayList<>();
+		list.add(1000); list.add(1.0); list.add(2.0); list.add(2); list.add(100);
+		job.run(list);
 	}
 
 	public void job(ArrayList<Object> controlParameterList) {
@@ -87,7 +87,7 @@ public class AirportTest33_3_NDIComp_cluster extends Job {
 				pw4.println(f + "," + sum_NI);
 				pw5.println(f + "," + sum_DI);
 			}
-			net.printList(folderName + "net.csv");
+			net.printListExtention(folderName + "net.csv");
 
 			pw1.close();
 			pw2.close();
