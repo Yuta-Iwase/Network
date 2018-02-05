@@ -24,8 +24,8 @@ public class テスト用{
 		MakePoisson dist1,dist2;
 		
 		do {
-			dist1 = new MakePoisson(N, 2.0);
-			dist2 = new MakePoisson(N, 3.0);
+			dist1 = new MakePoisson(N, 3.6);
+			dist2 = new MakePoisson(N, 0.2);
 			net = new ClusteringConfigrationNetwork(dist1.degree, dist2.degree, 100,false);
 		}while(!net.success);
 		net.printList();

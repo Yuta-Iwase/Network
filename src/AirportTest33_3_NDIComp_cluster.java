@@ -8,12 +8,12 @@ public class AirportTest33_3_NDIComp_cluster extends Job {
 		AirportTest33_3_NDIComp_cluster job = new AirportTest33_3_NDIComp_cluster();
 
 		// input .ini file
-//		job.run("param.ini");
+		job.run("param.ini");
 
 		// debag
-		ArrayList<Object> list = new ArrayList<>();
-		list.add(1000); list.add(1.0); list.add(2.0); list.add(2); list.add(100);
-		job.run(list);
+//		ArrayList<Object> list = new ArrayList<>();
+//		list.add(10000); list.add(3.6); list.add(0.2); list.add(100); list.add(100);
+//		job.run(list);
 	}
 
 	public void job(ArrayList<Object> controlParameterList) {
@@ -95,7 +95,9 @@ public class AirportTest33_3_NDIComp_cluster extends Job {
 			pw4.close();
 			pw5.close();
 
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			System.out.println("error happend!");
+		}
 
 	}
 
