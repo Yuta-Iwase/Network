@@ -58,6 +58,7 @@ public class Network implements Cloneable{
 	int count_cc;
 	ArrayList<ArrayList<Node>> ccMember;
 	int[] ccID_List;
+	int maxCC;
 
 	// Direct,In-direct破壊でのN,D,I,DI,NIの各連結成分データ
 	ArrayList<ArrayList<Node>> CompNDI_Member;
@@ -458,6 +459,56 @@ public class Network implements Cloneable{
 
 	}
 
+	/**
+	 * BondPercolation2018メソッド実行後の連結成分を調べるときに使うメソッド<br>
+	 */
+	public void ConnectedCompornent_BP2018() {
+		ccMember = new ArrayList<>();
+		ccID_List = new int[N];
+		maxCC = 0;
+
+		boolean[] visit = new boolean[N];
+		for(int i=0;i<N;i++) visit[i]=false;
+
+		ArrayList<Node> queue = new ArrayList<>();
+		ArrayList<Node> currentMamberList;
+		int current_CCIndex = -1;
+		while(true) {
+			currentMamberList = new ArrayList<>();
+			current_CCIndex++;
+			for(int i=0;i<N;i++) {
+				if(!visit[i]) {
+					queue.add(nodeList.get(i));
+					visit[i] = true;
+					break;
+				}
+			}
+			System.out.println("debag: newCC is maked now");
+
+			if(queue.isEmpty()) break;
+
+			while(!queue.isEmpty()) {
+				Node currentNode = queue.get(0);
+				queue.remove(0);
+				currentMamberList.add(currentNode);
+				ccID_List[currentNode.index] = current_CCIndex;
+				for(int i=0;i<currentNode.list.size();i++) {
+					Node neighborNode = currentNode.list.get(i);
+					Edge neighborEdge = currentNode.eList.get(i);
+					if(!neighborEdge.deleted) {
+						if(!visit[neighborNode.index]) {
+							queue.add(neighborNode);
+							visit[neighborNode.index] = true;
+						}
+					}
+				}
+			}
+			ccMember.add(currentMamberList);
+			if(maxCC < currentMamberList.size()) maxCC=currentMamberList.size();
+		}
+
+	}
+
 	/** サイト・パーコレーションを実行 */
 	public void SitePercolation(double f){
 		if(success){
@@ -654,8 +705,25 @@ public class Network implements Cloneable{
 				currentNode.indirectDeleted = false;
 			}
 		}
+	}
 
-
+	/**
+	 * 2018版 ボンドパーコレーション<br>
+	 * 辺は破壊されてもデータ上は存在していて、Nodeクラスのフラグがtrueとなる。<br>
+	 * このvisitを使うことで、各種の故障に対しての連結成分を調べることができる。<br>
+	 * (注)<br>
+	 * 事前にsetNode()またはsetNode(false)を実行し<br>
+	 * その後、setEdge()を実行させる必要がある。
+	 * @param f 故障確率
+	 */
+	public void BondPercolation2018(double f) {
+		for(int i=0;i<M;i++) {
+			if(Math.random() < f) {
+				edgeList.get(i).deleted = true;
+			}else {
+				edgeList.get(i).deleted = false;
+			}
+		}
 	}
 
 
@@ -2184,6 +2252,7 @@ public class Network implements Cloneable{
 		double betweenCentrality;
 		int linkSalience;
 		int visits;
+		boolean deleted;
 
 		Edge() {
 			init();
