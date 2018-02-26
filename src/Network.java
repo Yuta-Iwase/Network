@@ -808,6 +808,91 @@ public class Network implements Cloneable{
 	}
 
 	/**
+	 * 重み付きネットワークにおいて頂点媒介中心性を計算する(Brandesらの方法)<br>
+	 * 無向グラフのみ実行可能<br>
+	 * (注)<br>
+	 * 以下の状況が必要<br>
+	 * ●weight[]定義済み<br>
+	 * ●doubleCount=false<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 */
+	public void nodeBetweenness_for_WeightedNet(){
+		Node currentNode;
+		ArrayList<Node> stack = new ArrayList<Node>();
+		ArrayList<Node> queue = new ArrayList<Node>();
+		double[] distance = new double[N];
+		double[] sigma = new double[N];
+		double[] delta = new double[N];
+		int v, w,vwEdge, x, y;
+		// P:pの集合(lenght=N)
+		// └p[i]:頂点iのリスト(要素:Node)
+		// └Node
+		//
+		// ↑この構造を作る
+		ArrayList<ArrayList<Node>> P = new ArrayList<ArrayList<Node>>();
+		for (int n = 0; n < N; n++) {
+			P.add(new ArrayList<Node>());
+		}
+
+		for (int s = 0; s < N; s++) {
+			// 初期化
+			stack.clear();
+			queue.clear();
+			for (int i = 0; i < N; i++) {
+				distance[i] = -1;
+				sigma[i] = 0;
+				P.get(i).clear();
+			}
+
+			// 頂点sに対する処理
+			distance[s] = 0;
+			sigma[s] = 1;
+			queue.add(nodeList.get(s));
+
+			// 主となる処理
+			while (!queue.isEmpty()) {
+				currentNode = queue.get(0);
+				v = currentNode.index;
+				stack.add(currentNode);
+				queue.remove(0);
+				// 現頂点の隣接頂点についてループ
+				for (int neightbor = 0; neightbor < currentNode.list.size(); neightbor++) {
+					// 現ループの隣接頂点のindexをwとおく
+					w = currentNode.list.get(neightbor).index;
+					// 【追加部分】リンク(v,w)を検索
+					vwEdge = searchEdge(v,w);
+					// wが未訪問のとき
+					if (distance[w] < 0) {
+						queue.add(nodeList.get(w));
+						distance[w] = distance[v] + 1.0/weight[vwEdge];
+					}
+					// sからwへの最短経路にvが含まれるとき
+					if (distance[w] == distance[v] + 1.0/weight[vwEdge]) {
+						sigma[w] += sigma[v];
+						P.get(w).add(currentNode);
+					}
+				}
+			}
+			// 初期化
+			for (int n = 0; n < N; n++)
+				delta[n] = 0;
+			// stackは頂点sからの距離が遠い順で返す
+			while (!stack.isEmpty()) {
+				x = stack.get(stack.size() - 1).index;
+				stack.remove(stack.size() - 1);
+				for (int i = 0; i < P.get(x).size(); i++) {
+					y = P.get(x).get(i).index;
+					delta[y] += (sigma[y] / sigma[x]) * (1 + delta[x]);
+				}
+				if (x != s) {
+					nodeList.get(x).betweenCentrality += delta[x];
+				}
+			}
+		}
+	}
+
+	/**
 	 * 辺の媒介中心性を計算しプロットする(Brandesらの方法)<br>
 	 * 無向グラフのみ実行可能<br>
 	 * (注)<br>
