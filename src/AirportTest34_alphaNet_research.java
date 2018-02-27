@@ -6,10 +6,11 @@ public class AirportTest34_alphaNet_research extends Job{
 
 	public static void main(String[] args) {
 		AirportTest34_alphaNet_research job = new AirportTest34_alphaNet_research();
-		
-		ArrayList<Object> list = new ArrayList<Object>();
-		list.add(-2.0);
-		job.run(list);
+		job.run("param.ini");
+
+//		ArrayList<Object> list = new ArrayList<Object>();
+//		list.add(-2.0);
+//		job.run(list);
 	}
 
 	@Override
@@ -31,15 +32,21 @@ public class AirportTest34_alphaNet_research extends Job{
 		net.BiasedRandomWalk(1000*1000, 1.0, alpha, (int)(System.currentTimeMillis()&Integer.MAX_VALUE), 0.0, true);
 
 		net.nodeBetweenness_for_WeightedNet();
+		net.EdgeBetweenness();
 
 		try{
 			String folderName = "alpha="+alpha;
 			new File(folderName).mkdirs();
-			PrintWriter pw = new PrintWriter(new File(folderName + "/bc.txt"));
+			PrintWriter pw1 = new PrintWriter(new File(folderName + "/node_bc.txt"));
+			PrintWriter pw2 = new PrintWriter(new File(folderName + "/edge_bc.txt"));
 			for(int i=0;i<N;i++){
-				pw.println(net.nodeList.get(i).betweenCentrality);
+				pw1.println(net.nodeList.get(i).betweenCentrality);
 			}
-			pw.close();
+			for(int i=0;i<net.M;i++) {
+				pw2.println(net.edgeList.get(i).betweenCentrality);
+			}
+			pw1.close();
+			pw2.close();
 		}catch(Exception e){}
 
 	}
