@@ -1181,17 +1181,26 @@ public class Network implements Cloneable{
 	}
 
 	/**
-	 * BiasedRandomWalkを実行する。<br>
-	 * 以下の状況が必要<br>
-	 * ●setNode()またはsetNode(false)適用済み<br>
-	 * ●setEdge()適用済み<br>
-	 *
+	 * BiasedRandomWalkの大本となるメソッド
 	 */
-	public int BiasedRandomWalk(int step, double deltaW, double alpha, int seed, double teleportP, boolean disturb) {
+	private Object[] BiasedRandomWalk_Core(int step, double deltaW, double alpha, int seed, double teleportP, boolean disturb, boolean checkVisitedNodes) {
+		// 戻り値用リスト
+		// 0:終了時のwalkerの居る頂点のindex
+		// 1:各ステップごとの訪問済み頂点数の数
+		Object[] returnList = new Object[2];
+
 		weight = new double[M];
 
 		// 作業変数定義
 		int currentNodeIndex = seed%N;
+		boolean[] temp_visited = null;
+		int[] visitedNodes = null;
+		int currentVisitedNodes = 0;
+		if(checkVisitedNodes){
+			temp_visited = new boolean[N];
+			visitedNodes = new int[step];
+			for(int i=0;i<N;i++) temp_visited[i]=false;
+		}
 
 		int selectedEdge,nextNodeIndex;
 		double sumDegree;
@@ -1200,6 +1209,13 @@ public class Network implements Cloneable{
 		for(int i=0;i<M;i++) newWeight[i]=1.0;
 		for(int t=0;t<step;t++){
 			Network.Node currentNode = nodeList.get(currentNodeIndex);
+
+			// 訪問済み頂点数をチェック
+			if(!temp_visited[currentNodeIndex]){
+				temp_visited[currentNodeIndex] = true;
+				currentVisitedNodes++;
+			}
+			visitedNodes[t] = currentVisitedNodes;
 
 			if(currentNode.eList.size()>=1) {
 				// ここが各ランダムウォークで変化する内容(辺の選択方法)
@@ -1243,7 +1259,22 @@ public class Network implements Cloneable{
 
 		if(disturb) disturb();
 
-		return currentNodeIndex;
+		// returnList[]へ格納
+		returnList[0] = currentNodeIndex;
+		returnList[1] = visitedNodes;
+
+		return returnList;
+	}
+
+	/**
+	 * BiasedRandomWalkを実行する。<br>
+	 * 以下の状況が必要<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 *
+	 */
+	public int BiasedRandomWalk(int step, double deltaW, double alpha, int seed, double teleportP, boolean disturb) {
+		return (int)(BiasedRandomWalk_Core(step, deltaW, alpha, seed, teleportP, disturb,false)[0]);
 	}
 
 	public int BiasedRandomWalk(int step, double deltaW, double alpha, double teleportP, boolean disturb) {
@@ -1254,6 +1285,18 @@ public class Network implements Cloneable{
 	public int BiasedRandomWalk(int step, double deltaW, double teleportP, boolean disturb) {
 		int currentNodeIndex = (int)(N * Math.random());
 		return BiasedRandomWalk(step, deltaW, 1, currentNodeIndex, teleportP, disturb);
+	}
+
+	/**
+	 * BiasedRandomWalkを実行する。<br>
+	 * 加えて、各ステップごとの訪問済み頂点数を返す。
+	 * 以下の状況が必要<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 *
+	 */
+	public int[] BiasedRandomWalk_checkVisitedNodes(int step, double deltaW, double alpha, int seed, double teleportP, boolean disturb) {
+		return (int[])(BiasedRandomWalk_Core(step, deltaW, alpha, seed, teleportP, disturb, true)[1]);
 	}
 
 	/**

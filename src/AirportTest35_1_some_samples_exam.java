@@ -18,8 +18,8 @@ public class AirportTest35_1_some_samples_exam{
 		// アルファに制御される回数は固定する
 		final double ALPHA_CONTROLED_TIMES;
 		// debag mode: alpha=1.0
-		BigDecimal ALPHA_MIN = new BigDecimal("0.0");
-		BigDecimal ALPHA_MAX = new BigDecimal("1.0");
+		BigDecimal ALPHA_MIN = new BigDecimal("-3.0");
+		BigDecimal ALPHA_MAX = new BigDecimal("3.0");
 		BigDecimal ALPHA_WIDTH = new BigDecimal("0.1");
 		ALPHA_CONTROLED_TIMES = ALPHA_MAX.subtract(ALPHA_MIN).divide(ALPHA_WIDTH).add(BigDecimal.ONE).doubleValue();
 
@@ -112,6 +112,12 @@ public class AirportTest35_1_some_samples_exam{
 			}
 			double[][] current_nodeBC_liner = new double[bins][2];
 			double[][] current_nodeBC_log = new double[bins][2];
+			// ⑧visited_nodes
+			PrintWriter pw81 = new PrintWriter(new File(temp_fileName + "/visited_nodes.csv"));
+			PrintWriter pw82 = new PrintWriter(new File(temp_fileName + "/visited_nodes_once.csv"));
+			int[] visited_nodes = new int[num_step];
+			int[] current_visited_nodes = new int[num_step];
+			for(int i=0;i<num_step;i++) visited_nodes[i]=0;
 
 
 			// [ループ、level2]times処理
@@ -129,7 +135,8 @@ public class AirportTest35_1_some_samples_exam{
 				final double INV_SQUARE_N = 1.0/(net.N*net.N);
 
 				// random walkの実行
-				net.BiasedRandomWalk(num_step, 1.0, alpha, (int)(System.currentTimeMillis()&Integer.MAX_VALUE), 0.0, true);
+				// ⑧用の準備も
+				current_visited_nodes = net.BiasedRandomWalk_checkVisitedNodes(num_step, 1.0, alpha, (int)(System.currentTimeMillis()&Integer.MAX_VALUE), 0.0, true);
 
 				// ①
 				double[] w_round_list = new double[net.weight.length];
@@ -146,12 +153,12 @@ public class AirportTest35_1_some_samples_exam{
 				// ②
 				net.EdgeBetweenness();
 				double[] edge_BC_list = new double[net.edgeList.size()];
-				for(int i=0;i<edge_BC_list.length;i++) edge_BC_list[i]=net.edgeList.get(i).betweenCentrality;
+				for(int i=0;i<edge_BC_list.length;i++) edge_BC_list[i]=net.edgeList.get(i).betweenCentrality*INV_SQUARE_N;
 				current_edgeBC_liner = hist.binPlot(edge_BC_list, bins, false,0,1);
 				current_edgeBC_log = hist.binPlot(edge_BC_list, bins, true,0,1);
 				for(int i=0;i<current_edgeBC_liner.length;i++) {
-					edgeBC_liner[i][1] += current_edgeBC_liner[i][1]*INV_SQUARE_N;
-					edgeBC_log[i][1] += current_edgeBC_log[i][1]*INV_SQUARE_N;
+					edgeBC_liner[i][1] += current_edgeBC_liner[i][1]*INV_M;
+					edgeBC_log[i][1] += current_edgeBC_log[i][1]*INV_M;
 				}
 				for(int i=0;i<edge_BC_list.length;i++) {
 					pw23.println(edge_BC_list[i]);
@@ -159,10 +166,10 @@ public class AirportTest35_1_some_samples_exam{
 				// ③
 				net.LinkSalience();
 				double[] s_list = new double[net.edgeList.size()];
-				for(int i=0;i<s_list.length;i++) s_list[i]=net.edgeList.get(i).linkSalience;
+				for(int i=0;i<s_list.length;i++) s_list[i]=net.edgeList.get(i).linkSalience*INV_N;
 				current_s_liner = hist.binPlot(s_list, bins, false, 0, 1);
 				for(int i=0;i<s_liner.length;i++) {
-					s_liner[i][1] += current_s_liner[i][1]*INV_N;
+					s_liner[i][1] += current_s_liner[i][1]*INV_M;
 				}
 				for(int i=0;i<s_list.length;i++) {
 					pw32.println(s_list[i]);
@@ -201,15 +208,19 @@ public class AirportTest35_1_some_samples_exam{
 				// ⑦
 				net.nodeBetweenness_for_WeightedNet();
 				double[] node_BC_list = new double[net.nodeList.size()];
-				for(int i=0;i<node_BC_list.length;i++) node_BC_list[i]=net.nodeList.get(i).betweenCentrality;
+				for(int i=0;i<node_BC_list.length;i++) node_BC_list[i]=net.nodeList.get(i).betweenCentrality*INV_SQUARE_N;
 				current_nodeBC_liner = hist.binPlot(node_BC_list, bins, false,0,1);
 				current_nodeBC_log = hist.binPlot(node_BC_list, bins, true,0,1);
 				for(int i=0;i<current_nodeBC_liner.length;i++) {
-					nodeBC_liner[i][1] += current_nodeBC_liner[i][1]*INV_SQUARE_N;
-					nodeBC_log[i][1] += current_nodeBC_log[i][1]*INV_SQUARE_N;
+					nodeBC_liner[i][1] += current_nodeBC_liner[i][1]*INV_N;
+					nodeBC_log[i][1] += current_nodeBC_log[i][1]*INV_N;
 				}
-				for(int i=0;i<edge_BC_list.length;i++) {
+				for(int i=0;i<node_BC_list.length;i++) {
 					pw73.println(node_BC_list[i]);
+				}
+				// ⑧
+				for(int i=0;i<num_step;i++){
+					visited_nodes[i] += current_visited_nodes[i];
 				}
 
 
@@ -230,6 +241,7 @@ public class AirportTest35_1_some_samples_exam{
 				edgeBC_liner[i][1] /= times;
 				edgeBC_log[i][0] = current_edgeBC_log[i][0];
 				edgeBC_log[i][1] /= times;
+				s_liner[i][0] = current_s_liner[i][0];
 				s_liner[i][1] /= times;
 				d_hs_liner[i][1] *= d_divider;
 				d_hs_log[i][1] *= d_divider;
@@ -250,11 +262,15 @@ public class AirportTest35_1_some_samples_exam{
 				pw51.println(d_hs_liner[i][0] + "," + d_hs_liner[i][1]);
 				pw52.println(d_hs_log[i][0] + "," + d_hs_log[i][1]);
 				pw61.println(str_liner[i][0] + ","  + str_liner[i][1]);
-				pw61.println(str_log[i][0] + ","  + str_log[i][1]);
+				pw62.println(str_log[i][0] + ","  + str_log[i][1]);
 				pw71.println(nodeBC_liner[i][0] + "," + nodeBC_liner[i][1]);
 				pw72.println(nodeBC_log[i][0] + "," + nodeBC_log[i][1]);
 			}
 			pw41.println(alphaString + "," + current_HS_frag);
+			for(int i=0;i<num_step;i++){
+				pw81.println(i + "," + ((double)visited_nodes[i]/N)/times);
+				pw82.println(i + "," + ((double)current_visited_nodes[i]/N));
+			}
 
 
 			pw11.close();
@@ -265,7 +281,6 @@ public class AirportTest35_1_some_samples_exam{
 			pw23.close();
 			pw31.close();
 			pw32.close();
-			pw41.close();
 			pw51.close();
 			pw52.close();
 			pw53.close();
@@ -275,12 +290,15 @@ public class AirportTest35_1_some_samples_exam{
 			pw71.close();
 			pw72.close();
 			pw73.close();
+			pw81.close();
+			pw82.close();
 
 			int rap = (int)((System.currentTimeMillis()-start_time)/1000);
 			System.out.println("finish: rap=" + rap + "[s]");
 			System.out.println();
 
 		}
+		pw41.close();
 
 	}
 }
