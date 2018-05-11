@@ -1298,6 +1298,13 @@ public class Network implements Cloneable{
 	public int[] BiasedRandomWalk_checkVisitedNodes(int step, double deltaW, double alpha, int seed, double teleportP, boolean disturb) {
 		return (int[])(BiasedRandomWalk_Core(step, deltaW, alpha, seed, teleportP, disturb, true)[1]);
 	}
+	
+	/**
+	 * biasedRW(alpha)で振られる重みの理論値に振り分ける。
+	 */
+	public void SetWeight_to_Alpha(double alpha){
+		// TODO
+	}
 
 	/**
 	 *  ReinforcedRandomWalkを実行する。<br>

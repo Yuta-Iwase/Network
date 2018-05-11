@@ -13,7 +13,7 @@ public class AirportTest35_1_some_samples_exam{
 		int bins = 50;
 		// ネットワークパラメータ
 		int N = 1000;
-		double gamma = 2.7;
+		double gamma = 3.2;
 
 		// アルファに制御される回数は固定する
 		final double ALPHA_CONTROLED_TIMES;
@@ -176,17 +176,25 @@ public class AirportTest35_1_some_samples_exam{
 				}
 				// ④,⑤
 				current_HS_frag = 0.0;
+				int[] HS_degree = new int[N];
+				for(int i=0;i<HS_degree.length;i++) HS_degree[i]=0;
 				for(int i=0;i<s_list.length;i++) {
 					if(s_list[i]>=0.9) {
+						// ④
 						current_HS_frag++;
-						int degree0 = net.degree[net.edgeList.get(i).node[0]];
-						int degree1 = net.degree[net.edgeList.get(i).node[1]];
-						d_hs_RawList.add((double)degree0);
-						d_hs_RawList.add((double)degree1);
-						pw53.println(degree0);
-						pw53.println(degree1);
+						// ⑤
+						HS_degree[net.edgeList.get(i).node[0]]++;
+						HS_degree[net.edgeList.get(i).node[1]]++;
 					}
 				}
+				// ⑤
+				for(int i=0;i<HS_degree.length;i++){
+					if(HS_degree[i]>0){
+						d_hs_RawList.add((double)HS_degree[i]);
+						pw53.println(HS_degree[i]);
+					}
+				}
+				// ④
 				current_HS_frag *= INV_N;
 				// ⑥
 				double[] str_list = new double[net.nodeList.size()];
@@ -236,7 +244,7 @@ public class AirportTest35_1_some_samples_exam{
 				w_liner[i][0] = current_w_liner[i][0];
 				w_liner[i][1] /= times;
 				w_log[i][0] = current_w_log[i][0];
-				w_log[i][0] /= times;
+				w_log[i][1] /= times;
 				edgeBC_liner[i][0] = current_edgeBC_liner[i][0];
 				edgeBC_liner[i][1] /= times;
 				edgeBC_log[i][0] = current_edgeBC_log[i][0];
@@ -254,17 +262,17 @@ public class AirportTest35_1_some_samples_exam{
 				nodeBC_log[i][0] = current_edgeBC_log[i][0];
 				nodeBC_log[i][1] /= times;
 
-				pw11.println(w_liner[i][0]+","+w_liner[i][1]);
-				pw12.println(w_log[i][0]+","+w_log[i][1]);
-				pw21.println(edgeBC_liner[i][0] + "," + edgeBC_liner[i][1]);
-				pw22.println(edgeBC_log[i][0] + "," + edgeBC_log[i][1]);
-				pw31.println(s_liner[i][0] + "," + s_liner[i][1]);
-				pw51.println(d_hs_liner[i][0] + "," + d_hs_liner[i][1]);
-				pw52.println(d_hs_log[i][0] + "," + d_hs_log[i][1]);
-				pw61.println(str_liner[i][0] + ","  + str_liner[i][1]);
-				pw62.println(str_log[i][0] + ","  + str_log[i][1]);
-				pw71.println(nodeBC_liner[i][0] + "," + nodeBC_liner[i][1]);
-				pw72.println(nodeBC_log[i][0] + "," + nodeBC_log[i][1]);
+				if(w_liner[i][1]>0) pw11.println(w_liner[i][0]+","+w_liner[i][1]);
+				if(w_log[i][1]>0) pw12.println(w_log[i][0]+","+w_log[i][1]);
+				if(edgeBC_liner[i][1]>0) pw21.println(edgeBC_liner[i][0] + "," + edgeBC_liner[i][1]);
+				if(edgeBC_log[i][1]>0) pw22.println(edgeBC_log[i][0] + "," + edgeBC_log[i][1]);
+				if(s_liner[i][1]>0) pw31.println(s_liner[i][0] + "," + s_liner[i][1]);
+				if(d_hs_liner[i][1]>0) pw51.println(d_hs_liner[i][0] + "," + d_hs_liner[i][1]);
+				if(d_hs_log[i][1]>0) pw52.println(d_hs_log[i][0] + "," + d_hs_log[i][1]);
+				if(str_liner[i][1]>0) pw61.println(str_liner[i][0] + ","  + str_liner[i][1]);
+				if(str_log[i][1]>0) pw62.println(str_log[i][0] + ","  + str_log[i][1]);
+				if(nodeBC_liner[i][1]>0) pw71.println(nodeBC_liner[i][0] + "," + nodeBC_liner[i][1]);
+				if(nodeBC_log[i][1]>0) pw72.println(nodeBC_log[i][0] + "," + nodeBC_log[i][1]);
 			}
 			pw41.println(alphaString + "," + current_HS_frag);
 			for(int i=0;i<num_step;i++){
