@@ -1298,12 +1298,31 @@ public class Network implements Cloneable{
 	public int[] BiasedRandomWalk_checkVisitedNodes(int step, double deltaW, double alpha, int seed, double teleportP, boolean disturb) {
 		return (int[])(BiasedRandomWalk_Core(step, deltaW, alpha, seed, teleportP, disturb, true)[1]);
 	}
-	
+
 	/**
 	 * biasedRW(alpha)で振られる重みの理論値に振り分ける。
+	 * 以下の状況が必要<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
 	 */
-	public void SetWeight_to_Alpha(double alpha){
-		// TODO
+	public void SetWeight_to_Alpha(double alpha, int steps){
+		double constFactor;
+		double sum_kk = 0.0;
+		weight = new double[edgeList.size()];
+		for(int i=0;i<edgeList.size();i++) {
+			int[] nodeIndex = new int[2];
+			nodeIndex[0]=edgeList.get(i).node[0];
+			nodeIndex[1]=edgeList.get(i).node[1];
+			int degreeProduct = degree[nodeIndex[0]]*degree[nodeIndex[1]];
+			double powered_degreeProduct = Math.pow(degreeProduct, alpha);
+			weight[edgeList.get(i).index] = powered_degreeProduct;
+			sum_kk += powered_degreeProduct;
+		}
+		constFactor = steps/sum_kk;
+		for(int i=0;i<edgeList.size();i++) {
+			weight[edgeList.get(i).index] *= constFactor;
+			weight[edgeList.get(i).index] += 1;
+		}
 	}
 
 	/**
