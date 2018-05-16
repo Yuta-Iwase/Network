@@ -11,50 +11,83 @@ public class AirportTest35_1_some_samples_exam{
 		// メタ・パラメータ
 		int times = 2;
 		int bins = 50;
+		final boolean useAlphaList = true;
+		final boolean useRandomWalk = true;
 		// ネットワークパラメータ
 		int N = 1000;
-		double gamma = 3.2;
+		double gamma = 2.7;
+		// オプション
+		String markerColor = "blue";
 
-		// アルファに制御される回数は固定する
+		// アルファ周りの設定
 		final double ALPHA_CONTROLED_TIMES;
-		// debag mode: alpha=1.0
-		BigDecimal ALPHA_MIN = new BigDecimal("-3.0");
-		BigDecimal ALPHA_MAX = new BigDecimal("3.0");
-		BigDecimal ALPHA_WIDTH = new BigDecimal("0.1");
-		ALPHA_CONTROLED_TIMES = ALPHA_MAX.subtract(ALPHA_MIN).divide(ALPHA_WIDTH).add(BigDecimal.ONE).doubleValue();
+		ArrayList<BigDecimal> alphaList = new ArrayList<>();
+		BigDecimal ALPHA_MIN = null;
+		BigDecimal ALPHA_MAX = null;
+		BigDecimal ALPHA_WIDTH = null;
+		if(useAlphaList){
+			// [true]使用したいalphaの値を明記
+			String[] alpha_strList = {"-3.0", "-1.0", "-0.4", "0.0" , "1.0", "3.0"};
+			for(int i=0;i<alpha_strList.length;i++){
+				alphaList.add(new BigDecimal(alpha_strList[i]));
+			}
+			ALPHA_CONTROLED_TIMES = alpha_strList.length;
+		}else{
+			// [false]初期値、最終値、刻み幅でalphaを定義
+			ALPHA_MIN = new BigDecimal("-3.0");
+			ALPHA_MAX = new BigDecimal("3.0");
+			ALPHA_WIDTH = new BigDecimal("0.1");
+			ALPHA_CONTROLED_TIMES = ALPHA_MAX.subtract(ALPHA_MIN).divide(ALPHA_WIDTH).add(BigDecimal.ONE).doubleValue();
+		}
 
 		//// 定数定義
 		// ステップ数
 		int num_step = 100*N;
 		// オブジェクト定義
 		HistogramGenerator hist = new HistogramGenerator();
+		py_PointPlot py = new py_PointPlot();
 
 		//// 処理
 
 		// ④
-		PrintWriter pw41 = new PrintWriter(new File("high_salience_frag.csv"));
+		File f41 = null;
+		PrintWriter pw41 = null;
+		if(useRandomWalk){
+			f41 = new File("high_salience_edges.csv");
+			pw41 = new PrintWriter(f41);
+		}
 		double current_HS_frag = 0.0;
+
 
 		// 開始時のタイムスタンプ
 		long start_time;
 
 		// [ループ、level1]alpha回数処理
-		BigDecimal dec_current_alpha = ALPHA_MIN;
+		BigDecimal dec_current_alpha = null;
+		if(useAlphaList) dec_current_alpha = alphaList.get(0);
+		else dec_current_alpha = ALPHA_MIN;
 		for(int alpha_factor=0;alpha_factor<ALPHA_CONTROLED_TIMES;alpha_factor++) {
+			if(useAlphaList) dec_current_alpha = alphaList.get(alpha_factor);
 			double alpha = dec_current_alpha.doubleValue();
 			String alphaString = dec_current_alpha.toString();
 			String temp_fileName = "alpha=" + alphaString;
 			new File(temp_fileName).mkdirs();
-			dec_current_alpha = dec_current_alpha.add(ALPHA_WIDTH);
+			if(!useAlphaList) dec_current_alpha = dec_current_alpha.add(ALPHA_WIDTH);
 			start_time = System.currentTimeMillis();
 			System.out.println("start: alpha=" + alphaString);
 			System.out.println(new Date().toString());
 
 
 			// ①weight
-			PrintWriter pw11 = new PrintWriter(new File(temp_fileName + "/w_LinerScale.csv"));
-			PrintWriter pw12 = new PrintWriter(new File(temp_fileName + "/w_LogScale.csv"));
-			PrintWriter pw13 = new PrintWriter(new File(temp_fileName + "/w_RawList.csv"));
+			String s11 = "w_LinerScale.csv";
+			String s12 = "w_LogScale.csv";
+			String s13 = "w_RawList.csv";
+			File f11 = new File(temp_fileName + "/" + s11);
+			File f12 = new File(temp_fileName + "/" + s12);
+			File f13 = new File(temp_fileName + "/" + s13);
+			PrintWriter pw11 = new PrintWriter(f11);
+			PrintWriter pw12 = new PrintWriter(f12);
+			PrintWriter pw13 = new PrintWriter(f13);
 			double[][] w_liner = new double[bins][2];
 			double[][] w_log = new double[bins][2];
 			for(int i=0;i<bins;i++) {
@@ -64,9 +97,15 @@ public class AirportTest35_1_some_samples_exam{
 			double[][] current_w_liner = new double[bins][2];
 			double[][] current_w_log = new double[bins][2];
 			// ②edge_BC
-			PrintWriter pw21 = new PrintWriter(new File(temp_fileName + "/edgeBC_LinerScale.csv"));
-			PrintWriter pw22 = new PrintWriter(new File(temp_fileName + "/edgeBC_LogScale.csv"));
-			PrintWriter pw23 = new PrintWriter(new File(temp_fileName + "/edgeBC_RawList.csv"));
+			String s21 = "edgeBC_LinerScale.csv";
+			String s22 = "edgeBC_LogScale.csv";
+			String s23 = "edgeBC_RawList.csv";
+			File f21 = new File(temp_fileName + "/" + s21);
+			File f22 = new File(temp_fileName + "/" + s22);
+			File f23 = new File(temp_fileName + "/" + s23);
+			PrintWriter pw21 = new PrintWriter(f21);
+			PrintWriter pw22 = new PrintWriter(f22);
+			PrintWriter pw23 = new PrintWriter(f23);
 			double[][] edgeBC_liner = new double[bins][2];
 			double[][] edgeBC_log = new double[bins][2];
 			for(int i=0;i<bins;i++) {
@@ -76,22 +115,38 @@ public class AirportTest35_1_some_samples_exam{
 			double[][] current_edgeBC_liner = new double[bins][2];
 			double[][] current_edgeBC_log = new double[bins][2];
 			// ③link salience
-			PrintWriter pw31 = new PrintWriter(new File(temp_fileName + "/LinkSalience_LinerScale.csv"));
-			PrintWriter pw32 = new PrintWriter(new File(temp_fileName + "/LinkSalience_RawList.csv"));
+			String s31 = "LinkSalience_LinerScale.csv";
+			String s32 = "LinkSalience_RawList.csv";
+			File f31 = new File(temp_fileName + "/" + s31);
+			File f32 = new File(temp_fileName + "/" + s32);
+			PrintWriter pw31 = new PrintWriter(f31);
+			PrintWriter pw32 = new PrintWriter(f32);
 			double[][] s_liner = new double[bins][2];
 			for(int i=0;i<bins;i++) s_liner[i][1]=0.0;
 			double[][] current_s_liner = new double[bins][2];
 			// ⑤degree distribution(high salience)
-			PrintWriter pw51 = new PrintWriter(new File(temp_fileName + "/degree(HS)_dist_LinerScale.csv"));
-			PrintWriter pw52 = new PrintWriter(new File(temp_fileName + "/degree(HS)_dist_LogScale.csv"));
-			PrintWriter pw53 = new PrintWriter(new File(temp_fileName + "/degree(HS)_dist_RawList_doubleCount.csv"));
+			String s51 = "degree(HS)_dist_LinerScale.csv";
+			String s52 = "degree(HS)_dist_LogScale.csv";
+			String s53 = "degree(HS)_dist_RawList_doubleCount.csv";
+			File f51 = new File(temp_fileName + "/" + s51);
+			File f52 = new File(temp_fileName + "/" + s52);
+			File f53 = new File(temp_fileName + "/" + s53);
+			PrintWriter pw51 = new PrintWriter(f51);
+			PrintWriter pw52 = new PrintWriter(f52);
+			PrintWriter pw53 = new PrintWriter(f53);
 			double[][] d_hs_liner = new double[bins][2];
 			double[][] d_hs_log = new double[bins][2];
 			ArrayList<Double> d_hs_RawList = new ArrayList<>();
 			// ⑥strength
-			PrintWriter pw61 = new PrintWriter(new File(temp_fileName + "/strength_LinerScale.csv"));
-			PrintWriter pw62 = new PrintWriter(new File(temp_fileName + "/strength_LogScale.csv"));
-			PrintWriter pw63 = new PrintWriter(new File(temp_fileName + "/strength_RawList.csv"));
+			String s61 = "strength_LinerScale.csv";
+			String s62 = "strength_LogScale.csv";
+			String s63 = "strength_RawList.csv";
+			File f61 = new File(temp_fileName + "/" + s61);
+			File f62 = new File(temp_fileName + "/" + s62);
+			File f63 = new File(temp_fileName + "/" + s63);
+			PrintWriter pw61 = new PrintWriter(f61);
+			PrintWriter pw62 = new PrintWriter(f62);
+			PrintWriter pw63 = new PrintWriter(f63);
 			double[][] str_liner = new double[bins][2];
 			double[][] str_log = new double[bins][2];
 			for(int i=0;i<bins;i++) {
@@ -101,9 +156,15 @@ public class AirportTest35_1_some_samples_exam{
 			double[][] current_str_liner = new double[bins][2];
 			double[][] current_str_log = new double[bins][2];
 			// ⑦node_BC
-			PrintWriter pw71 = new PrintWriter(new File(temp_fileName + "/nodeBC_LinerScale.csv"));
-			PrintWriter pw72 = new PrintWriter(new File(temp_fileName + "/nodeBC_LogScale.csv"));
-			PrintWriter pw73 = new PrintWriter(new File(temp_fileName + "/nodeBC_RawList.csv"));
+			String s71 = "nodeBC_LinerScale.csv";
+			String s72 = "nodeBC_LogScale.csv";
+			String s73 = "nodeBC_RawList.csv";
+			File f71 = new File(temp_fileName + "/" + s71);
+			File f72 = new File(temp_fileName + "/" + s72);
+			File f73 = new File(temp_fileName + "/" + s73);
+			PrintWriter pw71 = new PrintWriter(f71);
+			PrintWriter pw72 = new PrintWriter(f72);
+			PrintWriter pw73 = new PrintWriter(f73);
 			double[][] nodeBC_liner = new double[bins][2];
 			double[][] nodeBC_log = new double[bins][2];
 			for(int i=0;i<bins;i++) {
@@ -113,8 +174,12 @@ public class AirportTest35_1_some_samples_exam{
 			double[][] current_nodeBC_liner = new double[bins][2];
 			double[][] current_nodeBC_log = new double[bins][2];
 			// ⑧visited_nodes
-			PrintWriter pw81 = new PrintWriter(new File(temp_fileName + "/visited_nodes.csv"));
-			PrintWriter pw82 = new PrintWriter(new File(temp_fileName + "/visited_nodes_once.csv"));
+			String s81 = "visited_nodes.csv";
+			String s82 = "visited_nodes_once.csv";
+			File f81 = new File(temp_fileName + "/" + s81);
+			File f82 = new File(temp_fileName + "/" + s82);
+			PrintWriter pw81 = new PrintWriter(f81);
+			PrintWriter pw82 = new PrintWriter(f82);
 			int[] visited_nodes = new int[num_step];
 			int[] current_visited_nodes = new int[num_step];
 			for(int i=0;i<num_step;i++) visited_nodes[i]=0;
@@ -136,7 +201,8 @@ public class AirportTest35_1_some_samples_exam{
 
 				// random walkの実行
 				// ⑧用の準備も
-				current_visited_nodes = net.BiasedRandomWalk_checkVisitedNodes(num_step, 1.0, alpha, (int)(System.currentTimeMillis()&Integer.MAX_VALUE), 0.0, true);
+				if(useRandomWalk) current_visited_nodes = net.BiasedRandomWalk_checkVisitedNodes(num_step, 1.0, alpha, (int)(System.currentTimeMillis()&Integer.MAX_VALUE), 0.0, true);
+				else net.SetWeight_to_Alpha(alpha, num_step);
 
 				// ①
 				double[] w_round_list = new double[net.weight.length];
@@ -274,7 +340,7 @@ public class AirportTest35_1_some_samples_exam{
 				if(nodeBC_liner[i][1]>0) pw71.println(nodeBC_liner[i][0] + "," + nodeBC_liner[i][1]);
 				if(nodeBC_log[i][1]>0) pw72.println(nodeBC_log[i][0] + "," + nodeBC_log[i][1]);
 			}
-			pw41.println(alphaString + "," + current_HS_frag);
+			if(useRandomWalk) pw41.println(alphaString + "," + current_HS_frag);
 			for(int i=0;i<num_step;i++){
 				pw81.println(i + "," + ((double)visited_nodes[i]/N)/times);
 				pw82.println(i + "," + ((double)current_visited_nodes[i]/N));
@@ -301,12 +367,31 @@ public class AirportTest35_1_some_samples_exam{
 			pw81.close();
 			pw82.close();
 
+			py.plot(temp_fileName+"/plot_w_liner.py", f11.getAbsolutePath().replace("\\", "/"), "w_liner", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "weight dist. liner", "$w$", "$p(w)$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
+			py.plot(temp_fileName+"/plot_w_log.py", f12.getAbsolutePath().replace("\\", "/"), "w_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, true, true, "weight dist. log", "$w$", "$p(w)$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
+			py.plot(temp_fileName+"/plot_edgeBC_liner.py", f21.getAbsolutePath().replace("\\", "/"), "edgeBC_liner", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "edgeBC dist. liner", "$BC_{\\rm edge}$", "$p(BC_{\\rm edge})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
+			py.plot(temp_fileName+"/plot_edgeBC_log.py", f22.getAbsolutePath().replace("\\", "/"), "edgeBC_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, true, true, "edgeBC dist. log", "$BC_{\\rm edge}$", "$p(BC_{\\rm edge})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
+			py.plot(temp_fileName+"/plot_salience.py", f31.getAbsolutePath().replace("\\", "/"), "salience", 0, 1, 0, 1, true, "black", false, true, markerColor, 4, 0, false, false, "salience dist.", "$salience$", "$p(salience)$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper center");
+			py.plot(temp_fileName+"/plot_degree(HS)_liner.py", f51.getAbsolutePath().replace("\\", "/"), "degree(HS)_liner", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "degree${\\in}$(high salience links) dist. liner", "$k$", "$p(k)$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
+			py.plot(temp_fileName+"/plot_degree(HS)_log.py", f52.getAbsolutePath().replace("\\", "/"), "degree(HS)_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, true, true, "degree${\\in}$(high salience links) dist. log", "$k$", "$p(k)$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
+			py.plot(temp_fileName+"/plot_strengh_liner.py", f61.getAbsolutePath().replace("\\", "/"), "str_liner", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "strength dist. liner", "$strength$", "$p(strength)$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
+			py.plot(temp_fileName+"/plot_strengh_log.py", f62.getAbsolutePath().replace("\\", "/"), "str_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "strength dist. log", "$strength$", "$p(strength)$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
+			py.plot(temp_fileName+"/plot_nodeBC_liner.py", f71.getAbsolutePath().replace("\\", "/"), "nodeBC_liner", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "nodeBC dist. liner", "$BC_{\\rm node}$", "$p(BC_{\\rm node})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
+			py.plot(temp_fileName+"/plot_nodeBC_log.py", f72.getAbsolutePath().replace("\\", "/"), "nodeBC_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, true, true, "nodeBC dist. log", "$BC_{\\rm node}$", "$p(BC_{\\rm node})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
+			py.plot(temp_fileName+"/plot_visitedNodes.py", f81.getAbsolutePath().replace("\\", "/"), "visited_nodes", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "visited nodes", "step", "#visited nodes", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "lower right");
+			py.plot(temp_fileName+"/plot_visitedNodes(single).py", f81.getAbsolutePath().replace("\\", "/"), "visited_nodes(single)", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "visited nodes(a single try only)", "step", "#visited nodes", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "lower right");
+
+
 			int rap = (int)((System.currentTimeMillis()-start_time)/1000);
 			System.out.println("finish: rap=" + rap + "[s]");
 			System.out.println();
 
 		}
-		pw41.close();
+
+		if(useRandomWalk){
+			pw41.close();
+			py.plot("plot_highSalience_edges.py", f41.getAbsolutePath().replace("\\", "/"), "high_salience_edges", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "high salience edges", "${\\alpha}$", "$p({\\alpha})$", true, "${\\gamma}="+gamma+"$", "lower right");
+		}
 
 	}
 }

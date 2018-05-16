@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class py_PointPlot {
 
+
 	public void plot(String str_inputPath, String str_outputName, double dou_plotRangeX_start, double dou_plotRangeX_end, double dou_plotRangeY_start, double dou_plotRangeY_end, boolean bool_withLine, String str_lineColor, boolean bool_dottedLine, boolean bool_withPoint, String str_pointColor, int int_pointSize, int int_accumulationMode, boolean bool_logscaleX, boolean bool_logscaleY, String str_title, String str_xLabel, String str_yLabel, boolean bool_withLegend, String str_legendLabel, String str_legendPosition) {
 		String name = "py_" + System.currentTimeMillis() + ".py";
 		try {
@@ -26,6 +27,7 @@ public class py_PointPlot {
 		ArrayList<String> programPath_List = new ArrayList<>();
 		// pythonランチャーの在り処候補を列挙
 		programPath_List.add("C:\\ProgramData\\Anaconda2\\pythonw.exe");
+		programPath_List.add("D:\\shortcut\\Anaconda2\\pythonw.exe");
 
 		File pyFile = new File(pyFilePath);
 		PrintWriter pw = new PrintWriter(pyFile);
@@ -91,7 +93,7 @@ public class py_PointPlot {
 		else temp="logscaleY = False";
 		argCodeList.add(temp);
 
-		temp = "title = \"" + str_title + "\"";
+		temp = "title = r\"" + str_title + "\"";
 		argCodeList.add(temp);
 
 		temp = "xLabel = r\"" + str_xLabel + "\"";
@@ -104,7 +106,8 @@ public class py_PointPlot {
 		else temp="withLegend = False";
 		argCodeList.add(temp);
 
-		temp = "legendLabel = [\"" + str_legendLabel + "\"]";
+		if(str_legendLabel.length()>0) temp = "legendLabel = [r\"" + str_legendLabel + "\"]";
+		else temp = "legendLabel = [\"\"]";
 		argCodeList.add(temp);
 
 		temp = "legendPosition = \"" + str_legendPosition + "\"";
@@ -197,13 +200,10 @@ public class py_PointPlot {
 				"";
 
 		// pyファイル書き込み
-		System.out.println(code1);
 		pw.println(code1);
 		for(int i=0;i<argCodeList.size();i++) {
-			System.out.println(argCodeList.get(i));
 			pw.println(argCodeList.get(i));
 		}
-		System.out.println(code2);
 		pw.println(code2);
 
 		pw.close();
@@ -218,19 +218,10 @@ public class py_PointPlot {
 		}
 		if(selectedPath.length()>0) {
 			try {
-				Runtime.getRuntime().exec(selectedPath + " " + pyFile.getAbsolutePath());
+				Runtime.getRuntime().exec(selectedPath + " " + pyFile.getAbsolutePath(), null, pyFile.getParentFile());
 			} catch (Exception e) {}
 		}
 
-
-	}
-
-	public static void main(String[] args) {
-		try {
-			new py_PointPlot().core("test.py", "str_inputPath", "str_outputName", 0, 1, 0, 2, true, "str_lineColor", false, true, "x", 1, 1, true, true, "str_title", "str_xLabel", "str_yLabel", false, "str_legendLabel", "str_legendPosition");
-		}catch (Exception e) {
-			// TODO: handle exception
-		}
 
 	}
 
