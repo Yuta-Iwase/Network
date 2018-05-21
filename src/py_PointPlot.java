@@ -28,7 +28,10 @@ public class py_PointPlot {
 		// pythonランチャーの在り処候補を列挙
 		programPath_List.add("C:\\ProgramData\\Anaconda2\\pythonw.exe");
 		programPath_List.add("D:\\shortcut\\Anaconda2\\pythonw.exe");
+		programPath_List.add("/users/takehisalab/anaconda3/bin/python");
+		programPath_List.add("/usr/bin/python");
 		programPath_List.add("/usr/local/bin/python");
+
 
 		File pyFile = new File(pyFilePath);
 		PrintWriter pw = new PrintWriter(pyFile);

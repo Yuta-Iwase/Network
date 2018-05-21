@@ -9,15 +9,17 @@ public class AirportTest35_1_some_samples_exam{
 	public static void main(String[] args) throws Exception{
 		//// 変動するパラメータ
 		// メタ・パラメータ
-		int times = 2;
+		int times = 1;
 		int bins = 50;
 		final boolean useAlphaList = false;
 		final boolean useRandomWalk = true;
 		// ネットワークパラメータ
 		int N = 1000;
-		double gamma = 5.2;
-		// オプション
+		double gamma = 2.7;
+		int minDegree = 2;
+		// 出力オプション
 		String markerColor = "blue";
+
 
 		// アルファ周りの設定
 		final double ALPHA_CONTROLED_TIMES;
@@ -83,7 +85,7 @@ public class AirportTest35_1_some_samples_exam{
 
 
 			// ①weight
-			String s11 = "w_LinerScale.csv";
+			String s11 = "w_LinearScale.csv";
 			String s12 = "w_LogScale.csv";
 			String s13 = "w_RawList.csv";
 			File f11 = new File(temp_fileName + "/" + s11);
@@ -101,7 +103,7 @@ public class AirportTest35_1_some_samples_exam{
 			double[][] current_w_linear = new double[bins][2];
 			double[][] current_w_log = new double[bins][2];
 			// ②edge_BC
-			String s21 = "edgeBC_LinerScale.csv";
+			String s21 = "edgeBC_LinearScale.csv";
 			String s22 = "edgeBC_LogScale.csv";
 			String s23 = "edgeBC_RawFreq.csv";
 			String s24 = "edgeBC_TotalFreq.csv";
@@ -125,7 +127,7 @@ public class AirportTest35_1_some_samples_exam{
 			double[][] current_edgeBC_linear = new double[bins][2];
 			double[][] current_edgeBC_log = new double[bins][2];
 			// ③link salience
-			String s31 = "LinkSalience_LinerScale.csv";
+			String s31 = "LinkSalience_LinearScale.csv";
 			String s32 = "LinkSalience_RawList.csv";
 			File f31 = new File(temp_fileName + "/" + s31);
 			File f32 = new File(temp_fileName + "/" + s32);
@@ -135,7 +137,7 @@ public class AirportTest35_1_some_samples_exam{
 			for(int i=0;i<bins;i++) s_linear[i][1]=0.0;
 			double[][] current_s_linear = new double[bins][2];
 			// ⑤degree distribution(high salience)
-			String s51 = "degree(HS)_dist_LinerScale.csv";
+			String s51 = "degree(HS)_dist_LinearScale.csv";
 			String s52 = "degree(HS)_dist_LogScale.csv";
 			String s53 = "degree(HS)_dist_RawList_doubleCount.csv";
 			File f51 = new File(temp_fileName + "/" + s51);
@@ -148,7 +150,7 @@ public class AirportTest35_1_some_samples_exam{
 			double[][] d_hs_log = new double[bins][2];
 			ArrayList<Double> d_hs_RawList = new ArrayList<>();
 			// ⑥strength
-			String s61 = "strength_LinerScale.csv";
+			String s61 = "strength_LinearScale.csv";
 			String s62 = "strength_LogScale.csv";
 			String s63 = "strength_RawList.csv";
 			File f61 = new File(temp_fileName + "/" + s61);
@@ -166,7 +168,7 @@ public class AirportTest35_1_some_samples_exam{
 			double[][] current_str_linear = new double[bins][2];
 			double[][] current_str_log = new double[bins][2];
 			// ⑦node_BC
-			String s71 = "nodeBC_LinerScale.csv";
+			String s71 = "nodeBC_LinearScale.csv";
 			String s72 = "nodeBC_LogScale.csv";
 			String s73 = "nodeBC_RawFreq.csv";
 			String s74 = "nodeBC_TotalFreq.csv";
@@ -206,7 +208,7 @@ public class AirportTest35_1_some_samples_exam{
 				// ネットワーク構築
 				Network net;
 				do{
-					MakePowerLaw dist = new MakePowerLaw(N, gamma, 2, N-1);
+					MakePowerLaw dist = new MakePowerLaw(N, gamma, minDegree, N-1);
 					net = new ConfigrationNetwork(dist.degree, 100,false);
 				}while(!net.success);
 				net.setNode(false);
@@ -425,8 +427,8 @@ public class AirportTest35_1_some_samples_exam{
 			py.plot(temp_fileName+"/plot_edgeBC_log.py", f22.getAbsolutePath().replace("\\", "/"), "edgeBC_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, true, true, "edgeBC dist. log", "$BC_{\\rm edge}$", "$p(BC_{\\rm edge})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
 
 			py.plot(temp_fileName+"/plot_edgeBC_freq_log.py", f24.getAbsolutePath().replace("\\", "/"), "edgeBC_freq_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, true, true, "edgeBC dist. log", "$BC_{\\rm edge}$", "$p(BC_{\\rm edge})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
-			py.plot(temp_fileName+"/plot_edgeBC_freq_log_ac.py", f24.getAbsolutePath().replace("\\", "/"), "edgeBC_freq_log_ac", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 2, true, true, "edgeBC dist. log", "$BC_{\\rm edge}$", "$p(BC_{\\rm edge})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
-
+			py.plot(temp_fileName+"/plot_edgeBC_freq_log_ac.py", f24.getAbsolutePath().replace("\\", "/"), "edgeBC_freq_log_ac", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 2, true, true, "edgeBC dist. log, cumulative", "$BC_{\\rm edge}$", "$p(BC_{\\rm edge})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
+			
 			py.plot(temp_fileName+"/plot_salience.py", f31.getAbsolutePath().replace("\\", "/"), "salience", 0, 1, 0, 1, true, "black", false, true, markerColor, 4, 0, false, false, "salience dist.", "$salience$", "$p(salience)$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper center");
 			py.plot(temp_fileName+"/plot_degree(HS)_linear.py", f51.getAbsolutePath().replace("\\", "/"), "degree(HS)_linear", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "degree${\\in}$(high salience links) dist. linear", "$k$", "$p(k)$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
 			py.plot(temp_fileName+"/plot_degree(HS)_log.py", f52.getAbsolutePath().replace("\\", "/"), "degree(HS)_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, true, true, "degree${\\in}$(high salience links) dist. log", "$k$", "$p(k)$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
