@@ -261,7 +261,7 @@ public class AirportTest35_1_some_samples_exam{
 					}
 				}
 				// ④
-				current_HS_frag *= INV_N;
+				current_HS_frag *= INV_M;
 				// ⑥
 				double[] str_list = new double[net.nodeList.size()];
 				for(int i=0;i<net.nodeList.size();i++) {
