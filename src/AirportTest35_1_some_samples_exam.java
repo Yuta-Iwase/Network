@@ -202,7 +202,10 @@ public class AirportTest35_1_some_samples_exam{
 				// random walkの実行
 				// ⑧用の準備も
 				if(useRandomWalk) current_visited_nodes = net.BiasedRandomWalk_checkVisitedNodes(num_step, 1.0, alpha, (int)(System.currentTimeMillis()&Integer.MAX_VALUE), 0.0, true);
-				else net.SetWeight_to_Alpha(alpha, num_step);
+				else{
+					net.SetWeight_to_Alpha(alpha, num_step);
+					net.disturb();
+				}
 
 				// ①
 				double[] w_round_list = new double[net.weight.length];
