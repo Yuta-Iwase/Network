@@ -9,9 +9,9 @@ public class AirportTest35_1_some_samples_exam{
 	public static void main(String[] args) throws Exception{
 		//// 変動するパラメータ
 		// メタ・パラメータ
-		int times = 1;
+		int times = 100;
 		int bins = 50;
-		final boolean useAlphaList = true;
+		final boolean useAlphaList = false;
 		final boolean useRandomWalk = true;
 		// ネットワークパラメータ
 		int N = 1000;
