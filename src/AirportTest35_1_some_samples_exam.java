@@ -11,7 +11,7 @@ public class AirportTest35_1_some_samples_exam{
 		// メタ・パラメータ
 		int times = 1;
 		int bins = 50;
-		final boolean useAlphaList = false;
+		final boolean useAlphaList = true;
 		final boolean useRandomWalk = true;
 		// ネットワークパラメータ
 		int N = 1000;
@@ -427,8 +427,8 @@ public class AirportTest35_1_some_samples_exam{
 			py.plot(temp_fileName+"/plot_edgeBC_log.py", f22.getAbsolutePath().replace("\\", "/"), "edgeBC_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, true, true, "edgeBC dist. log", "$BC_{\\rm edge}$", "$p(BC_{\\rm edge})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
 
 			py.plot(temp_fileName+"/plot_edgeBC_freq_log.py", f24.getAbsolutePath().replace("\\", "/"), "edgeBC_freq_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, true, true, "edgeBC dist. log", "$BC_{\\rm edge}$", "$p(BC_{\\rm edge})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
-			py.plot(temp_fileName+"/plot_edgeBC_freq_log_ac.py", f24.getAbsolutePath().replace("\\", "/"), "edgeBC_freq_log_ac", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 2, true, true, "edgeBC dist. log, cumulative", "$BC_{\\rm edge}$", "$p(BC_{\\rm edge})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
-			
+			py.plot(temp_fileName+"/plot_edgeBC_freq_log_ac.py", f24.getAbsolutePath().replace("\\", "/"), "edgeBC_freq_log_ac", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 2, true, true, "edgeBC dist. log, cumulative", "$BC_{\\rm edge}$", "$p(BC_{\\rm edge})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "lower left");
+
 			py.plot(temp_fileName+"/plot_salience.py", f31.getAbsolutePath().replace("\\", "/"), "salience", 0, 1, 0, 1, true, "black", false, true, markerColor, 4, 0, false, false, "salience dist.", "$salience$", "$p(salience)$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper center");
 			py.plot(temp_fileName+"/plot_degree(HS)_linear.py", f51.getAbsolutePath().replace("\\", "/"), "degree(HS)_linear", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "degree${\\in}$(high salience links) dist. linear", "$k$", "$p(k)$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
 			py.plot(temp_fileName+"/plot_degree(HS)_log.py", f52.getAbsolutePath().replace("\\", "/"), "degree(HS)_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, true, true, "degree${\\in}$(high salience links) dist. log", "$k$", "$p(k)$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
@@ -436,6 +436,10 @@ public class AirportTest35_1_some_samples_exam{
 			py.plot(temp_fileName+"/plot_strengh_log.py", f62.getAbsolutePath().replace("\\", "/"), "str_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "strength dist. log", "$strength$", "$p(strength)$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
 			py.plot(temp_fileName+"/plot_nodeBC_linear.py", f71.getAbsolutePath().replace("\\", "/"), "nodeBC_linear", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "nodeBC dist. linear", "$BC_{\\rm node}$", "$p(BC_{\\rm node})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
 			py.plot(temp_fileName+"/plot_nodeBC_log.py", f72.getAbsolutePath().replace("\\", "/"), "nodeBC_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, true, true, "nodeBC dist. log", "$BC_{\\rm node}$", "$p(BC_{\\rm node})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
+
+			py.plot(temp_fileName+"/plot_nodeBC_freq_log.py", f74.getAbsolutePath().replace("\\", "/"), "nodeBC_freq_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, true, true, "nodeBC dist. log", "$BC_{\\rm node}$", "$p(BC_{\\rm node})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
+			py.plot(temp_fileName+"/plot_nodeBC_freq_log_ac.py", f74.getAbsolutePath().replace("\\", "/"), "nodeBC_freq_log_ac", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 2, true, true, "nodeBC dist. log, cumulative", "$BC_{\\rm node}$", "$p(BC_{\\rm node})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "lower left");
+
 			py.plot(temp_fileName+"/plot_visitedNodes.py", f81.getAbsolutePath().replace("\\", "/"), "visited_nodes", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "visited nodes", "step", "#visited nodes", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "lower right");
 			py.plot(temp_fileName+"/plot_visitedNodes(single).py", f81.getAbsolutePath().replace("\\", "/"), "visited_nodes(single)", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "visited nodes(a single try only)", "step", "#visited nodes", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "lower right");
 
