@@ -15,7 +15,7 @@ public class AirportTest35_1_some_samples_exam{
 		final boolean useRandomWalk = true;
 		// ネットワークパラメータ
 		int N = 1000;
-		double gamma = 2.7;
+		double gamma = 4.7;
 		int minDegree = 2;
 		// 出力オプション
 		String markerColor = "blue";
