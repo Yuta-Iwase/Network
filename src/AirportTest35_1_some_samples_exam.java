@@ -9,13 +9,13 @@ public class AirportTest35_1_some_samples_exam{
 	public static void main(String[] args) throws Exception{
 		//// 変動するパラメータ
 		// メタ・パラメータ
-		int times = 10;
+		int times = 100;
 		int bins = 50;
 		final boolean useAlphaList = false;
-		final boolean useRandomWalk = true;
+		final boolean useRandomWalk = false;
 		// ネットワークパラメータ
 		int N = 1000;
-		double gamma = 4.7;
+		double gamma = 3.7;
 		int minDegree = 4;
 		// 出力オプション
 		String markerColor = "red";
@@ -38,7 +38,7 @@ public class AirportTest35_1_some_samples_exam{
 		}else{
 			// [false]初期値、最終値、刻み幅でalphaを定義
 			ALPHA_MIN = new BigDecimal("-1.0");
-			ALPHA_MAX = new BigDecimal("1.0");
+			ALPHA_MAX = new BigDecimal("0.0");
 			ALPHA_WIDTH = new BigDecimal("0.1");
 			ALPHA_CONTROLED_TIMES = ALPHA_MAX.subtract(ALPHA_MIN).divide(ALPHA_WIDTH).add(BigDecimal.ONE).doubleValue();
 		}
