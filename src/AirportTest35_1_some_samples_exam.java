@@ -9,16 +9,16 @@ public class AirportTest35_1_some_samples_exam{
 	public static void main(String[] args) throws Exception{
 		//// 変動するパラメータ
 		// メタ・パラメータ
-		int times = 100;
+		int times = 10;
 		int bins = 50;
 		final boolean useAlphaList = false;
 		final boolean useRandomWalk = true;
 		// ネットワークパラメータ
 		int N = 1000;
-		double gamma = 2.7;
-		int minDegree = 2;
+		double gamma = 4.7;
+		int minDegree = 4;
 		// 出力オプション
-		String markerColor = "blue";
+		String markerColor = "red";
 
 
 		// アルファ周りの設定
@@ -345,8 +345,17 @@ public class AirportTest35_1_some_samples_exam{
 			}
 
 			// ⑤
-			d_hs_linear = hist.binPlot(d_hs_RawList,bins,false);
-			d_hs_log = hist.binPlot(d_hs_RawList, bins, true);
+			if(d_hs_RawList.size()>0) {
+				d_hs_linear = hist.binPlot(d_hs_RawList,bins,false);
+				d_hs_log = hist.binPlot(d_hs_RawList, bins, true);
+			}else {
+				for(int i=0;i<bins;i++) {
+					d_hs_linear[i][0] = i;
+					d_hs_linear[i][1] = -123;
+					d_hs_log[i][0] = i;
+					d_hs_log[i][1] = -123;
+				}
+			}
 			double d_divider = 1.0/(2*N*times);
 
 			// bin関係print
