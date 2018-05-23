@@ -55,10 +55,8 @@ public class AirportTest35_1_some_samples_exam{
 		// ④
 		File f41 = null;
 		PrintWriter pw41 = null;
-		if(useRandomWalk){
-			f41 = new File("high_salience_edges.csv");
-			pw41 = new PrintWriter(f41);
-		}
+		f41 = new File("high_salience_edges.csv");
+		pw41 = new PrintWriter(f41);
 		double HS_frac = 0;
 		double current_HS_frac = 0.0;
 
@@ -393,10 +391,10 @@ public class AirportTest35_1_some_samples_exam{
 				if(nodeBC_linear[i][1]>0) pw71.println(nodeBC_linear[i][0] + "," + nodeBC_linear[i][1]);
 				if(nodeBC_log[i][1]>0) pw72.println(nodeBC_log[i][0] + "," + nodeBC_log[i][1]);
 			}
-			if(useRandomWalk) {
-				HS_frac /= times;
-				pw41.println(alphaString + "," + HS_frac);
-			}
+
+			HS_frac /= times;
+			pw41.println(alphaString + "," + HS_frac);
+
 			double INV_SQUARE_N = 1.0/(N*N);
 			for(int i=0;i<N*N;i++) {
 				if(total_edgeBC_freq[i]>0) pw24.println(i*INV_SQUARE_N + "," + total_edgeBC_freq[i]);
@@ -459,10 +457,10 @@ public class AirportTest35_1_some_samples_exam{
 
 		}
 
-		if(useRandomWalk){
-			pw41.close();
-			py.plot("plot_highSalience_edges.py", f41.getAbsolutePath().replace("\\", "/"), "high_salience_edges", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "high salience edges", "${\\alpha}$", "$p({\\alpha})$", true, "${\\gamma}="+gamma+"$", "lower right");
-		}
+
+		pw41.close();
+		py.plot("plot_highSalience_edges.py", f41.getAbsolutePath().replace("\\", "/"), "high_salience_edges", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "high salience edges", "${\\alpha}$", "$p({\\alpha})$", true, "${\\gamma}="+gamma+"$", "lower right");
+
 
 	}
 }
