@@ -11,11 +11,11 @@ public class AirportTest35_1_some_samples_exam{
 		// メタ・パラメータ
 		int times = 100;
 		int bins = 50;
-		final boolean useAlphaList = false;
+		final boolean useAlphaList = true;
 		final boolean useRandomWalk = false;
 		// ネットワークパラメータ
 		int N = 1000;
-		double gamma = 3.7;
+		double gamma = 4.7;
 		int minDegree = 4;
 		// 出力オプション
 		String markerColor = "red";
@@ -30,15 +30,19 @@ public class AirportTest35_1_some_samples_exam{
 		if(useAlphaList){
 			// [true]使用したいalphaの値を明記
 //			String[] alpha_strList = {"-3.0", "-1.0", "-0.4", "0.0" , "1.0", "3.0"};
-			String[] alpha_strList = {"-3.0","-1.0","1.0"};
+//			String[] alpha_strList = {"-3.0","-1.0","1.0"};
+			String[] alpha_strList = {
+					"-2.0", "-1.9", "-1.8", "-1.7", "-1.6", "-1.5", "-1.4", "-1.3", "-1.2", "-1.1",
+					"1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "2.0"
+			};
 			for(int i=0;i<alpha_strList.length;i++){
 				alphaList.add(new BigDecimal(alpha_strList[i]));
 			}
 			ALPHA_CONTROLED_TIMES = alpha_strList.length;
 		}else{
 			// [false]初期値、最終値、刻み幅でalphaを定義
-			ALPHA_MIN = new BigDecimal("-1.0");
-			ALPHA_MAX = new BigDecimal("0.0");
+			ALPHA_MIN = new BigDecimal("1.1");
+			ALPHA_MAX = new BigDecimal("2.0");
 			ALPHA_WIDTH = new BigDecimal("0.1");
 			ALPHA_CONTROLED_TIMES = ALPHA_MAX.subtract(ALPHA_MIN).divide(ALPHA_WIDTH).add(BigDecimal.ONE).doubleValue();
 		}
