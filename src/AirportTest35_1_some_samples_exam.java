@@ -15,10 +15,10 @@ public class AirportTest35_1_some_samples_exam{
 		final boolean useRandomWalk = false;
 		// ネットワークパラメータ
 		int N = 1000;
-		double gamma = 4.7;
-		int minDegree = 4;
+		double gamma = 2.7;
+		int minDegree = 16;
 		// 出力オプション
-		String markerColor = "red";
+		String markerColor = "purple";
 
 
 		// アルファ周りの設定
@@ -31,10 +31,11 @@ public class AirportTest35_1_some_samples_exam{
 			// [true]使用したいalphaの値を明記
 //			String[] alpha_strList = {"-3.0", "-1.0", "-0.4", "0.0" , "1.0", "3.0"};
 //			String[] alpha_strList = {"-3.0","-1.0","1.0"};
-			String[] alpha_strList = {
-					"-2.0", "-1.9", "-1.8", "-1.7", "-1.6", "-1.5", "-1.4", "-1.3", "-1.2", "-1.1",
-					"1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "2.0"
-			};
+//			String[] alpha_strList = {
+//					"-2.0", "-1.9", "-1.8", "-1.7", "-1.6", "-1.5", "-1.4", "-1.3", "-1.2", "-1.1",
+//					"1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "2.0"
+//			};
+			String[] alpha_strList = {"0.0"};
 			for(int i=0;i<alpha_strList.length;i++){
 				alphaList.add(new BigDecimal(alpha_strList[i]));
 			}
@@ -295,7 +296,7 @@ public class AirportTest35_1_some_samples_exam{
 					}
 				}
 				// ④
-				current_HS_frac *= INV_M;
+				current_HS_frac *= INV_N;
 				HS_frac += current_HS_frac;
 				// ⑥
 				double[] str_list = new double[net.nodeList.size()];
@@ -463,7 +464,7 @@ public class AirportTest35_1_some_samples_exam{
 
 
 		pw41.close();
-		py.plot("plot_highSalience_edges.py", f41.getAbsolutePath().replace("\\", "/"), "high_salience_edges", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "high salience edges", "${\\alpha}$", "$p({\\alpha})$", true, "${\\gamma}="+gamma+"$", "lower right");
+		py.plot("plot_highSalience_edges.py", f41.getAbsolutePath().replace("\\", "/"), "high_salience_edges", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "high salience edges", "${\\alpha}$", "$\\#HS(\\alpha) / N$", true, "${\\gamma}="+gamma+"$", "lower right");
 
 
 	}
