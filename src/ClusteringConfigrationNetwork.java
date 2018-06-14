@@ -76,108 +76,114 @@ public class ClusteringConfigrationNetwork extends Network{
 		boolean selfLoop,multiple;
 		success = true;
 		list = new int[M][2];
-		generateLoop: do{
-			nowLoopLimit=loopLimit;
-			do{
-				targetEdgeA=rnd.nextInt(disconnectedN);
-				targetEdgeB=rnd.nextInt(disconnectedN);
+		if(isolatedStubArray.size()>0) {
+			generateLoop: do{
+				nowLoopLimit=loopLimit;
+				do{
+					targetEdgeA=rnd.nextInt(disconnectedN);
+					targetEdgeB=rnd.nextInt(disconnectedN);
 
-				if(nowLoopLimit<=0){
-					if(message) System.out.println("生成に失敗しました。");
-					success = false;
-					break generateLoop;
-				}
-				nowLoopLimit--;
-
-				selfLoop= isolatedStubArray.get(targetEdgeA)==isolatedStubArray.get(targetEdgeB);
-				multiple=false;
-				cheakMultiple:for(int i=0;i<nowLine;i++){
-					if((isolatedStubArray.get(targetEdgeA)==list[i][0]&&isolatedStubArray.get(targetEdgeB)==list[i][1])||
-					   (isolatedStubArray.get(targetEdgeA)==list[i][1]&&isolatedStubArray.get(targetEdgeB)==list[i][0])){
-						multiple=true;
-						break cheakMultiple;
+					if(nowLoopLimit<=0){
+						if(message) System.out.println("生成に失敗しました。");
+						success = false;
+						break generateLoop;
 					}
+					nowLoopLimit--;
+
+					selfLoop= isolatedStubArray.get(targetEdgeA)==isolatedStubArray.get(targetEdgeB);
+					multiple=false;
+					cheakMultiple:for(int i=0;i<nowLine;i++){
+						if((isolatedStubArray.get(targetEdgeA)==list[i][0]&&isolatedStubArray.get(targetEdgeB)==list[i][1])||
+						   (isolatedStubArray.get(targetEdgeA)==list[i][1]&&isolatedStubArray.get(targetEdgeB)==list[i][0])){
+							multiple=true;
+							break cheakMultiple;
+						}
+					}
+				}while(selfLoop || multiple);
+
+				if(targetEdgeA >= targetEdgeB){
+					list[nowLine][1]=isolatedStubArray.get(targetEdgeA);
+					isolatedStubArray.remove(targetEdgeA);
+					list[nowLine][0]=isolatedStubArray.get(targetEdgeB);
+					isolatedStubArray.remove(targetEdgeB);
+				}else{
+					list[nowLine][1]=isolatedStubArray.get(targetEdgeB);
+					isolatedStubArray.remove(targetEdgeB);
+					list[nowLine][0]=isolatedStubArray.get(targetEdgeA);
+					isolatedStubArray.remove(targetEdgeA);
 				}
-			}while(selfLoop || multiple);
 
-			if(targetEdgeA >= targetEdgeB){
-				list[nowLine][1]=isolatedStubArray.get(targetEdgeA);
-				isolatedStubArray.remove(targetEdgeA);
-				list[nowLine][0]=isolatedStubArray.get(targetEdgeB);
-				isolatedStubArray.remove(targetEdgeB);
-			}else{
-				list[nowLine][1]=isolatedStubArray.get(targetEdgeB);
-				isolatedStubArray.remove(targetEdgeB);
-				list[nowLine][0]=isolatedStubArray.get(targetEdgeA);
-				isolatedStubArray.remove(targetEdgeA);
-			}
+				disconnectedN -= 2;
+				nowLine++;
+			}while(disconnectedN>0);
+		}
 
-			disconnectedN -= 2;
-			nowLine++;
-		}while(disconnectedN>0);
 
 		int fragment_base,fragment_A,fragment_B;
 		int baseNode,targetNodeA,targetNodeB;
 		boolean conflict;
 		disconnectedN=clusterFragmentArray.size();
 		success = true;
-		generateLoop: do{
-			nowLoopLimit=loopLimit;
-			do{
-				fragment_base = rnd.nextInt(clusterFragmentArray.size());
-				fragment_A = rnd.nextInt(clusterFragmentArray.size());
-				fragment_B = rnd.nextInt(clusterFragmentArray.size());
+		if(clusterFragmentArray.size()>0) {
+			generateLoop: do{
+				nowLoopLimit=loopLimit;
+				do{
+					fragment_base = rnd.nextInt(clusterFragmentArray.size());
+					fragment_A = rnd.nextInt(clusterFragmentArray.size());
+					fragment_B = rnd.nextInt(clusterFragmentArray.size());
 
-				baseNode = clusterFragmentArray.get(fragment_base);
-				targetNodeA = clusterFragmentArray.get(fragment_A);
-				targetNodeB = clusterFragmentArray.get(fragment_B);
+					baseNode = clusterFragmentArray.get(fragment_base);
+					targetNodeA = clusterFragmentArray.get(fragment_A);
+					targetNodeB = clusterFragmentArray.get(fragment_B);
 
-				if(nowLoopLimit<=0){
-					if(message) System.out.println("生成に失敗しました。");
-					success = false;
-					break generateLoop;
-				}
-				nowLoopLimit--;
-
-				conflict = (baseNode==targetNodeA || baseNode==targetNodeB || targetNodeA==targetNodeB);
-				multiple=false;
-				boolean malti_Base_A,malti_Base_B,malti_A_B;
-				cheakMultiple:for(int i=0;i<nowLine;i++){
-					malti_Base_A = ((baseNode==list[i][0]&&targetNodeA==list[i][1])||
-							   (baseNode==list[i][1]&&targetNodeA==list[i][0]));
-					malti_Base_B = ((baseNode==list[i][0]&&targetNodeB==list[i][1])||
-							   (baseNode==list[i][1]&&targetNodeB==list[i][0]));
-					malti_A_B = ((targetNodeA==list[i][0]&&targetNodeB==list[i][1])||
-							   (targetNodeA==list[i][1]&&targetNodeB==list[i][0]));
-
-					if(malti_Base_A || malti_Base_B || malti_A_B){
-						multiple=true;
-						break cheakMultiple;
+					if(nowLoopLimit<=0){
+						if(message) System.out.println("生成に失敗しました。");
+						success = false;
+						break generateLoop;
 					}
-				}
-			}while(conflict || multiple);
+					nowLoopLimit--;
 
-			int[] fragmentList = new int[3];
-			fragmentList[0] = fragment_base;
-			fragmentList[1] = fragment_A;
-			fragmentList[2] = fragment_B;
-			for(int i=0;i<3;i++) {
-				int currentFragment1 = fragmentList[i%3];
-				int currentFragment2 = fragmentList[(i+1)%3];
-				if(currentFragment1 >= currentFragment2){
-					list[nowLine][1]=clusterFragmentArray.get(currentFragment1);
-					list[nowLine][0]=clusterFragmentArray.get(currentFragment2);
-				}else{
-					list[nowLine][1]=clusterFragmentArray.get(currentFragment2);
-					list[nowLine][0]=clusterFragmentArray.get(currentFragment1);
+					conflict = (baseNode==targetNodeA || baseNode==targetNodeB || targetNodeA==targetNodeB);
+					multiple=false;
+					boolean malti_Base_A,malti_Base_B,malti_A_B;
+					cheakMultiple:for(int i=0;i<nowLine;i++){
+						malti_Base_A = ((baseNode==list[i][0]&&targetNodeA==list[i][1])||
+								   (baseNode==list[i][1]&&targetNodeA==list[i][0]));
+						malti_Base_B = ((baseNode==list[i][0]&&targetNodeB==list[i][1])||
+								   (baseNode==list[i][1]&&targetNodeB==list[i][0]));
+						malti_A_B = ((targetNodeA==list[i][0]&&targetNodeB==list[i][1])||
+								   (targetNodeA==list[i][1]&&targetNodeB==list[i][0]));
+
+						if(malti_Base_A || malti_Base_B || malti_A_B){
+							multiple=true;
+							break cheakMultiple;
+						}
+					}
+				}while(conflict || multiple);
+
+				int[] fragmentList = new int[3];
+				fragmentList[0] = fragment_base;
+				fragmentList[1] = fragment_A;
+				fragmentList[2] = fragment_B;
+				for(int i=0;i<3;i++) {
+					int currentFragment1 = fragmentList[i%3];
+					int currentFragment2 = fragmentList[(i+1)%3];
+					if(currentFragment1 >= currentFragment2){
+						list[nowLine][1]=clusterFragmentArray.get(currentFragment1);
+						list[nowLine][0]=clusterFragmentArray.get(currentFragment2);
+					}else{
+						list[nowLine][1]=clusterFragmentArray.get(currentFragment2);
+						list[nowLine][0]=clusterFragmentArray.get(currentFragment1);
+					}
+					nowLine++;
 				}
-				nowLine++;
-			}
-			Arrays.sort(fragmentList);
-			clusterFragmentArray.remove(fragmentList[2]);
-			clusterFragmentArray.remove(fragmentList[1]);
-			clusterFragmentArray.remove(fragmentList[0]);
-		}while(!clusterFragmentArray.isEmpty());
+				Arrays.sort(fragmentList);
+				clusterFragmentArray.remove(fragmentList[2]);
+				clusterFragmentArray.remove(fragmentList[1]);
+				clusterFragmentArray.remove(fragmentList[0]);
+			}while(!clusterFragmentArray.isEmpty());
+		}
+		
 	}
 
 	private void generate(int[] isolated_DegreeList,int[] cluster_FragmentList,int loopLimit) {

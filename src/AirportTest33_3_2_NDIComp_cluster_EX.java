@@ -1,0 +1,106 @@
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
+public class AirportTest33_3_2_NDIComp_cluster_EX extends Job {
+
+	public static void main(String[] args) throws Exception {
+		AirportTest33_3_2_NDIComp_cluster_EX job = new AirportTest33_3_2_NDIComp_cluster_EX();
+
+		// input .ini file
+		job.run("param.ini");
+
+		// debag
+//		ArrayList<Object> list = new ArrayList<>();
+//		list.add(10000); list.add(4.0); list.add(0.0); list.add(1); list.add(10);
+//		job.run(list);
+	}
+
+	public void job(ArrayList<Object> controlParameterList) {
+		try {
+			int index = 0;
+			int N = Integer.parseInt(controlParameterList.get(index++).toString());
+			double s_average = Double.parseDouble(controlParameterList.get(index++).toString());
+			double t_average = Double.parseDouble(controlParameterList.get(index++).toString());
+			int tmax = Integer.parseInt(controlParameterList.get(index++).toString());
+			int imax = Integer.parseInt(controlParameterList.get(index++).toString());
+
+			Network net = null;
+
+			double sum_N = 0.0;
+			double sum_D = 0.0;
+			double sum_I = 0.0;
+			double sum_NI = 0.0;
+			double sum_DI = 0.0;
+
+			String folderName = "s=" + s_average + "_t=" + t_average;
+			new File(folderName).mkdirs();
+			folderName = folderName + "/";
+
+			PrintWriter pw1 = new PrintWriter(new File(folderName + "N-comp.csv"));
+			PrintWriter pw2 = new PrintWriter(new File(folderName + "D-comp.csv"));
+			PrintWriter pw3 = new PrintWriter(new File(folderName + "I-comp.csv"));
+			PrintWriter pw4 = new PrintWriter(new File(folderName + "NI-comp.csv"));
+			PrintWriter pw5 = new PrintWriter(new File(folderName + "DI-comp.csv"));
+
+			for (int i = 0; i < imax; i++) {
+				double f = i / (double) imax;
+				sum_N = 0.0;
+				sum_D = 0.0;
+				sum_I = 0.0;
+				sum_NI = 0.0;
+				sum_DI = 0.0;
+				for (int t = 0; t < tmax; t++) {
+					 do {
+						 MakePoisson dist_s = new MakePoisson(N, s_average);
+						 MakePoisson dist_t = new MakePoisson(N, t_average);
+						 net = new ClusteringConfigrationNetwork(dist_s.degree, dist_t.degree, 100, false);
+					 }while(!net.success);
+
+					net.setNode(false);
+
+					net.SitePercolation2018(f, true);
+
+					net.ConnectedCompornentNDI(true, false, false);
+					sum_N += net.maxCC_NID;
+
+					net.ConnectedCompornentNDI(false, true, false);
+					sum_D += net.maxCC_NID;
+
+					net.ConnectedCompornentNDI(false, false, true);
+					sum_I += net.maxCC_NID;
+
+					net.ConnectedCompornentNDI(true, false, true);
+					sum_NI += net.maxCC_NID;
+
+					net.ConnectedCompornentNDI(false, true, true);
+					sum_DI += net.maxCC_NID;
+				}
+				sum_N /= (tmax * N);
+				sum_D /= (tmax * N);
+				sum_I /= (tmax * N);
+				sum_NI /= (tmax * N);
+				sum_DI /= (tmax * N);
+
+				pw1.println(f + "," + sum_N);
+				pw2.println(f + "," + sum_D);
+				pw3.println(f + "," + sum_I);
+				pw4.println(f + "," + sum_NI);
+				pw5.println(f + "," + sum_DI);
+			}
+			net.printListExtention(folderName + "net.csv");
+
+			pw1.close();
+			pw2.close();
+			pw3.close();
+			pw4.close();
+			pw5.close();
+
+		} catch (Exception e) {
+			System.out.println("error happend!");
+			System.out.println(e);
+		}
+
+	}
+
+}

@@ -200,6 +200,9 @@ public abstract class Job extends JFrame{
 
 
 		JLabel img = new JLabel();
+		try {
+			img.setIcon(new ImageIcon(getClass().getResource("paula.png")));
+		}catch(Exception e) {};
 		if(new File("pola.gif").exists()){
 			img.setIcon(new ImageIcon("pola.gif"));
 		}else if(new File("src/pola.gif").exists()){
