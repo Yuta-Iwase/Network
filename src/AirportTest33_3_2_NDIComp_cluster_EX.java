@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class AirportTest33_3_2_NDIComp_cluster_EX extends Job {
@@ -23,6 +24,8 @@ public class AirportTest33_3_2_NDIComp_cluster_EX extends Job {
 			double s_average = Double.parseDouble(controlParameterList.get(index++).toString());
 			double t_average = Double.parseDouble(controlParameterList.get(index++).toString());
 			int tmax = Integer.parseInt(controlParameterList.get(index++).toString());
+			BigDecimal dec_f0 = new BigDecimal(controlParameterList.get(index++).toString());
+			BigDecimal dec_delta_f = new BigDecimal(controlParameterList.get(index++).toString());
 			int imax = Integer.parseInt(controlParameterList.get(index++).toString());
 
 			Network net = null;
@@ -44,7 +47,9 @@ public class AirportTest33_3_2_NDIComp_cluster_EX extends Job {
 			PrintWriter pw5 = new PrintWriter(new File(folderName + "DI-comp.csv"));
 
 			for (int i = 0; i < imax; i++) {
-				double f = i / (double) imax;
+				// f_i = f_0+delta_f*i
+				double f = dec_f0.add(dec_delta_f.multiply(new BigDecimal(i))).doubleValue();
+
 				sum_N = 0.0;
 				sum_D = 0.0;
 				sum_I = 0.0;
