@@ -12,7 +12,7 @@ public class AirportTest36_1_break_bimodal{
 
 		String f = "test36";
 		new File(f).mkdirs();
-		PrintWriter pw = new PrintWriter(new File(f+"s.csv"));
+		PrintWriter pw = new PrintWriter(new File(f+"/s.csv"));
 		HistogramGenerator hist = new HistogramGenerator();
 		py_PointPlot py = new py_PointPlot();
 
