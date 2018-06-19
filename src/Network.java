@@ -2060,6 +2060,9 @@ public class Network implements Cloneable{
 		}
 	}
 
+	/**
+	 * 重みを1へ戻す
+	 */
 	public void turnUniform(){
 		weight = new double[M];
 		for(int i=0;i<M;i++) weight[i]=1.0;
@@ -2369,6 +2372,118 @@ public class Network implements Cloneable{
 
 	public int CircuitReinforcedRandomWalk2(int tryN, double divider, int input_startNodeIndex, boolean disturb) {
 		return CircuitReinforcedRandomWalk2(tryN, divider, input_startNodeIndex, disturb, false);
+	}
+
+	/**
+	 * 無作為に辺を2つ選び、頂点の組み合わせを交換する。<br>
+	 * 引数で交換回数を指定する。<br>
+	 * 未指定の場合、10*M*log(M)回交換する。<br>
+	 * ・setNode及びsetEdgeを実行済みであることが前提。
+	 */
+	public void EdgeRewiring(int swap_times) {
+		for(int i=0;i<swap_times;i++) {
+			// 交換される辺を選択
+			int edge1 = (int)(M*Math.random());
+			int edge2 = (int)((M-1)*Math.random());
+			if(edge1==edge2) edge2=M-1;
+			// どちらの頂点を切断するか選択
+			int picked_edge1_index = (int)(2*Math.random());
+			int picked_edge2_index = (int)(2*Math.random());
+
+			// 自己ループの判定
+			boolean selfLoop =
+					(list[edge1][(picked_edge1_index+1)%2]==list[edge2][picked_edge2_index]) ||
+					(list[edge2][(picked_edge2_index+1)%2]==list[edge1][picked_edge1_index]);
+			// 多重辺の判定
+			boolean multi = false;
+			if(!selfLoop) {
+				for(int j=0;j<nodeList.get(list[edge1][(picked_edge1_index+1)%2]).list.size();j++) {
+					int current_node_index = nodeList.get(list[edge1][(picked_edge1_index+1)%2]).list.get(j).index;
+					if(current_node_index==list[edge2][picked_edge2_index]) {
+						multi = true;
+						break;
+					}
+				}
+			}
+			if(!multi) {
+				for(int j=0;j<nodeList.get(list[edge2][(picked_edge2_index+1)%2]).list.size();j++) {
+					int current_node_index = nodeList.get(list[edge2][(picked_edge2_index+1)%2]).list.get(j).index;
+					if(current_node_index==list[edge1][picked_edge1_index]) {
+						multi = true;
+						break;
+					}
+				}
+			}
+
+			// 問題ないようならスワッピング、だめならやり直し
+			if(!selfLoop && !multi) {
+				// 隣接頂点情報を消去
+				int current_node_index;
+				ArrayList<Node> current_list;
+				current_node_index = list[edge1][(picked_edge1_index+1)%2];
+				current_list = nodeList.get(current_node_index).list;
+				for(int j=0;j<current_list.size();j++) {
+					if(list[edge1][picked_edge1_index] == current_list.get(j).index) {
+						current_list.remove(j);
+						break;
+					}
+				}
+				current_node_index = list[edge1][picked_edge1_index];
+				current_list = nodeList.get(current_node_index).list;
+				for(int j=0;j<current_list.size();j++) {
+					if(list[edge1][(picked_edge1_index+1)%2] == current_list.get(j).index) {
+						current_list.remove(j);
+						break;
+					}
+				}
+				current_node_index = list[edge2][(picked_edge2_index+1)%2];
+				current_list = nodeList.get(current_node_index).list;
+				for(int j=0;j<current_list.size();j++) {
+					if(list[edge2][picked_edge2_index] == current_list.get(j).index) {
+						current_list.remove(j);
+						break;
+					}
+				}
+				current_node_index = list[edge2][picked_edge2_index];
+				current_list = nodeList.get(current_node_index).list;
+				for(int j=0;j<current_list.size();j++) {
+					if(list[edge2][(picked_edge2_index+1)%2] == current_list.get(j).index) {
+						current_list.remove(j);
+						break;
+					}
+				}
+
+				// 頂点を交換
+				int temp_index = list[edge2][picked_edge2_index];
+				list[edge2][picked_edge2_index] = list[edge1][picked_edge1_index];
+				list[edge1][picked_edge1_index] = temp_index;
+
+				// 隣接頂点情報を更新
+				current_node_index = list[edge1][0];
+				nodeList.get(current_node_index).list.add(nodeList.get(list[edge1][1]));
+				current_node_index = list[edge1][1];
+				nodeList.get(current_node_index).list.add(nodeList.get(list[edge1][0]));
+				current_node_index = list[edge2][0];
+				nodeList.get(current_node_index).list.add(nodeList.get(list[edge2][1]));
+				current_node_index = list[edge2][1];
+				nodeList.get(current_node_index).list.add(nodeList.get(list[edge2][0]));
+
+			}else {
+				i--;
+				continue;
+			}
+
+		}
+
+		// Node, Edgeデータを再構成
+		if(M==list.length) setNode(false);
+		else setNode();
+		setEdge();
+	}
+
+	public void EdgeRewiring() {
+		int t = (int)(10*M*Math.log(M));
+		EdgeRewiring(t);
 	}
 
 
