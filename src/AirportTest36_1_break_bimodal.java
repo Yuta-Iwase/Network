@@ -34,7 +34,7 @@ public class AirportTest36_1_break_bimodal{
 
 		for(int i=0;i<50;i++) {
 			System.out.println(hist_s[i][0] + "," + hist_s[i][1]/(double)net.M);
-			pw.println(hist_s[i][0] + "," + hist_s[i][1]);
+			pw.println(hist_s[i][0] + "," + hist_s[i][1]/(double)net.M);
 		}
 		pw.close();
 
