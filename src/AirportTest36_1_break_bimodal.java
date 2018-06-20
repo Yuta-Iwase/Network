@@ -18,7 +18,7 @@ public class AirportTest36_1_break_bimodal{
 
 
 		{
-			GEXFStylePrinter gexf = new GEXFStylePrinter(net.N, net.list, false, f+"network.gexf");
+			GEXFStylePrinter gexf = new GEXFStylePrinter(net.N, net.list, false, f+"/network.gexf");
 			gexf.init_1st();
 			int[] nullList = {};
 			gexf.printNode_2nd(null, "", nullList);
