@@ -9,7 +9,7 @@ public class AirportTest35_2_some_samples_exam_for_WorldAir{
 	public static void main(String[] args) throws Exception{
 		//// 変動するパラメータ
 		// メタ・パラメータ
-		int times = 1;
+		int times = 100;
 		int bins = 50;
 		final boolean useAlphaList = true;
 		final boolean useRandomWalk = false;
@@ -33,7 +33,7 @@ public class AirportTest35_2_some_samples_exam_for_WorldAir{
 //					"-2.0", "-1.9", "-1.8", "-1.7", "-1.6", "-1.5", "-1.4", "-1.3", "-1.2", "-1.1",
 //					"1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "2.0"
 //			};
-			String[] alpha_strList = {"0.0"};
+			String[] alpha_strList = {"-2.0"};
 			for(int i=0;i<alpha_strList.length;i++){
 				alphaList.add(new BigDecimal(alpha_strList[i]));
 			}
