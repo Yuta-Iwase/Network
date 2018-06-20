@@ -17,19 +17,20 @@ public class AirportTest36_1_break_bimodal{
 		py_PointPlot py = new py_PointPlot();
 
 
+		net.LinkSalience();
+
+		double[] s_list = new double[net.edgeList.size()];
+		for(int i=0;i<s_list.length;i++) s_list[i]=net.edgeList.get(i).linkSalience/(double)net.N;
+		double[][] hist_s = hist.binPlot(s_list, 50, false, 0, 1);
+
 		{
 			GEXFStylePrinter gexf = new GEXFStylePrinter(net.N, net.list, false, f+"/network.gexf");
 			gexf.init_1st();
 			int[] nullList = {};
 			gexf.printNode_2nd(null, "", nullList);
-			gexf.printEdge_3rd(net.weight, "", nullList);
+			gexf.printEdge_3rd(net.weight, "salience", s_list);
 			gexf.terminal_4th();
 		}
-		net.LinkSalience();
-
-		int[] s_list = new int[net.edgeList.size()];
-		for(int i=0;i<s_list.length;i++) s_list[i]=net.edgeList.get(i).linkSalience;
-		double[][] hist_s = hist.binPlot(s_list, 50, false, 0, 1);
 
 		for(int i=0;i<50;i++) {
 			System.out.println(hist_s[i][0] + "," + hist_s[i][1]/(double)net.M);
