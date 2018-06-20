@@ -2476,6 +2476,8 @@ public class Network implements Cloneable{
 		}
 
 		// Node, Edgeデータを再構成
+		nodeList.clear();
+		edgeList.clear();
 		if(M==list.length) setNode(false);
 		else setNode();
 		setEdge();
