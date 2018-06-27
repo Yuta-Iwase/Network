@@ -1210,12 +1210,14 @@ public class Network implements Cloneable{
 		for(int t=0;t<step;t++){
 			Network.Node currentNode = nodeList.get(currentNodeIndex);
 
-			// 訪問済み頂点数をチェック
-			if(!temp_visited[currentNodeIndex]){
-				temp_visited[currentNodeIndex] = true;
-				currentVisitedNodes++;
+			if(checkVisitedNodes) {
+				// 訪問済み頂点数をチェック
+				if(!temp_visited[currentNodeIndex]){
+					temp_visited[currentNodeIndex] = true;
+					currentVisitedNodes++;
+				}
+				visitedNodes[t] = currentVisitedNodes;
 			}
-			visitedNodes[t] = currentVisitedNodes;
 
 			if(currentNode.eList.size()>=1) {
 				// ここが各ランダムウォークで変化する内容(辺の選択方法)
