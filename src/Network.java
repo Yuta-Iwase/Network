@@ -52,7 +52,9 @@ public class Network implements Cloneable{
 	// setNode()->setEdge()で使用可能
 	ArrayList<Edge> edgeList = new ArrayList<Edge>();
 	// setLabel(String inputFilePath)メソッドを実行することでラベル設定を読み込むことができる
-	String[] label;
+	String[] nodeLabel;
+	// 直接この変数にアクセスして、手動で定義して利用する。
+	String[] edgeLabel;
 
 	// ConnectedCompornentにより生成される変数
 	int count_cc;
@@ -279,7 +281,7 @@ public class Network implements Cloneable{
 	 */
 	public void setLabel(String inputFilePath){
 		Scanner scan = null;
-		label = new String[N];
+		nodeLabel = new String[N];
 		String punctuation = "";
 		String currentLine;
 		int pancPos;
@@ -301,13 +303,13 @@ public class Network implements Cloneable{
 
 			// 読み込みファイル1行目のみループ外で処理する
 			pancPos = currentLine.indexOf(punctuation);
-			label[Integer.parseInt(currentLine.substring(0, pancPos))] = currentLine.substring(pancPos+1);
+			nodeLabel[Integer.parseInt(currentLine.substring(0, pancPos))] = currentLine.substring(pancPos+1);
 
 			// ループ開始
 			while(scan.hasNextLine()){
 				currentLine = scan.nextLine();
 				pancPos = currentLine.indexOf(punctuation);
-				label[Integer.parseInt(currentLine.substring(0, pancPos))] = currentLine.substring(pancPos+1);
+				nodeLabel[Integer.parseInt(currentLine.substring(0, pancPos))] = currentLine.substring(pancPos+1);
 			}
 
 			scan.close();
@@ -2488,6 +2490,46 @@ public class Network implements Cloneable{
 	public void EdgeRewiring() {
 		int t = (int)(10*M*Math.log(M));
 		EdgeRewiring(t);
+	}
+
+	public Network FilteringBySalience(double min_ExcludeSection, double max_ExcludeSection) {
+		Network net = new Network();
+		net.N = N;
+		int newM = M;
+
+		boolean[] exists = new boolean[edgeList.size()];
+		for(int i=0;i<edgeList.size();i++) {
+			if(min_ExcludeSection<=edgeList.get(i).linkSalience && edgeList.get(i).linkSalience<=max_ExcludeSection) {
+				exists[i] = false;
+				newM--;
+			}else {
+				exists[i] = true;
+			}
+		}
+
+		net.degree = new int[net.N];
+		for(int i=0;i<degree.length;i++) net.degree[i]=degree[i];
+		net.M = newM;
+		net.list = new int[newM][2];
+		net.weight = new double[newM];
+		net.edgeLabel = new String[newM]; //フィルタリング前のindexを記憶
+		boolean this_is_original = (edgeLabel==null);
+		int currentLine = 0;
+		for(int i=0;i<M;i++) {
+			if(exists[i]) {
+				net.list[currentLine][0] = list[i][0];
+				net.list[currentLine][1] = list[i][1];
+				net.weight[currentLine] = 1.0;
+				if(this_is_original) net.edgeLabel[currentLine] = Integer.toString(i);
+				else net.edgeLabel[currentLine] = edgeLabel[i];
+				currentLine++;
+			}else {
+				net.degree[list[i][0]]--;
+				net.degree[list[i][1]]--;
+			}
+		}
+
+		return net;
 	}
 
 
