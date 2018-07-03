@@ -10,7 +10,7 @@ public class ScaleFreeNetwork extends ConfigrationNetwork{
 	 * @param maxDegree 最大次数
 	 * @param loopLimit 生成時のループ数の許容値
 	 */
-	protected ScaleFreeNetwork(int N, double gamma, int minDegree, int maxDegree, int loopLimit) {
+	public ScaleFreeNetwork(int N, double gamma, int minDegree, int maxDegree, int loopLimit) {
 		super(N, gamma, minDegree, maxDegree, loopLimit);
 	}
 
