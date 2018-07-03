@@ -20,6 +20,22 @@ public class ConfigrationNetwork extends Network{
 		generate(degree, loopLimit, message);
 	}
 
+	/**
+	 * ScaleFreeNetwork.class用
+	 * @param N
+	 * @param gamma
+	 * @param minDegree
+	 * @param maxDegree
+	 * @param loopLimit
+	 */
+	protected ConfigrationNetwork(int N, double gamma, int minDegree, int maxDegree, int loopLimit) {
+		do {
+			MakePowerLaw dist = new MakePowerLaw(N, gamma, minDegree, maxDegree);
+			generate(dist.degree, loopLimit, false);
+		}while(!success);
+	}
+
+
 	private void generate(int[] degree,int loopLimit,boolean message) {
 		directed = false;
 		doubleCount = false;
