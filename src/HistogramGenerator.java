@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class HistogramGenerator {
 
-	private double[][] binPlot(double[] list,int bins,boolean logScale,double min,double max,boolean sorted) {
+	private double[][] binPlot(double[] list, int bins, boolean logScale, double min, double max, boolean sorted) {
 		// 度数、return用変数
 		double[][] frequency = new double[bins][2];
 		for(int i=0;i<bins;i++) frequency[i][1]=0;
@@ -60,7 +60,7 @@ public class HistogramGenerator {
 			if(logScale) currentMax = max;
 			else currentMax = max;
 			// カウント
-			while(list[currentListIndex]<currentMax) {
+			while(list[currentListIndex]<=currentMax) {
 				frequency[bins-1][1]++;
 				currentListIndex++;
 				if(currentListIndex>=listLength) {
