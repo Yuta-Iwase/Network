@@ -2535,11 +2535,23 @@ public class Network implements Cloneable{
 
 	// Networkｵﾌﾞｼﾞｪｸﾄを複製できるようにメソッド追加
 	public Network clone(){
-		try {
-			return (Network)super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new InternalError(e.toString());
+		Network net = new Network();
+		net.N = N;
+		net.M = M;
+		net.degree = new int[N];
+		for(int i=0;i<N;i++) net.degree[i]=degree[i];
+		net.list = new int[M][2];
+		for(int i=0;i<M;i++) {
+			net.list[i][0] = list[i][0];
+			net.list[i][1] = list[i][1];
+
 		}
+
+		if(weight != null) {
+			net.weight = new double[M];
+			for(int i=0;i<M;i++) net.weight[i]=weight[i];
+		}
+		return net;
 	}
 
 	protected class Node{
