@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class DMSNetwork extends Network{
-	public DMSNetwork(int N0, int N, int insertEdges) {
+	public DMSNetwork(int N0, int N, int insertEdges, int loopLimit) {
 		// 接続頂点決定判定用のリスト
 		ArrayList<Integer> stubList = new ArrayList<>();
 
@@ -45,11 +45,8 @@ public class DMSNetwork extends Network{
 		}
 
 		// Configurationの要領でネットワークを構築
-
+		ConfigrationNetwork.generate(this, degree, loopLimit, false);
 	}
 
-	private void generate() {
-
-	}
 
 }
