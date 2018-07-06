@@ -2,6 +2,9 @@ import java.util.ArrayList;
 
 public class DMSNetwork extends Network{
 	public DMSNetwork(int N0, int N, int insertEdges, int loopLimit) {
+		// 初期化
+		degree = new int[N];
+
 		// 接続頂点決定判定用のリスト
 		ArrayList<Integer> stubList = new ArrayList<>();
 
