@@ -13,11 +13,11 @@ import java.util.Random;
 public class ConfigrationNetwork extends Network{
 
 	public ConfigrationNetwork(int[] degree,int loopLimit) {
-		generate(degree, loopLimit);
+		generate(this, degree, loopLimit);
 	}
 
 	public ConfigrationNetwork(int[] degree,int loopLimit,boolean message){
-		generate(degree, loopLimit, message);
+		generate(this, degree, loopLimit, message);
 	}
 
 	/**
@@ -31,27 +31,27 @@ public class ConfigrationNetwork extends Network{
 	protected ConfigrationNetwork(int N, double gamma, int minDegree, int maxDegree, int loopLimit) {
 		do {
 			MakePowerLaw dist = new MakePowerLaw(N, gamma, minDegree, maxDegree);
-			generate(dist.degree, loopLimit, false);
+			generate(this, dist.degree, loopLimit, false);
 		}while(!success);
 	}
 
 
-	private void generate(int[] degree,int loopLimit,boolean message) {
-		directed = false;
-		doubleCount = false;
-		N = degree.length;
-		this.degree = new int[N];
+	public static void generate(Network net, int[] degree,int loopLimit,boolean message) {
+		net.directed = false;
+		net.doubleCount = false;
+		net.N = degree.length;
+		net.degree = new int[net.N];
 
 		ArrayList<Integer> array = new ArrayList<Integer>();
 		int sumDegree=0;
-		for(int i=0;i<N;i++){
+		for(int i=0;i<net.N;i++){
 			for(int j=0;j<degree[i];j++){
 				array.add(i);
 			}
-			this.degree[i] = degree[i];
+			net.degree[i] = degree[i];
 			sumDegree += degree[i];
 		}
-		M = sumDegree/2;
+		net.M = sumDegree/2;
 
 		Random rnd = new Random();
 		int disconnectedN=sumDegree;
@@ -59,8 +59,8 @@ public class ConfigrationNetwork extends Network{
 		int nowLine=0;
 		int nowLoopLimit;
 		boolean selfLoop,multiple;
-		success = true;
-		list = new int[M][2];
+		net.success = true;
+		net.list = new int[net.M][2];
 		generateLoop: do{
 			nowLoopLimit=loopLimit;
 			do{
@@ -69,7 +69,7 @@ public class ConfigrationNetwork extends Network{
 
 				if(nowLoopLimit<=0){
 					if(message) System.out.println("生成に失敗しました。");
-					success = false;
+					net.success = false;
 					break generateLoop;
 				}
 				nowLoopLimit--;
@@ -77,8 +77,8 @@ public class ConfigrationNetwork extends Network{
 				selfLoop= array.get(targetEdgeA)==array.get(targetEdgeB);
 				multiple=false;
 				cheakMultiple:for(int i=0;i<nowLine;i++){
-					if((array.get(targetEdgeA)==list[i][0]&&array.get(targetEdgeB)==list[i][1])||
-					   (array.get(targetEdgeA)==list[i][1]&&array.get(targetEdgeB)==list[i][0])){
+					if((array.get(targetEdgeA)==net.list[i][0]&&array.get(targetEdgeB)==net.list[i][1])||
+					   (array.get(targetEdgeA)==net.list[i][1]&&array.get(targetEdgeB)==net.list[i][0])){
 						multiple=true;
 						break cheakMultiple;
 					}
@@ -86,14 +86,14 @@ public class ConfigrationNetwork extends Network{
 			}while(selfLoop || multiple);
 
 			if(targetEdgeA >= targetEdgeB){
-				list[nowLine][1]=array.get(targetEdgeA);
+				net.list[nowLine][1]=array.get(targetEdgeA);
 				array.remove(targetEdgeA);
-				list[nowLine][0]=array.get(targetEdgeB);
+				net.list[nowLine][0]=array.get(targetEdgeB);
 				array.remove(targetEdgeB);
 			}else{
-				list[nowLine][1]=array.get(targetEdgeB);
+				net.list[nowLine][1]=array.get(targetEdgeB);
 				array.remove(targetEdgeB);
-				list[nowLine][0]=array.get(targetEdgeA);
+				net.list[nowLine][0]=array.get(targetEdgeA);
 				array.remove(targetEdgeA);
 			}
 
@@ -102,8 +102,8 @@ public class ConfigrationNetwork extends Network{
 		}while(disconnectedN>0);
 	}
 
-	private void generate(int[] degree,int loopLimit) {
-		generate(degree, loopLimit, true);
+	private void generate(Network net, int[] degree,int loopLimit) {
+		generate(net, degree, loopLimit, true);
 	}
 
 }
