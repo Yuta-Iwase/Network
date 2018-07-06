@@ -1,6 +1,8 @@
 public class テスト用{
 	public static void main(String[] args) throws Exception{
-		System.out.println(1/(double)2);
+		DMSNetwork net = new DMSNetwork(5, 1000, 3, 100);
+		
+		net.printList();
 
 	}
 }
