@@ -11,10 +11,14 @@ public class テスト用{
 		PrintWriter pw1 = new PrintWriter(new File(desktop + "DMS.csv"));
 		PrintWriter pw2 = new PrintWriter(new File(desktop + "BA.csv"));
 		for(int i=0;i<DMS.M;i++) {
-			pw1.println(DMS.degree[DMS.list[i][0]] + "," + DMS.degree[DMS.list[i][1]]);
+			int min = Math.min(DMS.degree[DMS.list[i][0]], DMS.degree[DMS.list[i][1]]);
+			int max = Math.max(DMS.degree[DMS.list[i][0]], DMS.degree[DMS.list[i][1]]);
+			pw1.println(min + "," + max);
 		}
 		for(int i=0;i<BA.M;i++) {
-			pw2.println(BA.degree[BA.list[i][0]] + "," + BA.degree[BA.list[i][1]]);
+			int min = Math.min(BA.degree[BA.list[i][0]], BA.degree[BA.list[i][1]]);
+			int max = Math.max(BA.degree[BA.list[i][0]], BA.degree[BA.list[i][1]]);
+			pw2.println(min + "," + max);
 		}
 
 		pw1.close();
