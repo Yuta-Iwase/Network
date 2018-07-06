@@ -29,7 +29,6 @@ public class DMSNetwork extends Network{
 					int chosedNode = stubList.get(chosedStub);
 					if(!currentChosedNodes.contains(chosedNode)) {
 						currentChosedNodes.add(chosedNode);
-						degree[chosedNode]++;
 					}else {
 						j--;
 						continue;

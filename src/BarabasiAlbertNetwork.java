@@ -27,8 +27,8 @@ public class BarabasiAlbertNetwork extends Network{
 			while(chosedNodeList.size()<insertEdges){
 				for(int m=0;m<insertEdges;m++){
 					rnd = (int)(sumDegree*Math.random());
-					x = rnd%i;
-					y = rnd/i;
+					x = rnd/2;
+					y = rnd%2;
 					if(chosedNodeList.contains(list[x][y])){
 						chosedNodeList.clear();
 						break;
@@ -41,12 +41,14 @@ public class BarabasiAlbertNetwork extends Network{
 			for(int m=0;m<insertEdges;m++){
 				list[currentLine][0] = i;
 				list[currentLine][1] = chosedNodeList.get(m);
+				degree[list[currentLine][0]]++;
+				degree[list[currentLine][1]]++;
+				currentLine++;
 			}
+			
+			sumDegree += insertEdges*2;
 		}
-
-		for(int m=0;m<list.length;m++){
-			System.out.println(list[m][0]+"\t"+list[m][1]);
-		}
+		
 	}
 
 
