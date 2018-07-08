@@ -3,25 +3,52 @@ import java.io.PrintWriter;
 
 public class テスト用{
 	public static void main(String[] args) throws Exception{
-		DMSNetwork DMS = new DMSNetwork(5, 1000, 2, 100);
-		BarabasiAlbertNetwork BA = new BarabasiAlbertNetwork(5, 1000, 2, 1L);
-//		net.printList("C:\\users\\owner\\desktop\\netDNS.csv");
-//		System.out.println(net.generateCount);
-		String desktop = "../../desktop/";
-		PrintWriter pw1 = new PrintWriter(new File(desktop + "DMS.csv"));
-		PrintWriter pw2 = new PrintWriter(new File(desktop + "BA.csv"));
-		for(int i=0;i<DMS.M;i++) {
-			int min = Math.min(DMS.degree[DMS.list[i][0]], DMS.degree[DMS.list[i][1]]);
-			int max = Math.max(DMS.degree[DMS.list[i][0]], DMS.degree[DMS.list[i][1]]);
-			pw1.println(min + "," + max);
-		}
-		for(int i=0;i<BA.M;i++) {
-			int min = Math.min(BA.degree[BA.list[i][0]], BA.degree[BA.list[i][1]]);
-			int max = Math.max(BA.degree[BA.list[i][0]], BA.degree[BA.list[i][1]]);
-			pw2.println(min + "," + max);
-		}
+		int N = 1000;
+		DMSNetwork DMS = new DMSNetwork(5, N, 2, 100);
+		BarabasiAlbertNetwork BA = new BarabasiAlbertNetwork(5, N, 2, 1L);
 
-		pw1.close();
-		pw2.close();
+//		PrintWriter pw3 = new PrintWriter(new File("c:\\users\\owner\\desktop\\heatmap.csv"));
+//		int maxDegree = 0;
+//		for(int i=0;i<N;i++){
+//			if(maxDegree<DMS.degree[i]) maxDegree=DMS.degree[i];
+//		}
+//		int[][] heatMap = new int[maxDegree+1][maxDegree+1];
+//		for(int i=0;i<DMS.M;i++){
+//			int v0 = DMS.list[i][0];
+//			int v1 = DMS.list[i][1];
+//			int k0 = DMS.degree[v0];
+//			int k1 = DMS.degree[v1];
+//			heatMap[k0][k1]++;
+//			heatMap[k1][k0]++;
+//		}
+//		for(int i=0;i<maxDegree+1;i++){
+//			for(int j=0;j<maxDegree;j++){
+//				pw3.print(Math.log(heatMap[i][j]+1) + ",");
+//			}
+//			pw3.println(Math.log(heatMap[i][maxDegree]+1));
+//		}
+//		pw3.close();
+		
+		PrintWriter pw4 = new PrintWriter(new File("c:\\users\\owner\\desktop\\heatmapBA.csv"));
+		int maxDegree = 0;
+		for(int i=0;i<N;i++){
+			if(maxDegree<BA.degree[i]) maxDegree=BA.degree[i];
+		}
+		int[][] heatMap = new int[maxDegree+1][maxDegree+1];
+		for(int i=0;i<BA.M;i++){
+			int v0 = BA.list[i][0];
+			int v1 = BA.list[i][1];
+			int k0 = BA.degree[v0];
+			int k1 = BA.degree[v1];
+			heatMap[k0][k1]++;
+			heatMap[k1][k0]++;
+		}
+		for(int i=0;i<maxDegree+1;i++){
+			for(int j=0;j<maxDegree;j++){
+				pw4.print(Math.log(heatMap[i][j]+1) + ",");
+			}
+			pw4.println(Math.log(heatMap[i][maxDegree]+1));
+		}
+		pw4.close();
 	}
 }
