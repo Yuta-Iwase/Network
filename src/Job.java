@@ -217,7 +217,10 @@ public abstract class Job extends JFrame{
 			img.setIcon(new ImageIcon("/Users/Owner/eclipse/Network/src/pola.gif"));
 		}else if(new File("/home/yuta/workspace/Network/src/pola.gif").exists()){
 			img.setIcon(new ImageIcon("/home/yuta/workspace/Network/src/pola.gif"));
+		}else if(new File("/Users/yutaiwase/Network/src/pola.gif").exists()){
+			img.setIcon(new ImageIcon("/Users/yutaiwase/eclipse/Network/src/paula.gif"));
 		}
+
 		img.setLayout(null);
 		img.setBounds(0, 10, 155, 117);
 		add(img);
