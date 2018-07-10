@@ -11,9 +11,8 @@ public class AirportTest37_2_Iterative_Filtering_for_DMS extends Job{
 	public static void main(String[] args) throws Exception{
 		if(args.length>1){
 			mailer = new SendMail(args[0], args[1]);
+			mailer.sendMyself("job start", "start your jobs<br>" + new Date().toString());
 		}
-
-		mailer.sendMyself("job start", "start your jobs<br>" + new Date().toString());
 
 		AirportTest37_2_Iterative_Filtering_for_DMS job = new AirportTest37_2_Iterative_Filtering_for_DMS();
 		job.run("param.ini");
