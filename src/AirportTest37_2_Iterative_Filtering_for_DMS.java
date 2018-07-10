@@ -3,11 +3,19 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 
+import Tools.SendMail;
+
 public class AirportTest37_2_Iterative_Filtering_for_DMS extends Job{
+	static SendMail mailer = null;
 
 	public static void main(String[] args) throws Exception{
+		mailer = new SendMail(args[0], args[1]);
+		mailer.sendMyself("job start", "start your jobs<br>" + new Date().toString());
+
 		AirportTest37_2_Iterative_Filtering_for_DMS job = new AirportTest37_2_Iterative_Filtering_for_DMS();
 		job.run("param.ini");
+
+		mailer.sendMyself("job complete", "your jobs complete!<br>" + new Date().toString());
 
 	}
 
