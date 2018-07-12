@@ -38,7 +38,7 @@ public class AirportTest35_3_some_samples_exam_forDMS extends Job{
 			int M0 = Integer.parseInt(controlParameterList.get(index++).toString());
 			double a = Double.parseDouble(controlParameterList.get(index++).toString());
 			// 重みパラメータ
-			double input_alpha = Double.parseDouble(controlParameterList.get(index++).toString());
+			String input_alpha = controlParameterList.get(index++).toString();
 			// 出力オプション
 			String markerColor = "purple";
 
@@ -485,7 +485,7 @@ public class AirportTest35_3_some_samples_exam_forDMS extends Job{
 
 
 			pw41.close();
-			py.plot("plot_highSalience_edges.py", f41.getAbsolutePath().replace("\\", "/"), "high_salience_edges", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "high salience edges", "${\\alpha}$", "$\\#HS(\\alpha) / N$", true, "${\\gamma}="+gamma+"$", "lower right");
+			py.plot("plot_highSalience_edges.py", f41.getAbsolutePath().replace("\\", "/"), "high_salience_edges", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "high salience edges", "${\\alpha}$", "${\\#}HS(\\alpha) / N$", true, "${\\gamma}="+gamma+"$", "lower right");
 
 			mailer.sendMyself("job complete", "DMS network alpha=" + input_alpha + "<br>" + new Date().toString());
 		} catch (Exception e) {
