@@ -3,6 +3,7 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Scanner;
 
 import Tools.SendMail;
 
@@ -18,7 +19,7 @@ public class AirportTest35_3_some_samples_exam_forDMS extends Job{
 		job.run("param.ini");
 
 //		ArrayList<Object> list = new ArrayList<>();
-//		list.add(1); list.add(5); list.add(1000); list.add(4); list.add(-1.2);
+//		list.add(1); list.add(5); list.add(1000); list.add(4); list.add(-1.2); list.add(0.0);
 //		job.run(list);
 	}
 
@@ -72,7 +73,20 @@ public class AirportTest35_3_some_samples_exam_forDMS extends Job{
 			File f41 = null;
 			PrintWriter pw41 = null;
 			f41 = new File("high_salience_edges.csv");
-			pw41 = new PrintWriter(f41);
+			if(f41.exists()) {
+				Scanner scan = new Scanner(new File("high_salience_edges.csv"));
+				ArrayList<String> lines = new ArrayList<>();
+				while(scan.hasNextLine()) {
+					lines.add(scan.nextLine());
+				}
+				scan.close();
+				pw41 = new PrintWriter(f41);
+				for(int i=0;i<lines.size();i++) {
+					pw41.println(lines.get(i));
+				}
+			}else {
+				pw41 = new PrintWriter(f41);
+			}
 			double HS_frac = 0;
 			double current_HS_frac = 0.0;
 
@@ -405,6 +419,7 @@ public class AirportTest35_3_some_samples_exam_forDMS extends Job{
 
 				HS_frac /= times;
 				pw41.println(alphaString + "," + HS_frac);
+				System.out.println("debug: writing->" + alphaString + "," + HS_frac);
 
 				double INV_SQUARE_N = 1.0/(N*N);
 				for(int i=0;i<N*N;i++) {
@@ -472,7 +487,7 @@ public class AirportTest35_3_some_samples_exam_forDMS extends Job{
 			pw41.close();
 			py.plot("plot_highSalience_edges.py", f41.getAbsolutePath().replace("\\", "/"), "high_salience_edges", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "high salience edges", "${\\alpha}$", "$\\#HS(\\alpha) / N$", true, "${\\gamma}="+gamma+"$", "lower right");
 
-			mailer.sendMyself("job complete", "DMS network<br>" + new Date().toString());
+			mailer.sendMyself("job complete", "DMS network alpha=" + input_alpha + "<br>" + new Date().toString());
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
