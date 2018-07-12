@@ -2,10 +2,19 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
+
+import Tools.SendMail;
 
 public class AirportTest33_3_2_NDIComp_cluster_EX extends Job {
+	static SendMail mailer = null;
 
 	public static void main(String[] args) throws Exception {
+		if(args.length>1) {
+			mailer = new SendMail(args[0], args[1]);
+			mailer.sendMyself("start", new Date().toString());
+		}
+
 		AirportTest33_3_2_NDIComp_cluster_EX job = new AirportTest33_3_2_NDIComp_cluster_EX();
 
 		// input .ini file
@@ -46,9 +55,10 @@ public class AirportTest33_3_2_NDIComp_cluster_EX extends Job {
 			PrintWriter pw4 = new PrintWriter(new File(folderName + "NI-comp.csv"));
 			PrintWriter pw5 = new PrintWriter(new File(folderName + "DI-comp.csv"));
 
+			double f = -1;
 			for (int i = 0; i < imax; i++) {
 				// f_i = f_0+delta_f*i
-				double f = dec_f0.add(dec_delta_f.multiply(new BigDecimal(i))).doubleValue();
+				f = dec_f0.add(dec_delta_f.multiply(new BigDecimal(i))).doubleValue();
 
 				sum_N = 0.0;
 				sum_D = 0.0;
@@ -100,6 +110,8 @@ public class AirportTest33_3_2_NDIComp_cluster_EX extends Job {
 			pw3.close();
 			pw4.close();
 			pw5.close();
+
+			mailer.sendMyself("finish your job", new Date().toString() + "<br>finally: f=" + f);
 
 		} catch (Exception e) {
 			System.out.println("error happend!");
