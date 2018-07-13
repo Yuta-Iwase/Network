@@ -13,6 +13,16 @@ public class DMSNetwork extends Network{
 	 * @param loopLimit 次数分布のリトライ回数
 	 */
 	public DMSNetwork(int N0, int N, int insertEdges, double a, int loopLimit) {
+		try {
+			// 引数の値が、生成不能な値になっている
+			if(N0<insertEdges) {
+				throw new IllegalArgumentException("引数の値が不正です(N0<insertEdges)");
+			}
+		}catch(IllegalArgumentException e) {
+			System.out.println(e);
+			System.exit(0);
+		}
+
 		do {
 			// 初期化
 			degree = new int[N];
