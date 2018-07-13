@@ -13,6 +13,7 @@ public class AirportTest35_3_some_samples_exam_forDMS extends Job{
 	public static void main(String[] args) throws Exception{
 		if(args.length>1) {
 			mailer = new SendMail(args[0], args[1]);
+			mailer.sendMyself("job start", "DMS network<br>" + System.getProperty("user.dir"));
 		}
 
 		AirportTest35_3_some_samples_exam_forDMS job = new AirportTest35_3_some_samples_exam_forDMS();
