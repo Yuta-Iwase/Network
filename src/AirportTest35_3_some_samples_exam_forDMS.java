@@ -16,11 +16,11 @@ public class AirportTest35_3_some_samples_exam_forDMS extends Job{
 		}
 
 		AirportTest35_3_some_samples_exam_forDMS job = new AirportTest35_3_some_samples_exam_forDMS();
-//		job.run("param.ini");
+		job.run("param.ini");
 
-		ArrayList<Object> list = new ArrayList<>();
-		list.add(1); list.add(10); list.add(1000); list.add(8); list.add(8.0); list.add(-1.0);
-		job.run(list);
+//		ArrayList<Object> list = new ArrayList<>();
+//		list.add(1); list.add(10); list.add(1000); list.add(8); list.add(8.0); list.add(-1.0);
+//		job.run(list);
 	}
 
 	@Override
