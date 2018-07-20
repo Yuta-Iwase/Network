@@ -90,7 +90,7 @@ public class AirportTest38_1_weight_variance_forDMS extends Job{
 				hs_frac /= times;
 				variance /= times;
 
-				pw.println(alpha + "\t" + variance + "\t" + hs_frac);
+				pw.println(variance + "," + hs_frac + ","  + alpha);
 				System.out.println(alpha + "\t" + variance + "\t" + hs_frac);
 			}
 
