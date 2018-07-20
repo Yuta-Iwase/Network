@@ -99,5 +99,18 @@ public class DMSNetwork extends Network{
 
 	}
 
+	/**
+	 * DMS(Dorogovtsev, Mendes, Samukhin) networkを作る。<br>
+	 * 次数分布の指数は、3+a/insertEdges となる。<br>
+	 * 注:初期頂点数は、insertEdges+1となる。<br>
+	 * @param N 最終的な頂点数
+	 * @param insertEdges 1回のステップに追加する辺の本数
+	 * @param a 頂点選択のときに各確率に履かせるゲタ
+	 * @param loopLimit 次数分布のリトライ回数
+	 */
+	public DMSNetwork(int N, int insertEdges, double a, int loopLimit) {
+		this(insertEdges+1, N, insertEdges, a, loopLimit);
+	}
+
 
 }

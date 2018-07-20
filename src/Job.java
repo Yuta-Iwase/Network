@@ -16,10 +16,13 @@ public abstract class Job extends JFrame{
 	private static final long serialVersionUID = 1L;
 	String gnuplotPath;
 	int progress;
+	static ArrayList<Object> pList = null;
+	static int pList_index;
 
 	// 直接打ち込む手法
 	final void run(ArrayList<Object> controlParameterList){
-//		job(controlParameterList);
+		pList = controlParameterList;
+		pList_index = 0;
 
 		init();
 
@@ -30,6 +33,15 @@ public abstract class Job extends JFrame{
 		repaint();
 		job(controlParameterList);
 		System.exit(0);
+	}
+
+	// 直接打ち込む手法(列挙型)
+	final void run(Object...objects) {
+		ArrayList<Object> controlParameterList = new ArrayList<>();
+		for(int i=0;i<objects.length;i++) {
+			controlParameterList.add(objects[i]);
+		}
+		run(controlParameterList);
 	}
 
 	// iniファイルを読み込む手法
@@ -80,6 +92,30 @@ public abstract class Job extends JFrame{
 	}
 
 	public abstract void job (ArrayList<Object> controlParameterList);
+
+	public void set_plist(ArrayList<Object> controlParameterList) {
+		pList = controlParameterList;
+	}
+
+	public String nextString_from_pList() {
+		return pList.get(pList_index++).toString();
+	}
+
+	public int nextInt_from_pList() {
+		return Integer.parseInt(pList.get(pList_index++).toString());
+	}
+
+	public long nextLong_from_pList() {
+		return Long.parseLong(pList.get(pList_index++).toString());
+	}
+
+	public double nextDouble_from_pList() {
+		return Double.parseDouble(pList.get(pList_index++).toString());
+	}
+
+	public boolean nextBoolean_from_pList() {
+		return Boolean.parseBoolean(pList.get(pList_index++).toString());
+	}
 
 	/*
 	 * gnuplotコマンドセット

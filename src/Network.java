@@ -1304,12 +1304,40 @@ public class Network implements Cloneable{
 	}
 
 	/**
+	 * 重みwをw∝(kk)^alphaになるように割り振る。
+	 * 以下の状況が必要<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 */
+	public void SetWeight_to_Alpha(double alpha){
+		weight = new double[edgeList.size()];
+		for(int i=0;i<edgeList.size();i++) {
+			int[] nodeIndex = new int[2];
+			nodeIndex[0]=edgeList.get(i).node[0];
+			nodeIndex[1]=edgeList.get(i).node[1];
+			int degreeProduct = degree[nodeIndex[0]]*degree[nodeIndex[1]];
+			double powered_degreeProduct = Math.pow(degreeProduct, alpha);
+			weight[edgeList.get(i).index] = powered_degreeProduct;
+		}
+	}
+
+	/**
 	 * biasedRW(alpha)で振られる重みの理論値に振り分ける。
 	 * 以下の状況が必要<br>
 	 * ●setNode()またはsetNode(false)適用済み<br>
 	 * ●setEdge()適用済み<br>
 	 */
-	public void SetWeight_to_Alpha(double alpha, int steps){
+	public void SetWeight_to_Alpha(double alpha, int steps) {
+		SetWeight_to_Alpha_Faithfully(alpha, steps);
+	}
+
+	/**
+	 * biasedRW(alpha)で振られる重みの理論値に振り分ける。
+	 * 以下の状況が必要<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 */
+	public void SetWeight_to_Alpha_Faithfully(double alpha, int steps){
 		double constFactor;
 		double sum_kk = 0.0;
 		weight = new double[edgeList.size()];
