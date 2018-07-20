@@ -11,6 +11,7 @@ import java.util.Random;
 //・生成失敗のメッセージがうっとおしいのでオプションで出さないように修正
 
 public class ConfigrationNetwork extends Network{
+	int generateCount = 0;
 
 	public ConfigrationNetwork(int[] degree,int loopLimit) {
 		generate(this, degree, loopLimit);
@@ -32,6 +33,7 @@ public class ConfigrationNetwork extends Network{
 		do {
 			MakePowerLaw dist = new MakePowerLaw(N, gamma, minDegree, maxDegree);
 			generate(this, dist.degree, loopLimit, false);
+			generateCount++;
 		}while(!success);
 	}
 
@@ -62,6 +64,7 @@ public class ConfigrationNetwork extends Network{
 		net.success = true;
 		net.list = new int[net.M][2];
 		generateLoop: do{
+
 			nowLoopLimit=loopLimit;
 			do{
 				targetEdgeA=rnd.nextInt(disconnectedN);

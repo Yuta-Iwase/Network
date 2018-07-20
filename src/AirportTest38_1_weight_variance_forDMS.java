@@ -27,6 +27,8 @@ public class AirportTest38_1_weight_variance_forDMS extends Job{
 			String delta_alpha_string = nextString_from_pList();
 			int alpha_times_string = nextInt_from_pList();
 
+			boolean weightShuffle = nextBoolean_from_pList();
+
 			// 解析用パラメータ
 			double hs_threshold = 0.9;
 			int retry_limit = 100;
@@ -44,7 +46,7 @@ public class AirportTest38_1_weight_variance_forDMS extends Job{
 			double inv_N = 1.0/N;
 
 			// PrintWriter設置
-			PrintWriter pw = new PrintWriter(new File("kmin" + k_min + ".txt"));
+			PrintWriter pw = new PrintWriter(new File("kmin" + k_min + (weightShuffle?"_shuffle":"") + ".txt"));
 
 			for(int al=0;al<alpha_times_string;al++) {
 				// alpha定義
@@ -62,6 +64,7 @@ public class AirportTest38_1_weight_variance_forDMS extends Job{
 					net.setEdge();
 					net.SetWeight_to_Alpha(alpha);
 					net.disturb();
+					if(weightShuffle) net.weightShuffle();
 
 					// salience処理
 					net.LinkSalience();
