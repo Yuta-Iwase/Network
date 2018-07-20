@@ -3,10 +3,10 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-public class AirportTest38_1_weight_variance extends Job{
+public class AirportTest38_1_weight_variance_forDMS extends Job{
 
 	public static void main(String[] args) {
-		AirportTest38_1_weight_variance job = new AirportTest38_1_weight_variance();
+		AirportTest38_1_weight_variance_forDMS job = new AirportTest38_1_weight_variance_forDMS();
 		job.run("param.ini");
 //		job.run(100,100,2.7,4,0,0.1,10);
 
