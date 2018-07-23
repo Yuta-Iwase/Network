@@ -1,33 +1,50 @@
 public class テスト用{
 	public static void main(String[] args) throws Exception{
-		int N = 1000;
-//		double gamma = 2.7;
-//		int k_min = 2;
+		Network net = new NetworkForCSVFile("FloridaEcosystem.csv", false, true, false, false);
+		net.setNode(false);
+		net.setEdge();
 //
-//		int times = 100;
-//
-//
-//		double a = k_min*(gamma-3.0);
-//		int[] degreeDist = new int[N];
-//		for(int t=0;t<times;t++) {
-//			DMSNetwork net = new DMSNetwork(N, k_min, a, 100);
-//			for(int i=0;i<net.N;i++) {
-//				degreeDist[net.degree[i]]++;
-//			}
+//		double[] realWeight = new double[net.M];
+//		for(int i=0;i<net.M;i++) {
+//			realWeight[i] = net.weight[i];
 //		}
-//		double inv_divider = 1.0/(N*times);
-//		for(int i=0;i<degreeDist.length;i++) {
-//			if(degreeDist[i]>0) {
-//				System.out.println(i + "\t" + degreeDist[i]*inv_divider);
-//			}
+//
+//		net.turnUniform();
+//		net.EdgeBetweenness();
+//		double[] b = new double[net.M];
+//		for(int i=0;i<net.M;i++) {
+//			b[i] = net.edgeList.get(i).betweenCentrality;
 //		}
-
-		int[] degree = new int[N];
-		for(int i=0;i<N;i++) {
-			degree[i] = 5;
-		}
-		Network net = new ConfigrationNetwork(degree, 100);
-		System.out.println(net.success);
+//
+//		net.SetWeight_to_Alpha(0.5);
+//		double[] weight_05 = new double[net.M];
+//		for(int i=0;i<net.M;i++) {
+//			weight_05[i] = net.weight[i];
+//		}
+//		net.turnUniform();
+//
+//		net.SetWeight_to_Alpha(1.0);
+//		double[] weight_10 = new double[net.M];
+//		for(int i=0;i<net.M;i++) {
+//			weight_10[i] = net.weight[i];
+//		}
+//		net.turnUniform();
+//
+//		net.SetWeight_to_Alpha(1.5);
+//		double[] weight_15 = new double[net.M];
+//		for(int i=0;i<net.M;i++) {
+//			weight_15[i] = net.weight[i];
+//		}
+//		net.turnUniform();
+//
+//
+//		for(int i=0;i<net.M;i++) {
+//			System.out.println(realWeight[i] + "\t" + b[i] + "\t" + weight_05[i] + "\t" + weight_10[i] + "\t" + weight_15[i]);
+//		
+//		
+//		}
+		
+		net.printList();
 
 	}
 }

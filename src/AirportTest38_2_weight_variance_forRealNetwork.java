@@ -11,7 +11,9 @@ public class AirportTest38_2_weight_variance_forRealNetwork {
 		// 構築、重み付け
 //		Network net = new NetworkForCSVFile("JPAirport/JPAirport_w.csv", false, true, false, false);
 //		Network net = new NetworkForCSVFile("WorldAir/WorldAir_w.csv",false,true,false,false);
-		Network net = new NetworkForCSVFile("CaenorhabditisElegans.csv", false, true, false, false);
+//		Network net = new NetworkForCSVFile("CaenorhabditisElegans.csv", false, true, false, false);
+		Network net = new NetworkForCSVFile("C:\\Users\\Owner\\Desktop\\job0723_4\\florida.csv", false, true, false, false);
+		
 		net.setNode(false);
 		net.setEdge();
 		double threshold_multi_N = hs_threshold*net.N;
@@ -45,7 +47,7 @@ public class AirportTest38_2_weight_variance_forRealNetwork {
 		variance += current_variance;
 
 
-		System.out.println(variance + "," + hs_frac + "," + "CE(shuffle)");
+		System.out.println(variance + "," + hs_frac + "," + "FloridaEcosystem");
 
 		System.out.println();
 		for(int i=0;i<net.M;i++) {

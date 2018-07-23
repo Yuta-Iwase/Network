@@ -209,6 +209,7 @@ public class Network implements Cloneable{
 	 * 頂点のリストnodeListを使うことができる。<br>
 	 * (注):doubleCountが偽のときはsetNode(boolean input_doubleCount)を使うこと<br>*/
 	public void setNode(){
+		nodeList.clear();
 		// 隣接リストを辞書式順序(昇順)へ整列
 		sort();
 
@@ -229,6 +230,7 @@ public class Network implements Cloneable{
 	/** setNode()ではdoubleCountが偽のときの
 	 * 動作がおかしかった。それを修正するためのオーバーロード*/
 	public void setNode(boolean input_doubleCount){
+		nodeList.clear();
 		// 隣接リストを辞書式順序(昇順)へ整列
 		sort();
 
@@ -262,6 +264,7 @@ public class Network implements Cloneable{
 	 * さらにsetNode()またはsetNode(false)適用後でないと使えない<br>
 	 * */
 	public void setEdge(){
+		edgeList.clear();
 		Edge currentEdge = null;
 		for(int i=0;i<M;i++){
 			// 現在のループで扱う辺
