@@ -25,7 +25,7 @@ public class AirportTest38_1_weight_variance_forDMS extends Job{
 
 			String min_alpha_string = nextString_from_pList();
 			String delta_alpha_string = nextString_from_pList();
-			int alpha_times_string = nextInt_from_pList();
+			int alpha_times = nextInt_from_pList();
 
 			boolean weightShuffle = nextBoolean_from_pList();
 
@@ -48,9 +48,8 @@ public class AirportTest38_1_weight_variance_forDMS extends Job{
 			// PrintWriter設置
 			PrintWriter pw = new PrintWriter(new File("kmin" + k_min + (weightShuffle?"_shuffle":"") + ".txt"));
 
-			for(int al=0;al<alpha_times_string;al++) {
+			for(int al=0;al<alpha_times;al++) {
 				// alpha定義
-				alpha_dec = alpha_dec.add(delta_alpha_dec);
 				double alpha = alpha_dec.doubleValue();
 
 				// 取るパラメータ
@@ -92,6 +91,9 @@ public class AirportTest38_1_weight_variance_forDMS extends Job{
 				}
 				hs_frac /= times;
 				variance /= times;
+
+				// alpha加算
+				alpha_dec = alpha_dec.add(delta_alpha_dec);
 
 				pw.println(variance + "," + hs_frac + ","  + alpha);
 				System.out.println(alpha + "\t" + variance + "\t" + hs_frac);
