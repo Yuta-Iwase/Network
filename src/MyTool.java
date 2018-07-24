@@ -1,5 +1,7 @@
 public class MyTool {
 
+	final static double DOUBLE_MACHINE_EPSILON = 2.2204460492503131E-16;
+
 	static int max(int[] array) {
 		int max = array[0];
 		for(int i=0;i<array.length;i++) {
@@ -46,6 +48,21 @@ public class MyTool {
 
 	static double square(double a) {
 		return a*a;
+	}
+
+	/**
+	 * マシンイプシロンを考慮して二数a,bを比較する<br>
+	 * 本質的にa==bならば0を、a>bなら1、b>aなら-1を返す。<br>
+	 * @param a
+	 * @param b
+	 * @return 0(a==b), 1(a>b), -1(b>a)
+	 */
+	static int compareDouble(double a, double b){
+		if(Math.abs(a-b)<DOUBLE_MACHINE_EPSILON){
+			return 0;
+		}else{
+			return a>b ? 1 : -1;
+		}
 	}
 
 }
