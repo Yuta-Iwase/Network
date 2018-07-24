@@ -47,10 +47,17 @@ public class Network implements Cloneable{
 	boolean weighted;
 	boolean success = true; //基本true サブクラス次第でfalseにもなる
 
+	//// レガシー
 	// setNode()メソッドを実行することでノードリストを使うことができる
 	ArrayList<Node> nodeList = new ArrayList<Node>();
 	// setNode()->setEdge()で使用可能
 	ArrayList<Edge> edgeList = new ArrayList<Edge>();
+
+	//// 新設
+	int[] neightborList = null;
+	int[] addressList = null;
+
+
 	// setLabel(String inputFilePath)メソッドを実行することでラベル設定を読み込むことができる
 	String[] nodeLabel;
 	// 直接この変数にアクセスして、手動で定義して利用する。
@@ -274,6 +281,30 @@ public class Network implements Cloneable{
 			// eListへ登録
 			nodeList.get(list[i][0]).eList.add(currentEdge);
 			nodeList.get(list[i][1]).eList.add(currentEdge);
+		}
+	}
+	/**
+	 *
+	 */
+	public void setNeightbor(){
+		// addressList初期化
+		addressList = new int[N];
+		addressList[0] = 0;
+		for(int i=1;i<N;i++){
+			addressList[i] = addressList[i-1] + degree[i-1];
+		}
+
+		// neightborListをどこまで埋めたか管理する変数
+		int[] cursor = new int[N];
+		for(int i=0;i<N;i++) cursor[i]=addressList[i];
+
+		// edgeListを参照してneightborListを生成
+		neightborList = new int[M*2];
+		for(int i=0;i<M;i++){
+			int left = list[i][0];
+			int right = list[i][1];
+			neightborList[cursor[left]++] = right;
+			neightborList[cursor[right]++] = left;
 		}
 	}
 
