@@ -77,17 +77,17 @@ public class AirportTest38_3_weight_variance_forRewiringNet extends Job{
 					hs_frac += current_hs_frac;
 
 					// 重み処理
-					double inv_average_w = 1.0/MyCalc.average(net.weight);
+					double inv_average_w = 1.0/MyTool.average(net.weight);
 					double average_wPrime = 0.0;
 					double square_average_wPrime = 0.0;
 					for(int i=0;i<net.M;i++) {
 						double current_wPrime = net.weight[i]*inv_average_w;
 						average_wPrime += current_wPrime;
-						square_average_wPrime += MyCalc.square(current_wPrime);
+						square_average_wPrime += MyTool.square(current_wPrime);
 					}
 					average_wPrime /= net.M;
 					square_average_wPrime /= net.M;
-					double current_variance = square_average_wPrime - MyCalc.square(average_wPrime);
+					double current_variance = square_average_wPrime - MyTool.square(average_wPrime);
 					variance += current_variance;
 
 				}

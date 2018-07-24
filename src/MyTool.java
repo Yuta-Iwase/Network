@@ -1,5 +1,4 @@
-
-public class MyCalc {
+public class MyTool {
 
 	static int max(int[] array) {
 		int max = array[0];
@@ -48,7 +47,5 @@ public class MyCalc {
 	static double square(double a) {
 		return a*a;
 	}
-
-
 
 }
