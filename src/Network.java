@@ -1166,8 +1166,8 @@ public class Network implements Cloneable{
 		ArrayList<ArrayList<Integer>> Pred = new ArrayList<ArrayList<Integer>>();
 		for(int i=0;i<N;i++) Pred.add(new ArrayList<Integer>());
 
-//		ArrayList<Edge> edge = new ArrayList<Edge>();
-//		for(int i=0;i<M;i++)edge.add(new Edge());
+		ArrayList<Edge> edge = new ArrayList<Edge>();
+		for(int i=0;i<M;i++)edge.add(new Edge());
 
 		int v,w,m,minIndex,vwEdge;
 		Double minDis;
@@ -1218,8 +1218,8 @@ public class Network implements Cloneable{
 						Pred.get(w).clear();
 					}
 					//path counting
-//					if(dist[w] == dist[v]+1.0/weight[vwEdge]){
-					if(MyTool.compareDouble(dist[w], dist[v]+1.0/weight[vwEdge]) == 0){
+					if(dist[w] == dist[v]+1.0/weight[vwEdge]){
+//					if(MyTool.compareDouble(dist[w], dist[v]+1.0/weight[vwEdge]) == 0){
 						Pred.get(w).add(v);
 					}
 				}
@@ -1241,7 +1241,7 @@ public class Network implements Cloneable{
 						listNode[1] = Math.max(list[m][0],list[m][1]);
 						if(listNode[0]==node[0]&&listNode[1]==node[1])break;
 					}
-//					edge.get(m).setNode(node[0], node[1]);
+					edge.get(m).setNode(node[0], node[1]);
 //					edge.get(m).linkSalience = edge.get(m).linkSalience+1;
 					edgeList.get(m).linkSalience += 1;
 				}
