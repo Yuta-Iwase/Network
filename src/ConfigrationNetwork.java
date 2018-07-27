@@ -82,28 +82,31 @@ public class ConfigrationNetwork extends Network{
 				}
 				nowLoopLimit--;
 
-				selfLoop= array.get(targetEdgeA)==array.get(targetEdgeB);
+				int aIndex = array.get(targetEdgeA);
+				int bIndex = array.get(targetEdgeB);
+				selfLoop= (aIndex==bIndex);
+
 				multiple=false;
-				cheakMultiple:for(int i=0;i<nowLine;i++){
-					if((array.get(targetEdgeA)==net.list[i][0]&&array.get(targetEdgeB)==net.list[i][1])||
-					   (array.get(targetEdgeA)==net.list[i][1]&&array.get(targetEdgeB)==net.list[i][0])){
-						multiple=true;
-						break cheakMultiple;
+				if(!selfLoop) {
+					cheakMultiple:for(int i=0;i<nowLine;i++){
+						if((array.get(targetEdgeA)==net.list[i][0]&&array.get(targetEdgeB)==net.list[i][1])||
+						   (array.get(targetEdgeA)==net.list[i][1]&&array.get(targetEdgeB)==net.list[i][0])){
+							multiple=true;
+							break cheakMultiple;
+						}
 					}
 				}
 			}while(selfLoop || multiple);
 
-			if(targetEdgeA >= targetEdgeB){
-				net.list[nowLine][1]=array.get(targetEdgeA);
-				array.remove(targetEdgeA);
-				net.list[nowLine][0]=array.get(targetEdgeB);
-				array.remove(targetEdgeB);
-			}else{
-				net.list[nowLine][1]=array.get(targetEdgeB);
-				array.remove(targetEdgeB);
-				net.list[nowLine][0]=array.get(targetEdgeA);
-				array.remove(targetEdgeA);
-			}
+			int smallerStub = Math.min(targetEdgeA, targetEdgeB);
+			int largerStub = Math.max(targetEdgeA, targetEdgeB);
+			int[] nodeIndexs = new int[2];
+			nodeIndexs[0] = array.get(largerStub);
+			array.remove(largerStub);
+			nodeIndexs[1] = array.get(smallerStub);
+			array.remove(smallerStub);
+			net.list[nowLine][0] = Math.min(nodeIndexs[0], nodeIndexs[1]);
+			net.list[nowLine][1] = Math.max(nodeIndexs[0], nodeIndexs[1]);
 
 			disconnectedN -= 2;
 			nowLine++;

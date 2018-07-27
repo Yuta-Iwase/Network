@@ -304,8 +304,6 @@ public class Network implements Cloneable{
 		neightborList = new int[M*2];
 		neightborIndexList = new int[M*2];
 		for(int i=0;i<M;i++) neightborIndexList[i]=-123456;
-		boolean[] ride = new boolean[M*2];
-		for(int i=0;i<2*M;i++) ride[i]=false;
 		for(int i=0;i<M;i++){
 			int left = list[i][0];
 			int right = list[i][1];
@@ -313,20 +311,6 @@ public class Network implements Cloneable{
 			neightborList[cursor[right]] = left;
 			neightborIndexList[cursor[left]] = i;
 			neightborIndexList[cursor[right]] = i;
-
-			if(ride[cursor[left]]){
-				System.out.println("debug: error! double ride");
-				System.out.println(left + "\t" + cursor[left] + "\t" + addressList[left+1]);
-				System.out.println();
-			}
-			if(ride[cursor[right]]){
-				System.out.println("debug: error! double ride");
-				System.out.println(right + "\t" + cursor[right] + "\t" + addressList[right+1]);
-				System.out.println();
-			}
-			ride[cursor[left]] = true;
-			ride[cursor[right]] = true;
-
 			cursor[left]++;
 			cursor[right]++;
 		}
@@ -1084,6 +1068,11 @@ public class Network implements Cloneable{
 	 * ●neighborList[]定義済み<br>
 	 */
 	public void LinkSalience(){
+		if(weight==null || weight.length<=0) {
+			System.out.println("weightが正しく定義されていません。プログラムを終了します。");
+			System.exit(1);
+		}
+
 		// salience初期化
 		linkSalience = new int[M];
 
@@ -1104,7 +1093,8 @@ public class Network implements Cloneable{
 		int v,w,minIndex;
 		Double minDis;
 
-
+		double[] inv_weight = new double[M];
+		for(int i=0;i<M;i++) inv_weight[i] = 1.0/weight[i];
 		for(int s=0 ; s<N ; s++){
 			//// single-source shortest-paths problem
 			// initialization
@@ -1138,17 +1128,9 @@ public class Network implements Cloneable{
 					final int currentCursor = vAddress + neighbor;
 					w = neightborList[currentCursor];
 					// path discovery
-					int aa = -1;
-					try{
-						aa = neightborIndexList[currentCursor];
-						boolean aaaa= dist[w] > dist[v] + 1.0/weight[aa];
-					}catch (Exception e) {
-						System.out.println("error:" + currentCursor);
-						System.out.println(v+ "\t" + w  + "\t" + aa);
-					}
 					int vwEdge = neightborIndexList[currentCursor];
-					if(dist[w] > dist[v] + 1.0/weight[vwEdge]){
-						dist[w] = dist[v] + 1.0/weight[vwEdge];
+					if(dist[w] > dist[v] + inv_weight[vwEdge]){
+						dist[w] = dist[v] + inv_weight[vwEdge];
 
 						// insert/update w
 						queue.add(w);
@@ -1199,13 +1181,14 @@ public class Network implements Cloneable{
 		}
 
 		// 旧プログラム用の配慮
-		if(edgeList!=null){
-			if(edgeList.size()>0){
-				for(int i=0;i<M;i++){
+//		if(edgeList!=null){
+//			if(edgeList.size()>0){
+//				for(int i=0;i<M;i++){
 //					edgeList.get(i).linkSalience = linkSalience[i];
-				}
-			}
-		}
+//				}
+//			}
+//		}
+
 	}
 
 	public void LinkSalience_legacy(){
