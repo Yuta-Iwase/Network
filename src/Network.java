@@ -47,7 +47,7 @@ public class Network implements Cloneable{
 	boolean weighted;
 	boolean success = true; //基本true サブクラス次第でfalseにもなる
 
-	//// レガシー
+	//// レガシー変数
 	// setNode()メソッドを実行することでノードリストを使うことができる
 	ArrayList<Node> nodeList = new ArrayList<Node>();
 	// setNode()->setEdge()で使用可能
@@ -56,6 +56,8 @@ public class Network implements Cloneable{
 	//// 新設
 	int[] neightborList = null;
 	int[] addressList = null;
+	int[] neightborIndexList = null;
+	int[] linkSalience = null;
 
 
 	// setLabel(String inputFilePath)メソッドを実行することでラベル設定を読み込むことができる
@@ -300,11 +302,33 @@ public class Network implements Cloneable{
 
 		// edgeListを参照してneightborListを生成
 		neightborList = new int[M*2];
+		neightborIndexList = new int[M*2];
+		for(int i=0;i<M;i++) neightborIndexList[i]=-123456;
+		boolean[] ride = new boolean[M*2];
+		for(int i=0;i<2*M;i++) ride[i]=false;
 		for(int i=0;i<M;i++){
 			int left = list[i][0];
 			int right = list[i][1];
-			neightborList[cursor[left]++] = right;
-			neightborList[cursor[right]++] = left;
+			neightborList[cursor[left]] = right;
+			neightborList[cursor[right]] = left;
+			neightborIndexList[cursor[left]] = i;
+			neightborIndexList[cursor[right]] = i;
+
+			if(ride[cursor[left]]){
+				System.out.println("debug: error! double ride");
+				System.out.println(left + "\t" + cursor[left] + "\t" + addressList[left+1]);
+				System.out.println();
+			}
+			if(ride[cursor[right]]){
+				System.out.println("debug: error! double ride");
+				System.out.println(right + "\t" + cursor[right] + "\t" + addressList[right+1]);
+				System.out.println();
+			}
+			ride[cursor[left]] = true;
+			ride[cursor[right]] = true;
+
+			cursor[left]++;
+			cursor[right]++;
 		}
 	}
 
@@ -1057,11 +1081,12 @@ public class Network implements Cloneable{
 	 * (注)<br>
 	 * 以下の状況が必要<br>
 	 * ●weight[]定義済み<br>
-	 * ●doubleCount=false<br>
-	 * ●setNode()またはsetNode(false)適用済み<br>
-	 * ●setEdge()適用済み<br>
+	 * ●neighborList[]定義済み<br>
 	 */
 	public void LinkSalience(){
+		// salience初期化
+		linkSalience = new int[M];
+
 		ArrayList<Integer> queue = new ArrayList<Integer>();
 		ArrayList<Integer> stack = new ArrayList<Integer>();
 
@@ -1069,29 +1094,33 @@ public class Network implements Cloneable{
 		double[] dist = new double[N];
 
 		//list of predecessors on shortest paths from source
-		ArrayList<ArrayList<Integer>> Pred = new ArrayList<ArrayList<Integer>>();
-		for(int i=0;i<N;i++) Pred.add(new ArrayList<Integer>());
+//		ArrayList<ArrayList<Integer>> Pred = new ArrayList<ArrayList<Integer>>();
+//		for(int i=0;i<N;i++) Pred.add(new ArrayList<Integer>());
+		int[] Pred = new int[2*M];
+		int[] PredIndex = new int[2*M];
+		int[] PredCursor = new int[N];
 
-//		ArrayList<Edge> edge = new ArrayList<Edge>();
-//		for(int i=0;i<M;i++)edge.add(new Edge());
-
-		int v,w,m,minIndex,vwEdge;
+//		int v,w,m,minIndex;
+		int v,w,minIndex;
 		Double minDis;
 
 
 		for(int s=0 ; s<N ; s++){
 			//// single-source shortest-paths problem
 			// initialization
-			for(int i=0 ; i<N ; i++){
-				Pred.get(i).clear();
-				dist[i] = Double.MAX_VALUE;
-			}
+//			for(int i=0 ; i<N ; i++){
+//				Pred.get(i).clear();
+//				dist[i] = Double.MAX_VALUE;
+//			}
+
+			for(int i=0;i<N;i++) PredCursor[i]=addressList[i]; //PredCursor初期化(事実上のPred初期化)
+			for(int i=0 ; i<N ; i++) dist[i]=Double.MAX_VALUE;
 			dist[s] = 0;
 			queue.add(s);
 
 			while(!queue.isEmpty()){
 				// queueからdist[v]が最小となるものを取り出す
-				minDis = Double.MAX_VALUE - 1.0;
+				minDis = Double.MAX_VALUE;
 				v = -1;
 				minIndex = -1;
 				for(int i=0;i<queue.size();i++){
@@ -1104,11 +1133,20 @@ public class Network implements Cloneable{
 				queue.remove(minIndex);
 				stack.add(v);
 
-				for(int neighbor=0 ; neighbor<nodeList.get(v).list.size() ; neighbor++){
-					w = nodeList.get(v).list.get(neighbor).index;
+				final int vAddress = addressList[v];
+				for(int neighbor=0 ; neighbor<degree[v] ; neighbor++){
+					final int currentCursor = vAddress + neighbor;
+					w = neightborList[currentCursor];
 					// path discovery
-//					vwEdge = searchEdge(v,w);
-					vwEdge = nodeList.get(v).eList.get(neighbor).index;
+					int aa = -1;
+					try{
+						aa = neightborIndexList[currentCursor];
+						boolean aaaa= dist[w] > dist[v] + 1.0/weight[aa];
+					}catch (Exception e) {
+						System.out.println("error:" + currentCursor);
+						System.out.println(v+ "\t" + w  + "\t" + aa);
+					}
+					int vwEdge = neightborIndexList[currentCursor];
 					if(dist[w] > dist[v] + 1.0/weight[vwEdge]){
 						dist[w] = dist[v] + 1.0/weight[vwEdge];
 
@@ -1121,35 +1159,50 @@ public class Network implements Cloneable{
 							}
 						}
 
-						Pred.get(w).clear();
+//						Pred.get(w).clear();
+						PredCursor[w] = addressList[w];
 					}
 					//path counting
-//					if(dist[w] == dist[v]+1.0/weight[vwEdge]){
 					if(MyTool.compareDouble(dist[w], dist[v]+1.0/weight[vwEdge]) == 0){
-						Pred.get(w).add(v);
+//						Pred.get(w).add(v);
+						Pred[PredCursor[w]] = v;
+						PredIndex[PredCursor[w]] = vwEdge;
+						PredCursor[w]++;
 					}
 				}
 			}
 
-			int[] node = new int[2];
-			int[] listNode = new int[2];
+//			int[] node = new int[2];
+//			int[] listNode = new int[2];
 			//// accumulation
 			while(!stack.isEmpty()){
 				w = stack.get(stack.size()-1);
 				stack.remove(stack.size()-1);
 
-				for(int i=0 ; i<Pred.get(w).size() ; i++){
-					v = Pred.get(w).get(i);
-					node[0] = Math.min(v,w);
-					node[1] = Math.max(v,w);
-					for(m=0;m<M;m++){
-						listNode[0] = Math.min(list[m][0],list[m][1]);
-						listNode[1] = Math.max(list[m][0],list[m][1]);
-						if(listNode[0]==node[0]&&listNode[1]==node[1])break;
-					}
-//					edge.get(m).setNode(node[0], node[1]);
-//					edge.get(m).linkSalience = edge.get(m).linkSalience+1;
-					edgeList.get(m).linkSalience += 1;
+				final int PredSize = PredCursor[w]-addressList[w];
+//				for(int i=0 ; i<Pred.get(w).size() ; i++){
+				for(int i=0 ; i<PredSize ; i++){
+//					v = Pred.get(w).get(i);
+////					v = Pred[addressList[w]+i];
+//					node[0] = Math.min(v,w);
+//					node[1] = Math.max(v,w);
+//					for(m=0;m<M;m++){
+//						listNode[0] = Math.min(list[m][0],list[m][1]);
+//						listNode[1] = Math.max(list[m][0],list[m][1]);
+//						if(listNode[0]==node[0]&&listNode[1]==node[1])break;
+//					}
+					int vwEdge = PredIndex[addressList[w]+i];
+//					edgeList.get(vwEdge).linkSalience += 1;
+					linkSalience[vwEdge]++;
+				}
+			}
+		}
+
+		// 旧プログラム用の配慮
+		if(edgeList!=null){
+			if(edgeList.size()>0){
+				for(int i=0;i<M;i++){
+//					edgeList.get(i).linkSalience = linkSalience[i];
 				}
 			}
 		}
@@ -1242,6 +1295,110 @@ public class Network implements Cloneable{
 						if(listNode[0]==node[0]&&listNode[1]==node[1])break;
 					}
 					edge.get(m).setNode(node[0], node[1]);
+//					edge.get(m).linkSalience = edge.get(m).linkSalience+1;
+					edgeList.get(m).linkSalience += 1;
+				}
+			}
+		}
+	}
+
+	/**
+	 * 辺のsalienceを計算しEdgeクラスのlinkSalienceへ受け渡す(Brandesを書き換えGradyが作った方法)<br>
+	 * 無向グラフのみ実行可能<br>
+	 * (注)<br>
+	 * 以下の状況が必要<br>
+	 * ●weight[]定義済み<br>
+	 * ●doubleCount=false<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 */
+	public void LinkSalience_legacy2(){
+		ArrayList<Integer> queue = new ArrayList<Integer>();
+		ArrayList<Integer> stack = new ArrayList<Integer>();
+
+		//distance from source
+		double[] dist = new double[N];
+
+		//list of predecessors on shortest paths from source
+		ArrayList<ArrayList<Integer>> Pred = new ArrayList<ArrayList<Integer>>();
+		for(int i=0;i<N;i++) Pred.add(new ArrayList<Integer>());
+
+//		ArrayList<Edge> edge = new ArrayList<Edge>();
+//		for(int i=0;i<M;i++)edge.add(new Edge());
+
+		int v,w,m,minIndex,vwEdge;
+		Double minDis;
+
+
+		for(int s=0 ; s<N ; s++){
+			//// single-source shortest-paths problem
+			// initialization
+			for(int i=0 ; i<N ; i++){
+				Pred.get(i).clear();
+				dist[i] = Double.MAX_VALUE;
+			}
+			dist[s] = 0;
+			queue.add(s);
+
+			while(!queue.isEmpty()){
+				// queueからdist[v]が最小となるものを取り出す
+				minDis = Double.MAX_VALUE - 1.0;
+				v = -1;
+				minIndex = -1;
+				for(int i=0;i<queue.size();i++){
+					if(minDis > dist[queue.get(i)]){
+						minDis = dist[queue.get(i)];
+						v = queue.get(i);
+						minIndex = i;
+					}
+				}
+				queue.remove(minIndex);
+				stack.add(v);
+
+				for(int neighbor=0 ; neighbor<nodeList.get(v).list.size() ; neighbor++){
+					w = nodeList.get(v).list.get(neighbor).index;
+					// path discovery
+//					vwEdge = searchEdge(v,w);
+					vwEdge = nodeList.get(v).eList.get(neighbor).index;
+					if(dist[w] > dist[v] + 1.0/weight[vwEdge]){
+						dist[w] = dist[v] + 1.0/weight[vwEdge];
+
+						// insert/update w
+						queue.add(w);
+						for(int i=0;i<queue.size()-1;i++){
+							if(queue.get(i) == w){
+								queue.remove(i);
+								break;
+							}
+						}
+
+						Pred.get(w).clear();
+					}
+					//path counting
+//					if(dist[w] == dist[v]+1.0/weight[vwEdge]){
+					if(MyTool.compareDouble(dist[w], dist[v]+1.0/weight[vwEdge]) == 0){
+						Pred.get(w).add(v);
+					}
+				}
+			}
+
+			int[] node = new int[2];
+			int[] listNode = new int[2];
+			//// accumulation
+			while(!stack.isEmpty()){
+				w = stack.get(stack.size()-1);
+				stack.remove(stack.size()-1);
+
+				for(int i=0 ; i<Pred.get(w).size() ; i++){
+					v = Pred.get(w).get(i);
+					node[0] = Math.min(v,w);
+					node[1] = Math.max(v,w);
+					for(m=0;m<M;m++){
+						listNode[0] = Math.min(list[m][0],list[m][1]);
+						listNode[1] = Math.max(list[m][0],list[m][1]);
+						if(listNode[0]==node[0]&&listNode[1]==node[1])break;
+					}
+//					edge.get(m).setNode(node[0], node[1]);
 //					edge.get(m).linkSalience = edge.get(m).linkSalience+1;
 					edgeList.get(m).linkSalience += 1;
 				}
@@ -1440,14 +1597,17 @@ public class Network implements Cloneable{
 	 * ●setEdge()適用済み<br>
 	 */
 	public void SetWeight_to_Alpha(double alpha){
-		weight = new double[edgeList.size()];
-		for(int i=0;i<edgeList.size();i++) {
+		weight = new double[M];
+		for(int i=0;i<M;i++) {
 			int[] nodeIndex = new int[2];
-			nodeIndex[0]=edgeList.get(i).node[0];
-			nodeIndex[1]=edgeList.get(i).node[1];
+//			nodeIndex[0]=edgeList.get(i).node[0];
+//			nodeIndex[1]=edgeList.get(i).node[1];
+			nodeIndex[0]=list[i][0];
+			nodeIndex[1]=list[i][1];
 			int degreeProduct = degree[nodeIndex[0]]*degree[nodeIndex[1]];
 			double powered_degreeProduct = Math.pow(degreeProduct, alpha);
-			weight[edgeList.get(i).index] = powered_degreeProduct;
+//			weight[edgeList.get(i).index] = powered_degreeProduct;
+			weight[i] = powered_degreeProduct;
 		}
 	}
 

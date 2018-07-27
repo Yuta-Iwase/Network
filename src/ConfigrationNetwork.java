@@ -53,6 +53,11 @@ public class ConfigrationNetwork extends Network{
 			net.degree[i] = degree[i];
 			sumDegree += degree[i];
 		}
+		if(sumDegree%2==1){
+			array.add(0);
+			net.degree[0]++;
+			sumDegree++;
+		}
 		net.M = sumDegree/2;
 
 		Random rnd = new Random();
