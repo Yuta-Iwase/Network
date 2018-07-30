@@ -1089,6 +1089,8 @@ public class Network implements Cloneable{
 		int[] PredIndex = new int[2*M];
 		int[] PredCursor = new int[N];
 
+		boolean[] contentQueue = new boolean[N];
+
 //		int v,w,m,minIndex;
 		int v,w,minIndex;
 		Double minDis;
@@ -1105,8 +1107,10 @@ public class Network implements Cloneable{
 
 			for(int i=0;i<N;i++) PredCursor[i]=addressList[i]; //PredCursor初期化(事実上のPred初期化)
 			for(int i=0 ; i<N ; i++) dist[i]=Double.MAX_VALUE;
+			for(int i=0 ; i<N ; i++) contentQueue[i]=false;
 			dist[s] = 0;
 			queue.add(s);
+			contentQueue[s] = true;
 
 			while(!queue.isEmpty()){
 				// queueからdist[v]が最小となるものを取り出す
@@ -1121,6 +1125,7 @@ public class Network implements Cloneable{
 					}
 				}
 				queue.remove(minIndex);
+				contentQueue[v] = false;
 				stack.add(v);
 
 				final int vAddress = addressList[v];
@@ -1133,13 +1138,18 @@ public class Network implements Cloneable{
 						dist[w] = dist[v] + inv_weight[vwEdge];
 
 						// insert/update w
-						queue.add(w);
-						for(int i=0;i<queue.size()-1;i++){
-							if(queue.get(i) == w){
-								queue.remove(i);
-								break;
+						if(contentQueue[w]) {
+							for(int i=0;i<queue.size();i++){
+								if(queue.get(i) == w){
+									queue.remove(i);
+//									System.out.println("ok");
+									break;
+								}
 							}
 						}
+						queue.add(w);
+						contentQueue[w] = true;
+//						System.out.println(queue.size());
 
 //						Pred.get(w).clear();
 						PredCursor[w] = addressList[w];
