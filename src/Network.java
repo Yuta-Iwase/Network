@@ -1191,13 +1191,13 @@ public class Network implements Cloneable{
 		}
 
 		// 旧プログラム用の配慮
-//		if(edgeList!=null){
-//			if(edgeList.size()>0){
-//				for(int i=0;i<M;i++){
-//					edgeList.get(i).linkSalience = linkSalience[i];
-//				}
-//			}
-//		}
+		if(edgeList!=null){
+			if(edgeList.size()>0){
+				for(int i=0;i<M;i++){
+					edgeList.get(i).linkSalience = linkSalience[i];
+				}
+			}
+		}
 
 	}
 

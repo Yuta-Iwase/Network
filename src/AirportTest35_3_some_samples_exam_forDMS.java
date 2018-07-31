@@ -17,11 +17,13 @@ public class AirportTest35_3_some_samples_exam_forDMS extends Job{
 		}
 
 		AirportTest35_3_some_samples_exam_forDMS job = new AirportTest35_3_some_samples_exam_forDMS();
-		job.run("param.ini");
+//		job.run("param.ini");
+		job.run(1, 5, 1000, 4, 2.7, "1.0");
 
 //		ArrayList<Object> list = new ArrayList<>();
 //		list.add(1); list.add(10); list.add(1000); list.add(8); list.add(8.0); list.add(-1.0);
 //		job.run(list);
+		System.out.println("job complete");
 	}
 
 	@Override
@@ -37,7 +39,7 @@ public class AirportTest35_3_some_samples_exam_forDMS extends Job{
 			int N0 = Integer.parseInt(controlParameterList.get(index++).toString());
 			int N = Integer.parseInt(controlParameterList.get(index++).toString());
 			int M0 = Integer.parseInt(controlParameterList.get(index++).toString());
-			double a = Double.parseDouble(controlParameterList.get(index++).toString());
+			double gamma = Double.parseDouble(controlParameterList.get(index++).toString());
 			// 重みパラメータ
 			String input_alpha = controlParameterList.get(index++).toString();
 			// 出力オプション
@@ -46,7 +48,7 @@ public class AirportTest35_3_some_samples_exam_forDMS extends Job{
 			boolean useRandomWalk = false;
 
 
-			double gamma = 3.0+a/M0;
+			double a = (gamma-3.0)*M0;
 
 
 			// アルファ周りの設定
@@ -234,7 +236,9 @@ public class AirportTest35_3_some_samples_exam_forDMS extends Job{
 				for(int t=0;t<times;t++) {
 					// ネットワーク構築
 					Network net;
-					net = new DMSNetwork(N0, N, M0, a, 100);
+//					net = new DMSNetwork(N0, N, M0, a, 100);
+					net = new DMSNetwork(N, M0, a, 100);
+					net.setNeightbor();
 					net.setNode(false);
 					net.setEdge();
 					final double INV_M = 1.0/net.M;
