@@ -6,9 +6,9 @@ public class AirportTest40_check_wVSkk extends Job{
 
 	public static void main(String[] args) {
 		AirportTest40_check_wVSkk job = new AirportTest40_check_wVSkk();
-//		job.run("param.ini");
+		job.run("param.ini");
 
-		job.run(1000,4,2.7,2.0,100000);
+//		job.run(1000, 4, 2.7, 2.0, 100000);
 
 	}
 
@@ -44,7 +44,17 @@ public class AirportTest40_check_wVSkk extends Job{
 			pw.close();
 
 			py_PointPlot py = new py_PointPlot();
-//			py.plot(fileNameFraction+".py", fileNameFraction, str_outputName, dou_plotRangeX_start, dou_plotRangeX_end, dou_plotRangeY_start, dou_plotRangeY_end, bool_withLine, str_lineColor, bool_dottedLine, bool_withPoint, str_pointColor, int_pointSize, int_accumulationMode, bool_logscaleX, bool_logscaleY, str_title, str_xLabel, str_yLabel, bool_withLegend, str_legendLabel, str_legendPosition);
+			py.plot(folderPath+"plot_"+fileNameFraction+".py", fileNameFraction+".csv", fileNameFraction,
+					0.0, 0.0,
+					0.0, 0.0,
+					false, "black", false,
+					true, "blue", 5,
+					"o", true,
+					0, true, true,
+					"$w$ vs $kk$", "$k_i k_j$", "$w$",
+					true, "${\\alpha}=$"+alpha+" ${\\gamma}=$"+gamma, "upper left",
+					"y=(x**" +alpha+")", "red", false, "$y=x^{"+alpha+"}$"
+					);
 		}catch (Exception e) {
 			// TODO: handle exception
 		}
