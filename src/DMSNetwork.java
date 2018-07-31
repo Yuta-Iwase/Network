@@ -24,6 +24,9 @@ public class DMSNetwork extends Network{
 		}
 
 		do {
+			// debug
+			int sumDegree = 0;
+
 			// 初期化
 			degree = new int[N];
 
@@ -42,6 +45,7 @@ public class DMSNetwork extends Network{
 				int N0_additionalStub = (N0-1)-N0_initStub;
 				for(int i=0;i<N0;i++) {
 					degree[i] = N0-1;
+					sumDegree += degree[i];
 					for(int j=0;j<N0_additionalStub;j++) {
 						additionalStub_List.add(i);
 					}
@@ -58,10 +62,11 @@ public class DMSNetwork extends Network{
 
 				// 選択
 				for(int j=0;j<insertEdges;j++) {
+
 					double r = Math.random()*total_probability;
 					int chosedNode = -1;
 					if(r<=total_init_prob) {
-						chosedNode = (int)Math.round(r/INIT_VALUE);
+						chosedNode = (int)(Math.random()*i);
 					}else {
 						int chosedStub = (int)(Math.random()*additionalStub_List.size());
 						chosedNode = additionalStub_List.get(chosedStub);
@@ -80,15 +85,19 @@ public class DMSNetwork extends Network{
 					int currentChosedNode = currentChosedNodes.get(j);
 					additionalStub_List.add(currentChosedNode);
 					degree[currentChosedNode]++;
+					sumDegree++;
 				}
 
 				// 追加頂点の初期情報設定
 				degree[i] = insertEdges;
+				sumDegree += insertEdges;
 
 				// total_probability, sum_degreeの更新
 				total_probability += 2*insertEdges+a;
 				total_init_prob += INIT_VALUE;
+
 			}
+
 
 			// Configurationの要領でネットワークを構築
 			ConfigrationNetwork.generate(this, degree, loopLimit, false);
