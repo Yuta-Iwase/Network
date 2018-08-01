@@ -123,7 +123,7 @@ public class py_PointPlot {
 		temp = temp + temp_intArray[temp_intArray.length-1] + "]";
 		argCodeList.add(temp);
 
-		temp = "pointColors = [";
+		temp = "pointDescription = [";
 		temp_strArray = strArray_pointDescription;
 		for(int i=0;i<temp_strArray.length-1;i++) {
 			temp = temp + "\"" + temp_strArray[i] + "\", ";
