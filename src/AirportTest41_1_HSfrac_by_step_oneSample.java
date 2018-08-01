@@ -2,10 +2,10 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-public class AirportTest41_HSfrac_by_step extends Job{
+public class AirportTest41_1_HSfrac_by_step_oneSample extends Job{
 
 	public static void main(String[] args) {
-		AirportTest41_HSfrac_by_step job = new AirportTest41_HSfrac_by_step();
+		AirportTest41_1_HSfrac_by_step_oneSample job = new AirportTest41_1_HSfrac_by_step_oneSample();
 //		job.run("param.ini");
 
 		job.run(1000, 4, 2.7, 2.0, 50, 1);
@@ -22,13 +22,12 @@ public class AirportTest41_HSfrac_by_step extends Job{
 		int delta_scaledStep = nextInt_from_pList();
 
 		try {
-			String folderName = "test41";
+			String folderName = "test41_1";
 			new File(folderName).mkdirs();
 			String folderPath = folderName+"/";
 			String fileNameFraction = "alpha" + alpha + "_gamma" + gamma + "_kmin" + kmin;
 			PrintWriter pw1 = new PrintWriter(new File(folderPath + fileNameFraction + ".csv"));
 
-//			int divided_max = max_scaledStep;
 			double a = (gamma-3)*kmin;
 			int hs_frac;
 			int hs_threshold = (int)(N*0.9);
@@ -51,12 +50,9 @@ public class AirportTest41_HSfrac_by_step extends Job{
 			}
 			System.out.println(currentStep/N + "\t" + hs_frac*INV_N);
 			pw1.println(currentStep/N + "," + hs_frac*INV_N);
-//			System.out.println(currentStep+1 + "\t" + hs_frac*INV_N);
-//			pw1.println(currentStep+1 + "," + hs_frac*INV_N);
 
 			walkerNode = (int)(Math.random()*net.N);
 			currentStep = DELTA_STEP;
-//			currentStep = 1;
 			int beforeStep = 0;
 			while(true) {
 				int nextWalkerNode = net.BiasedRandomWalk_continueWeight(currentStep-beforeStep, 1.0, alpha, walkerNode, 0.0, true);
@@ -67,16 +63,12 @@ public class AirportTest41_HSfrac_by_step extends Job{
 				for(int i=0;i<net.M;i++) {
 					if(net.linkSalience[i]>=hs_threshold) hs_frac++;
 				}
-//				System.out.println(currentStep+1 + "\t" + hs_frac*INV_N);
-//				pw1.println(currentStep+1 + "," + hs_frac*INV_N);
 				System.out.println(currentStep/N + "\t" + hs_frac*INV_N);
 				pw1.println(currentStep/N + "," + hs_frac*INV_N);
 
 				beforeStep = currentStep;
 				currentStep += DELTA_STEP;
-//				divided_max *= 0.1;
 				if(currentStep>max_scaledStep*N) break;
-//				if(1.0>divided_max) break;
 			}
 			pw1.close();
 
