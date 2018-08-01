@@ -1072,6 +1072,10 @@ public class Network implements Cloneable{
 			System.out.println("weightが正しく定義されていません。プログラムを終了します。");
 			System.exit(1);
 		}
+		if(neightborList==null || neightborList.length<=0) {
+			System.out.println("neighborListが正しく定義されていません。プログラムを終了します。");
+			System.exit(1);
+		}
 
 		// salience初期化
 		linkSalience = new int[M];
