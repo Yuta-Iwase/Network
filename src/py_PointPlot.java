@@ -175,9 +175,9 @@ public class py_PointPlot {
 		temp = "function_List = [";
 		temp_strArray = strArray_function;
 		for(int i=0;i<temp_strArray.length-1;i++) {
-			temp = temp + "\"" + (temp_strArray[i].length()>0?"\"" + temp_strArray[i] + "\"":"") + "\", ";
+			temp = temp + "\"" + (temp_strArray[i].length()>0?"\"" + temp_strArray[i] + "\"":"") + ", ";
 		}
-		temp = temp + "\"" + (temp_strArray[temp_strArray.length-1].length()>0?"\"" + temp_strArray[temp_strArray.length-1] + "\"":"") + "]";
+		temp = temp + (temp_strArray[temp_strArray.length-1].length()>0?"\"" + temp_strArray[temp_strArray.length-1] + "\"":"") + "]";
 		argCodeList.add(temp);
 
 		temp = "function_LineColors = [";
