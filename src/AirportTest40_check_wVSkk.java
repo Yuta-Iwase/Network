@@ -8,7 +8,7 @@ public class AirportTest40_check_wVSkk extends Job{
 		AirportTest40_check_wVSkk job = new AirportTest40_check_wVSkk();
 		job.run("param.ini");
 
-//		job.run(1000, 4, 2.7, 2.0, 100000);
+//		job.run(1000, 4, 2.7, 1.0, 10000000);
 
 	}
 
