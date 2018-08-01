@@ -1469,16 +1469,16 @@ public class Network implements Cloneable{
 	/**
 	 * BiasedRandomWalkの大本となるメソッド
 	 */
-	private Object[] BiasedRandomWalk_Core(int step, double deltaW, double alpha, int seed, double teleportP, boolean disturb, boolean checkVisitedNodes) {
+	private Object[] BiasedRandomWalk_Core(int step, double deltaW, double alpha, int startNode, double teleportP, boolean disturb, boolean checkVisitedNodes, boolean continueWeight) {
 		// 戻り値用リスト
 		// 0:終了時のwalkerの居る頂点のindex
 		// 1:各ステップごとの訪問済み頂点数の数
 		Object[] returnList = new Object[2];
 
-		weight = new double[M];
+		if(!continueWeight) weight = new double[M];
 
 		// 作業変数定義
-		int currentNodeIndex = seed%N;
+		int currentNodeIndex = startNode%N;
 		boolean[] temp_visited = null;
 		int[] visitedNodes = null;
 		int currentVisitedNodes = 0;
@@ -1561,8 +1561,8 @@ public class Network implements Cloneable{
 	 * ●setEdge()適用済み<br>
 	 *
 	 */
-	public int BiasedRandomWalk(int step, double deltaW, double alpha, int seed, double teleportP, boolean disturb) {
-		return (int)(BiasedRandomWalk_Core(step, deltaW, alpha, seed, teleportP, disturb,false)[0]);
+	public int BiasedRandomWalk(int step, double deltaW, double alpha, int startNode, double teleportP, boolean disturb) {
+		return (int)(BiasedRandomWalk_Core(step, deltaW, alpha, startNode, teleportP, disturb, false, false)[0]);
 	}
 
 	public int BiasedRandomWalk(int step, double deltaW, double alpha, double teleportP, boolean disturb) {
@@ -1584,7 +1584,20 @@ public class Network implements Cloneable{
 	 *
 	 */
 	public int[] BiasedRandomWalk_checkVisitedNodes(int step, double deltaW, double alpha, int seed, double teleportP, boolean disturb) {
-		return (int[])(BiasedRandomWalk_Core(step, deltaW, alpha, seed, teleportP, disturb, true)[1]);
+		return (int[])(BiasedRandomWalk_Core(step, deltaW, alpha, seed, teleportP, disturb, true, false)[1]);
+	}
+
+	/**
+	 * BiasedRandomWalkを実行する。<br>
+	 * 加えて、各ステップごとの訪問済み頂点数を返す。<br>
+	 * <b>開始時の重みは、開始以前の重みを利用し、加算していく。</b><br>
+	 * 以下の状況が必要<br>
+	 * ●setNode()またはsetNode(false)適用済み<br>
+	 * ●setEdge()適用済み<br>
+	 *
+	 */
+	public int BiasedRandomWalk_continueWeight(int step, double deltaW, double alpha, int seed, double teleportP, boolean disturb) {
+		return (int)(BiasedRandomWalk_Core(step, deltaW, alpha, seed, teleportP, disturb, true, true)[0]);
 	}
 
 	/**

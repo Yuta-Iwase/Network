@@ -55,9 +55,7 @@ public class AirportTest40_1_check_wVSkk extends Job{
 					true, "${\\alpha}=$"+alpha+" ${\\gamma}=$"+gamma, "upper left",
 					"y=(x**" +alpha+")", "red", false, "$y=x^{"+alpha+"}$"
 					);
-		}catch (Exception e) {
-			// TODO: handle exception
-		}
+		}catch (Exception e) {}
 
 	}
 
