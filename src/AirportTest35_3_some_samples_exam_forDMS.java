@@ -17,8 +17,8 @@ public class AirportTest35_3_some_samples_exam_forDMS extends Job{
 		}
 
 		AirportTest35_3_some_samples_exam_forDMS job = new AirportTest35_3_some_samples_exam_forDMS();
-//		job.run("param.ini");
-		job.run(1, 5, 1000, 4, 2.7, "1.0");
+		job.run("param.ini");
+//		job.run(1, 1000, 4, 2.7, "1.0");
 
 //		ArrayList<Object> list = new ArrayList<>();
 //		list.add(1); list.add(10); list.add(1000); list.add(8); list.add(8.0); list.add(-1.0);
@@ -36,7 +36,6 @@ public class AirportTest35_3_some_samples_exam_forDMS extends Job{
 			int times = Integer.parseInt(controlParameterList.get(index++).toString());
 			int bins = 50;
 			// ネットワークパラメータ
-			int N0 = Integer.parseInt(controlParameterList.get(index++).toString());
 			int N = Integer.parseInt(controlParameterList.get(index++).toString());
 			int M0 = Integer.parseInt(controlParameterList.get(index++).toString());
 			double gamma = Double.parseDouble(controlParameterList.get(index++).toString());
@@ -103,7 +102,7 @@ public class AirportTest35_3_some_samples_exam_forDMS extends Job{
 			for(int alpha_factor=0;alpha_factor<ALPHA_CONTROLED_TIMES;alpha_factor++) {
 				double alpha = dec_current_alpha.doubleValue();
 				String alphaString = dec_current_alpha.toString();
-				String temp_fileName = "alpha=" + alphaString;
+				String temp_fileName = "[" + progress +"]" + "alpha" + alphaString + "_gamma" + gamma + "_kmin" + M0;
 				new File(temp_fileName).mkdirs();
 				dec_current_alpha = dec_current_alpha.add(ALPHA_WIDTH);
 				start_time = System.currentTimeMillis();

@@ -65,4 +65,12 @@ public class MyTool {
 		}
 	}
 
+	static void printList(int[] list) {
+		System.out.print("{");
+		for(int i=0;i<list.length-1;i++) {
+			System.out.print(list[i] + ", ");
+		}
+		System.out.println(list[list.length-1] + "}");
+	}
+
 }

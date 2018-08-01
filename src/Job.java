@@ -77,6 +77,7 @@ public abstract class Job extends JFrame{
 				progressLabel.setText("Job: " + progress + "/" + works);
 				repaint();
 				job(controlParameterMatrix.get(i));
+				pList_index = 0;
 				progress++;
 			}
 		}catch(Exception e){
@@ -95,6 +96,7 @@ public abstract class Job extends JFrame{
 
 	public void set_plist(ArrayList<Object> controlParameterList) {
 		pList = controlParameterList;
+		pList_index = 0;
 	}
 
 	public String nextString_from_pList() {

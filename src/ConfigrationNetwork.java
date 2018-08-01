@@ -46,12 +46,13 @@ public class ConfigrationNetwork extends Network{
 
 		ArrayList<Integer> array = new ArrayList<Integer>();
 		int sumDegree=0;
-		for(int i=0;i<net.N;i++){
-			for(int j=0;j<degree[i];j++){
+		for(int i=0;i<degree.length;i++){
+			int currentDegree = degree[i];
+			for(int j=0;j<currentDegree;j++){
 				array.add(i);
 			}
-			net.degree[i] = degree[i];
-			sumDegree += degree[i];
+			net.degree[i] = currentDegree;
+			sumDegree += currentDegree;
 		}
 		if(sumDegree%2==1){
 			array.add(0);
