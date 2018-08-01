@@ -1492,7 +1492,11 @@ public class Network implements Cloneable{
 		double sumDegree;
 		double r,threshold;
 		double[] newWeight = new double[M];
-		for(int i=0;i<M;i++) newWeight[i]=1.0;
+		if(continueWeight) {
+			for(int i=0;i<M;i++) newWeight[i]=weight[i];
+		}else {
+			for(int i=0;i<M;i++) newWeight[i]=1.0;
+		}
 		for(int t=0;t<step;t++){
 			Network.Node currentNode = nodeList.get(currentNodeIndex);
 

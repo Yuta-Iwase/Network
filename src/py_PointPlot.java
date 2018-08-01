@@ -34,6 +34,17 @@ public class py_PointPlot {
 		}
 	}
 
+	/**
+	 * 多変数プロット<br>
+	 */
+	public void plot(String pyFilePath, String[] strArray_inputPath, String str_outputName, double dou_plotRangeX_start, double dou_plotRangeX_end, double dou_plotRangeY_start, double dou_plotRangeY_end, boolean bool_withLine, String[] strArray_lineColor, boolean[] boolArray_dottedLine, boolean bool_withPoint, String[] strArray_pointColor, int[] intArray_pointSize, String[] strArray_pointDescription, boolean bool_withAnnotate, int int_accumulationMode, boolean bool_logscaleX, boolean bool_logscaleY, String str_title, String str_xLabel, String str_yLabel, boolean bool_withLegend, String[] strArray_legendLabel, String str_legendPosition, String[] strArray_function, String[] strArray_function_LineColors, boolean[] boolArray_function_DottedLine, String[] strArray_function_LegendLabel){
+		try {
+			coreMultiArg(pyFilePath, strArray_inputPath, str_outputName, dou_plotRangeX_start, dou_plotRangeX_end, dou_plotRangeY_start, dou_plotRangeY_end, bool_withLine, strArray_lineColor, boolArray_dottedLine, bool_withPoint, strArray_pointColor, intArray_pointSize, strArray_pointDescription, bool_withAnnotate, int_accumulationMode, bool_logscaleX, bool_logscaleY, str_title, str_xLabel, str_yLabel, bool_withLegend, strArray_legendLabel, str_legendPosition, strArray_function, strArray_function_LineColors, boolArray_function_DottedLine, strArray_function_LegendLabel);
+		}catch (FileNotFoundException e) {
+			System.out.println(e);
+		}
+	}
+
 	private void coreMultiArg(String pyFilePath, String[] strArray_inputPath, String str_outputName, double dou_plotRangeX_start, double dou_plotRangeX_end, double dou_plotRangeY_start, double dou_plotRangeY_end, boolean bool_withLine, String[] strArray_lineColor, boolean[] boolArray_dottedLine, boolean bool_withPoint, String[] strArray_pointColor, int[] intArray_pointSize, String[] strArray_pointDescription, boolean bool_withAnnotate, int int_accumulationMode, boolean bool_logscaleX, boolean bool_logscaleY, String str_title, String str_xLabel, String str_yLabel, boolean bool_withLegend, String[] strArray_legendLabel, String str_legendPosition, String[] strArray_function, String[] strArray_function_LineColors, boolean[] boolArray_function_DottedLine, String[] strArray_function_LegendLabel) throws FileNotFoundException{
 		ArrayList<String> programPath_List = new ArrayList<>();
 		// pythonランチャーの在り処候補を列挙
