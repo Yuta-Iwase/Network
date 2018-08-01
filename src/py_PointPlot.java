@@ -9,7 +9,7 @@ public class py_PointPlot {
 	public void plot(String str_inputPath, String str_outputName, double dou_plotRangeX_start, double dou_plotRangeX_end, double dou_plotRangeY_start, double dou_plotRangeY_end, boolean bool_withLine, String str_lineColor, boolean bool_dottedLine, boolean bool_withPoint, String str_pointColor, int int_pointSize, int int_accumulationMode, boolean bool_logscaleX, boolean bool_logscaleY, String str_title, String str_xLabel, String str_yLabel, boolean bool_withLegend, String str_legendLabel, String str_legendPosition) {
 		String name = "py_" + System.currentTimeMillis() + ".py";
 		try {
-			core(name, str_inputPath, str_outputName, dou_plotRangeX_start, dou_plotRangeX_end, dou_plotRangeY_start, dou_plotRangeY_end, bool_withLine, str_lineColor, bool_dottedLine, bool_withPoint, str_pointColor, int_pointSize, "o", true, int_accumulationMode, bool_logscaleX, bool_logscaleY, str_title, str_xLabel, str_yLabel, bool_withLegend, str_legendLabel, str_legendPosition, "", "red", false, "");
+			coreSimgleArg(name, str_inputPath, str_outputName, dou_plotRangeX_start, dou_plotRangeX_end, dou_plotRangeY_start, dou_plotRangeY_end, bool_withLine, str_lineColor, bool_dottedLine, bool_withPoint, str_pointColor, int_pointSize, "o", true, int_accumulationMode, bool_logscaleX, bool_logscaleY, str_title, str_xLabel, str_yLabel, bool_withLegend, str_legendLabel, str_legendPosition, "", "red", false, "");
 		}catch(FileNotFoundException e) {
 			System.out.println(e);
 		};
@@ -20,7 +20,7 @@ public class py_PointPlot {
 	 */
 	public void plot(String pyFilePath, String str_inputPath, String str_outputName, double dou_plotRangeX_start, double dou_plotRangeX_end, double dou_plotRangeY_start, double dou_plotRangeY_end, boolean bool_withLine, String str_lineColor, boolean bool_dottedLine, boolean bool_withPoint, String str_pointColor, int int_pointSize, int int_accumulationMode, boolean bool_logscaleX, boolean bool_logscaleY, String str_title, String str_xLabel, String str_yLabel, boolean bool_withLegend, String str_legendLabel, String str_legendPosition) {
 		try {
-			core(pyFilePath, str_inputPath, str_outputName, dou_plotRangeX_start, dou_plotRangeX_end, dou_plotRangeY_start, dou_plotRangeY_end, bool_withLine, str_lineColor, bool_dottedLine, bool_withPoint, str_pointColor, int_pointSize, "o", true, int_accumulationMode, bool_logscaleX, bool_logscaleY, str_title, str_xLabel, str_yLabel, bool_withLegend, str_legendLabel, str_legendPosition, "", "red", false, "");
+			coreSimgleArg(pyFilePath, str_inputPath, str_outputName, dou_plotRangeX_start, dou_plotRangeX_end, dou_plotRangeY_start, dou_plotRangeY_end, bool_withLine, str_lineColor, bool_dottedLine, bool_withPoint, str_pointColor, int_pointSize, "o", true, int_accumulationMode, bool_logscaleX, bool_logscaleY, str_title, str_xLabel, str_yLabel, bool_withLegend, str_legendLabel, str_legendPosition, "", "red", false, "");
 		}catch(FileNotFoundException e) {
 			System.out.println(e);
 		};
@@ -28,13 +28,13 @@ public class py_PointPlot {
 
 	public void plot(String pyFilePath, String str_inputPath, String str_outputName, double dou_plotRangeX_start, double dou_plotRangeX_end, double dou_plotRangeY_start, double dou_plotRangeY_end, boolean bool_withLine, String str_lineColor, boolean bool_dottedLine, boolean bool_withPoint, String str_pointColor, int int_pointSize, String str_pointDescription, boolean bool_withAnnotate, int int_accumulationMode, boolean bool_logscaleX, boolean bool_logscaleY, String str_title, String str_xLabel, String str_yLabel, boolean bool_withLegend, String str_legendLabel, String str_legendPosition, String str_function, String str_function_LineColors, boolean bool_function_DottedLine, String str_function_LegendLabel){
 		try {
-			core(pyFilePath, str_inputPath, str_outputName, dou_plotRangeX_start, dou_plotRangeX_end, dou_plotRangeY_start, dou_plotRangeY_end, bool_withLine, str_lineColor, bool_dottedLine, bool_withPoint, str_pointColor, int_pointSize, str_pointDescription, bool_withAnnotate, int_accumulationMode, bool_logscaleX, bool_logscaleY, str_title, str_xLabel, str_yLabel, bool_withLegend, str_legendLabel, str_legendPosition, str_function, str_function_LineColors, bool_function_DottedLine, str_function_LegendLabel);
+			coreSimgleArg(pyFilePath, str_inputPath, str_outputName, dou_plotRangeX_start, dou_plotRangeX_end, dou_plotRangeY_start, dou_plotRangeY_end, bool_withLine, str_lineColor, bool_dottedLine, bool_withPoint, str_pointColor, int_pointSize, str_pointDescription, bool_withAnnotate, int_accumulationMode, bool_logscaleX, bool_logscaleY, str_title, str_xLabel, str_yLabel, bool_withLegend, str_legendLabel, str_legendPosition, str_function, str_function_LineColors, bool_function_DottedLine, str_function_LegendLabel);
 		}catch (FileNotFoundException e) {
 			System.out.println(e);
 		}
 	}
 
-	private void core(String pyFilePath, String str_inputPath, String str_outputName, double dou_plotRangeX_start, double dou_plotRangeX_end, double dou_plotRangeY_start, double dou_plotRangeY_end, boolean bool_withLine, String str_lineColor, boolean bool_dottedLine, boolean bool_withPoint, String str_pointColor, int int_pointSize, String str_pointDescription, boolean bool_withAnnotate, int int_accumulationMode, boolean bool_logscaleX, boolean bool_logscaleY, String str_title, String str_xLabel, String str_yLabel, boolean bool_withLegend, String str_legendLabel, String str_legendPosition, String str_function, String str_function_LineColors, boolean bool_function_DottedLine, String str_function_LegendLabel) throws FileNotFoundException{
+	private void coreMultiArg(String pyFilePath, String[] strArray_inputPath, String str_outputName, double dou_plotRangeX_start, double dou_plotRangeX_end, double dou_plotRangeY_start, double dou_plotRangeY_end, boolean bool_withLine, String[] strArray_lineColor, boolean[] boolArray_dottedLine, boolean bool_withPoint, String[] strArray_pointColor, int[] intArray_pointSize, String[] strArray_pointDescription, boolean bool_withAnnotate, int int_accumulationMode, boolean bool_logscaleX, boolean bool_logscaleY, String str_title, String str_xLabel, String str_yLabel, boolean bool_withLegend, String[] strArray_legendLabel, String str_legendPosition, String[] strArray_function, String[] strArray_function_LineColors, boolean[] boolArray_function_DottedLine, String[] strArray_function_LegendLabel) throws FileNotFoundException{
 		ArrayList<String> programPath_List = new ArrayList<>();
 		// pythonランチャーの在り処候補を列挙
 		programPath_List.add("C:\\ProgramData\\Anaconda2\\pythonw.exe");
@@ -56,8 +56,16 @@ public class py_PointPlot {
 
 		ArrayList<String> argCodeList = new ArrayList<>();
 		String temp;
+		String[] temp_strArray;
+		int[] temp_intArray;
+		boolean[] temp_boolArray;
 
-		temp = "inputPath = [\"" + str_inputPath + "\"]";
+		temp = "inputPath = [";
+		temp_strArray = strArray_inputPath;
+		for(int i=0;i<temp_strArray.length-1;i++) {
+			temp = temp + "\"" + temp_strArray[i] + "\", ";
+		}
+		temp = temp + "\"" + temp_strArray[temp_strArray.length-1] + "\"]";
 		argCodeList.add(temp);
 
 		temp = "outputName = \"" + str_outputName + "\"";
@@ -79,24 +87,48 @@ public class py_PointPlot {
 		else temp="withLines = False";
 		argCodeList.add(temp);
 
-		temp = "lineColors = [\"" + str_lineColor + "\"]";
+		temp = "lineColors = [";
+		temp_strArray = strArray_lineColor;
+		for(int i=0;i<temp_strArray.length-1;i++) {
+			temp = temp + "\"" + temp_strArray[i] + "\", ";
+		}
+		temp = temp + "\"" + temp_strArray[temp_strArray.length-1] + "\"]";
 		argCodeList.add(temp);
 
-		if(bool_dottedLine) temp="dottedLine = [True]";
-		else temp="dottedLine = [False]";
+		temp = "dottedLine = [";
+		temp_boolArray = boolArray_dottedLine;
+		for(int i=0;i<temp_boolArray.length-1;i++) {
+			temp = temp + (temp_boolArray[i]?"True":"False") + ", ";
+		}
+		temp = temp + (temp_boolArray[temp_boolArray.length-1]?"True":"False") + "]";
 		argCodeList.add(temp);
 
 		if(bool_withPoint) temp="withPoints = True";
 		else temp="withPoints = False";
 		argCodeList.add(temp);
 
-		temp = "pointColors = [\"" + str_pointColor + "\"]";
+		temp = "pointColors = [";
+		temp_strArray = strArray_pointColor;
+		for(int i=0;i<temp_strArray.length-1;i++) {
+			temp = temp + "\"" + temp_strArray[i] + "\", ";
+		}
+		temp = temp + "\"" + temp_strArray[temp_strArray.length-1] + "\"]";
 		argCodeList.add(temp);
 
-		temp = "pointSizes = [" + int_pointSize + "]";
+		temp = "pointColors = [";
+		temp_intArray = intArray_pointSize;
+		for(int i=0;i<temp_intArray.length-1;i++) {
+			temp = temp + temp_intArray[i] + ", ";
+		}
+		temp = temp + temp_intArray[temp_intArray.length-1] + "]";
 		argCodeList.add(temp);
 
-		temp = "pointDescription = [\"" + str_pointDescription + "\"]#マーカーの形、'o'で丸、'^'で三角";
+		temp = "pointColors = [";
+		temp_strArray = strArray_pointDescription;
+		for(int i=0;i<temp_strArray.length-1;i++) {
+			temp = temp + "\"" + temp_strArray[i] + "\", ";
+		}
+		temp = temp + temp_strArray[temp_strArray.length-1] + "\"]#マーカーの形、'o'で丸、'^'で三角";
 		argCodeList.add(temp);
 
 		if(bool_withAnnotate) temp = "withAnnotate = True";
@@ -127,8 +159,12 @@ public class py_PointPlot {
 		else temp="withLegend = False";
 		argCodeList.add(temp);
 
-		if(str_legendLabel.length()>0) temp = "legendLabel = [r\"" + str_legendLabel + "\"]";
-		else temp = "legendLabel = [\"\"]";
+		temp = "legendLabel = [";
+		temp_strArray = strArray_legendLabel;
+		for(int i=0;i<temp_strArray.length-1;i++) {
+			temp = temp + "r\"" + temp_strArray[i] + "\", ";
+		}
+		temp = temp + "r\"" + temp_strArray[temp_strArray.length-1] + "\"]";
 		argCodeList.add(temp);
 
 		temp = "legendPosition = \"" + str_legendPosition + "\"";
@@ -136,21 +172,38 @@ public class py_PointPlot {
 
 		argCodeList.add("");
 
-		if(str_function.length()>0)
-			temp = "function_List = [\"" + str_function + "\"]";
-		else
-			temp = "function_List = []";
+		temp = "function_List = [";
+		temp_strArray = strArray_function;
+		for(int i=0;i<temp_strArray.length-1;i++) {
+			temp = temp + "\"" + (temp_strArray[i].length()>0?"\"" + temp_strArray[i] + "\"":"") + "\", ";
+		}
+		temp = temp + "\"" + (temp_strArray[temp_strArray.length-1].length()>0?"\"" + temp_strArray[temp_strArray.length-1] + "\"":"") + "]";
 		argCodeList.add(temp);
 
-		temp = "function_LineColors = [\"" + str_function_LineColors + "\"]";
+		temp = "function_LineColors = [";
+		temp_strArray = strArray_function_LineColors;
+		for(int i=0;i<temp_strArray.length-1;i++) {
+			temp = temp + "\"" + temp_strArray[i] + "\", ";
+		}
+		temp = temp + "\"" + temp_strArray[temp_strArray.length-1] + "\"]";
 		argCodeList.add(temp);
 
-		if(bool_function_DottedLine) temp="function_DottedLine = [True]";
-		else temp="function_DottedLine = [False]";
+		temp = "function_DottedLine = [";
+		temp_boolArray = boolArray_function_DottedLine;
+		for(int i=0;i<temp_boolArray.length-1;i++) {
+			temp = temp + (temp_boolArray[i]?"True":"False") + ", ";
+		}
+		temp = temp + (temp_boolArray[temp_boolArray.length-1]?"True":"False") + "]";
 		argCodeList.add(temp);
 
-		temp = "function_LegendLabel = [r\"" + str_function_LegendLabel + "\"]";
+		temp = "function_LegendLabel = [";
+		temp_strArray = strArray_function_LegendLabel;
+		for(int i=0;i<temp_strArray.length-1;i++) {
+			temp = temp + "r\"" + temp_strArray[i] + "\", ";
+		}
+		temp = temp + "r\"" + temp_strArray[temp_strArray.length-1] + "\"]";
 		argCodeList.add(temp);
+
 
 		String code2="### ここからプログラム内容\r\n" +
 				"\r\n" +
@@ -297,6 +350,11 @@ public class py_PointPlot {
 		}
 
 
+	}
+
+
+	private void coreSimgleArg(String pyFilePath, String str_inputPath, String str_outputName, double dou_plotRangeX_start, double dou_plotRangeX_end, double dou_plotRangeY_start, double dou_plotRangeY_end, boolean bool_withLine, String str_lineColor, boolean bool_dottedLine, boolean bool_withPoint, String str_pointColor, int int_pointSize, String str_pointDescription, boolean bool_withAnnotate, int int_accumulationMode, boolean bool_logscaleX, boolean bool_logscaleY, String str_title, String str_xLabel, String str_yLabel, boolean bool_withLegend, String str_legendLabel, String str_legendPosition, String str_function, String str_function_LineColors, boolean bool_function_DottedLine, String str_function_LegendLabel) throws FileNotFoundException{
+		coreMultiArg(pyFilePath, new String[]{str_inputPath}, str_outputName, dou_plotRangeX_start, dou_plotRangeX_end, dou_plotRangeY_start, dou_plotRangeY_end, bool_withLine, new String[]{str_lineColor}, new boolean[]{bool_dottedLine}, bool_withPoint, new String[]{str_pointColor}, new int[]{int_pointSize}, new String[]{str_pointDescription}, bool_withAnnotate, int_accumulationMode, bool_logscaleX, bool_logscaleY, str_title, str_xLabel, str_yLabel, bool_withLegend, new String[]{str_legendLabel}, str_legendPosition, new String[]{str_function}, new String[]{str_function_LineColors}, new boolean[]{bool_function_DottedLine}, new String[]{str_function_LegendLabel});
 	}
 
 }
