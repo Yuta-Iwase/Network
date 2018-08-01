@@ -115,7 +115,7 @@ public class py_PointPlot {
 		temp = temp + "\"" + temp_strArray[temp_strArray.length-1] + "\"]";
 		argCodeList.add(temp);
 
-		temp = "pointColors = [";
+		temp = "pointSizes = [";
 		temp_intArray = intArray_pointSize;
 		for(int i=0;i<temp_intArray.length-1;i++) {
 			temp = temp + temp_intArray[i] + ", ";
@@ -128,7 +128,7 @@ public class py_PointPlot {
 		for(int i=0;i<temp_strArray.length-1;i++) {
 			temp = temp + "\"" + temp_strArray[i] + "\", ";
 		}
-		temp = temp + temp_strArray[temp_strArray.length-1] + "\"]#マーカーの形、'o'で丸、'^'で三角";
+		temp = temp + "\"" + temp_strArray[temp_strArray.length-1] + "\"]#マーカーの形、'o'で丸、'^'で三角";
 		argCodeList.add(temp);
 
 		if(bool_withAnnotate) temp = "withAnnotate = True";
