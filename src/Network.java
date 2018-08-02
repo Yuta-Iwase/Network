@@ -59,6 +59,9 @@ public class Network implements Cloneable{
 	int[] neightborIndexList = null;
 	int[] linkSalience = null;
 
+	 // BiasedRandomWalk_continueWeightで用いる訪問済みリスト
+	boolean[] isVisited_onRW = null;
+
 
 	// setLabel(String inputFilePath)メソッドを実行することでラベル設定を読み込むことができる
 	String[] nodeLabel;
@@ -1473,9 +1476,7 @@ public class Network implements Cloneable{
 		// 戻り値用リスト
 		// 0:終了時のwalkerの居る頂点のindex
 		// 1:各ステップごとの訪問済み頂点数の数
-		Object[] returnList = new Object[2];
-
-		if(!continueWeight) weight = new double[M];
+		Object[] returnList = new Object[3];
 
 		// 作業変数定義
 		int currentNodeIndex = startNode%N;
@@ -1487,6 +1488,13 @@ public class Network implements Cloneable{
 			visitedNodes = new int[step];
 			for(int i=0;i<N;i++) temp_visited[i]=false;
 		}
+
+		if(!continueWeight) weight = new double[M];
+		if(continueWeight && isVisited_onRW==null) {
+			isVisited_onRW = new boolean[N];
+			for(int i=0;i<N;i++)isVisited_onRW[i]=false;
+		}
+		isVisited_onRW[currentNodeIndex] = true;
 
 		int selectedEdge,nextNodeIndex;
 		double sumDegree;
@@ -1531,6 +1539,9 @@ public class Network implements Cloneable{
 					nextNodeIndex = currentNode.eList.get(selectedEdge).node[1];
 				}
 				currentNodeIndex = nextNodeIndex;
+
+				// 訪問済み更新(continue用)
+				isVisited_onRW[nextNodeIndex] = true;
 			}else {
 				// 次数0なら確定ワープ
 				t--;
