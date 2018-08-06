@@ -187,29 +187,29 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 				double[][] current_str_linear = new double[bins][2];
 				double[][] current_str_log = new double[bins][2];
 				// ⑦node_BC
-				String s71 = "nodeBC_LinearScale.csv";
-				String s72 = "nodeBC_LogScale.csv";
-				String s73 = "nodeBC_RawFreq.csv";
-				String s74 = "nodeBC_TotalFreq.csv";
-				File f71 = new File(temp_fileName + "/" + s71);
-				File f72 = new File(temp_fileName + "/" + s72);
-				File f73 = new File(temp_fileName + "/" + s73);
-				File f74 = new File(temp_fileName + "/" + s74);
-				PrintWriter pw71 = new PrintWriter(f71);
-				PrintWriter pw72 = new PrintWriter(f72);
-				PrintWriter pw73 = new PrintWriter(f73);
-				PrintWriter pw74 = new PrintWriter(f74);
-				double[][] nodeBC_linear = new double[bins][2];
-				double[][] nodeBC_log = new double[bins][2];
-				int[] nodeBC_freq = new int[N*N];
-				int[] total_nodeBC_freq = new int[N*N];
-				for(int i=0;i<bins;i++) {
-					nodeBC_linear[i][1] = 0.0;
-					nodeBC_log[i][1] = 0.0;
-				}
-				for(int i=0;i<total_nodeBC_freq.length;i++) total_nodeBC_freq[i]=0;
-				double[][] current_nodeBC_linear = new double[bins][2];
-				double[][] current_nodeBC_log = new double[bins][2];
+//				String s71 = "nodeBC_LinearScale.csv";
+//				String s72 = "nodeBC_LogScale.csv";
+//				String s73 = "nodeBC_RawFreq.csv";
+//				String s74 = "nodeBC_TotalFreq.csv";
+//				File f71 = new File(temp_fileName + "/" + s71);
+//				File f72 = new File(temp_fileName + "/" + s72);
+//				File f73 = new File(temp_fileName + "/" + s73);
+//				File f74 = new File(temp_fileName + "/" + s74);
+//				PrintWriter pw71 = new PrintWriter(f71);
+//				PrintWriter pw72 = new PrintWriter(f72);
+//				PrintWriter pw73 = new PrintWriter(f73);
+//				PrintWriter pw74 = new PrintWriter(f74);
+//				double[][] nodeBC_linear = new double[bins][2];
+//				double[][] nodeBC_log = new double[bins][2];
+//				int[] nodeBC_freq = new int[N*N];
+//				int[] total_nodeBC_freq = new int[N*N];
+//				for(int i=0;i<bins;i++) {
+//					nodeBC_linear[i][1] = 0.0;
+//					nodeBC_log[i][1] = 0.0;
+//				}
+//				for(int i=0;i<total_nodeBC_freq.length;i++) total_nodeBC_freq[i]=0;
+//				double[][] current_nodeBC_linear = new double[bins][2];
+//				double[][] current_nodeBC_log = new double[bins][2];
 				// ⑧visited_nodes
 				String s81 = "visited_nodes.csv";
 				String s82 = "visited_nodes_once.csv";
@@ -237,9 +237,10 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 
 					// random walkの実行
 					// ⑧用の準備も
-					if(useRandomWalk) current_visited_nodes = net.BiasedRandomWalk_checkVisitedNodes(num_step, 1.0, alpha, (int)(System.currentTimeMillis()&Integer.MAX_VALUE), 0.0, true);
+					if(useRandomWalk) current_visited_nodes = net.BiasedRandomWalk_checkVisitedNodes(num_step, 1.0, alpha, (int)(System.currentTimeMillis()%Integer.MAX_VALUE), 0.0, true);
 					else{
-						net.SetWeight_to_Alpha(alpha, num_step);
+//						net.SetWeight_to_Alpha(alpha, num_step);
+						net.SetWeight_to_Alpha(alpha);
 						net.disturb();
 					}
 
@@ -331,29 +332,29 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 						pw63.println(str_list[i]);
 					}
 					// ⑦
-					net.nodeBetweenness_for_WeightedNet();
-					double[] node_BC_list = new double[net.nodeList.size()];
-					for(int i=0;i<N*N;i++) nodeBC_freq[i]=0;
-					for(int i=0;i<node_BC_list.length;i++) {
-						node_BC_list[i]=net.nodeList.get(i).betweenCentrality*INV_SQUARE_N;
-						int intBC = (int)Math.round(net.nodeList.get(i).betweenCentrality);
-						nodeBC_freq[intBC]++;
-						total_nodeBC_freq[intBC]++;
-					}
-					current_nodeBC_linear = hist.binPlot(node_BC_list, bins, false,0,1);
-					current_nodeBC_log = hist.binPlot(node_BC_list, bins, true,0,1);
-					for(int i=0;i<current_nodeBC_linear.length;i++) {
-						nodeBC_linear[i][1] += current_nodeBC_linear[i][1]*INV_N;
-						nodeBC_log[i][1] += current_nodeBC_log[i][1]*INV_N;
-					}
-					pw73.println("node," + net.N);
-					pw73.println("edge," + net.M);
-					for(int i=0;i<node_BC_list.length;i++) {
-						if(node_BC_list[i]>0) {
-							pw73.println(i + "," + node_BC_list[i]);
-						}
-					}
-					pw73.println("end");
+//					net.nodeBetweenness_for_WeightedNet();
+//					double[] node_BC_list = new double[net.nodeList.size()];
+//					for(int i=0;i<N*N;i++) nodeBC_freq[i]=0;
+//					for(int i=0;i<node_BC_list.length;i++) {
+//						node_BC_list[i]=net.nodeList.get(i).betweenCentrality*INV_SQUARE_N;
+//						int intBC = (int)Math.round(net.nodeList.get(i).betweenCentrality);
+//						nodeBC_freq[intBC]++;
+//						total_nodeBC_freq[intBC]++;
+//					}
+//					current_nodeBC_linear = hist.binPlot(node_BC_list, bins, false,0,1);
+//					current_nodeBC_log = hist.binPlot(node_BC_list, bins, true,0,1);
+//					for(int i=0;i<current_nodeBC_linear.length;i++) {
+//						nodeBC_linear[i][1] += current_nodeBC_linear[i][1]*INV_N;
+//						nodeBC_log[i][1] += current_nodeBC_log[i][1]*INV_N;
+//					}
+//					pw73.println("node," + net.N);
+//					pw73.println("edge," + net.M);
+//					for(int i=0;i<node_BC_list.length;i++) {
+//						if(node_BC_list[i]>0) {
+//							pw73.println(i + "," + node_BC_list[i]);
+//						}
+//					}
+//					pw73.println("end");
 					// ⑧
 					for(int i=0;i<num_step;i++){
 						visited_nodes[i] += current_visited_nodes[i];
@@ -394,10 +395,10 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 					str_linear[i][1] /= times;
 					str_log[i][0] = current_str_log[i][0];
 					str_log[i][1] /= times;
-					nodeBC_linear[i][0] = current_edgeBC_linear[i][0];
-					nodeBC_linear[i][1] /= times;
-					nodeBC_log[i][0] = current_edgeBC_log[i][0];
-					nodeBC_log[i][1] /= times;
+//					nodeBC_linear[i][0] = current_edgeBC_linear[i][0];
+//					nodeBC_linear[i][1] /= times;
+//					nodeBC_log[i][0] = current_edgeBC_log[i][0];
+//					nodeBC_log[i][1] /= times;
 
 					if(w_linear[i][1]>0) pw11.println(w_linear[i][0]+","+w_linear[i][1]);
 					if(w_log[i][1]>0) pw12.println(w_log[i][0]+","+w_log[i][1]);
@@ -408,8 +409,8 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 					if(d_hs_log[i][1]>0) pw52.println(d_hs_log[i][0] + "," + d_hs_log[i][1]);
 					if(str_linear[i][1]>0) pw61.println(str_linear[i][0] + ","  + str_linear[i][1]);
 					if(str_log[i][1]>0) pw62.println(str_log[i][0] + ","  + str_log[i][1]);
-					if(nodeBC_linear[i][1]>0) pw71.println(nodeBC_linear[i][0] + "," + nodeBC_linear[i][1]);
-					if(nodeBC_log[i][1]>0) pw72.println(nodeBC_log[i][0] + "," + nodeBC_log[i][1]);
+//					if(nodeBC_linear[i][1]>0) pw71.println(nodeBC_linear[i][0] + "," + nodeBC_linear[i][1]);
+//					if(nodeBC_log[i][1]>0) pw72.println(nodeBC_log[i][0] + "," + nodeBC_log[i][1]);
 				}
 
 				HS_frac /= times;
@@ -419,7 +420,7 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 				double INV_SQUARE_N = 1.0/(N*N);
 				for(int i=0;i<N*N;i++) {
 					if(total_edgeBC_freq[i]>0) pw24.println(i*INV_SQUARE_N + "," + total_edgeBC_freq[i]);
-					if(total_nodeBC_freq[i]>0) pw74.println(i*INV_SQUARE_N + "," + total_nodeBC_freq[i]);
+//					if(total_nodeBC_freq[i]>0) pw74.println(i*INV_SQUARE_N + "," + total_nodeBC_freq[i]);
 				}
 				for(int i=0;i<num_step;i++){
 					pw81.println(i + "," + ((double)visited_nodes[i]/N)/times);
@@ -442,10 +443,10 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 				pw61.close();
 				pw62.close();
 				pw63.close();
-				pw71.close();
-				pw72.close();
-				pw73.close();
-				pw74.close();
+//				pw71.close();
+//				pw72.close();
+//				pw73.close();
+//				pw74.close();
 				pw81.close();
 				pw82.close();
 
@@ -462,11 +463,11 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 				py.plot(temp_fileName+"/plot_degree(HS)_log.py", f52.getAbsolutePath().replace("\\", "/"), "degree(HS)_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, true, true, "degree${\\in}$(high salience links) dist. log", "$k$", "$p(k)$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
 				py.plot(temp_fileName+"/plot_strengh_linear.py", f61.getAbsolutePath().replace("\\", "/"), "str_linear", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "strength dist. linear", "$strength$", "$p(strength)$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
 				py.plot(temp_fileName+"/plot_strengh_log.py", f62.getAbsolutePath().replace("\\", "/"), "str_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "strength dist. log", "$strength$", "$p(strength)$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
-				py.plot(temp_fileName+"/plot_nodeBC_linear.py", f71.getAbsolutePath().replace("\\", "/"), "nodeBC_linear", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "nodeBC dist. linear", "$BC_{\\rm node}$", "$p(BC_{\\rm node})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
-				py.plot(temp_fileName+"/plot_nodeBC_log.py", f72.getAbsolutePath().replace("\\", "/"), "nodeBC_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, true, true, "nodeBC dist. log", "$BC_{\\rm node}$", "$p(BC_{\\rm node})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
+//				py.plot(temp_fileName+"/plot_nodeBC_linear.py", f71.getAbsolutePath().replace("\\", "/"), "nodeBC_linear", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "nodeBC dist. linear", "$BC_{\\rm node}$", "$p(BC_{\\rm node})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
+//				py.plot(temp_fileName+"/plot_nodeBC_log.py", f72.getAbsolutePath().replace("\\", "/"), "nodeBC_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, true, true, "nodeBC dist. log", "$BC_{\\rm node}$", "$p(BC_{\\rm node})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
 
-				py.plot(temp_fileName+"/plot_nodeBC_freq_log.py", f74.getAbsolutePath().replace("\\", "/"), "nodeBC_freq_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, true, true, "nodeBC dist. log", "$BC_{\\rm node}$", "$p(BC_{\\rm node})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
-				py.plot(temp_fileName+"/plot_nodeBC_freq_log_ac.py", f74.getAbsolutePath().replace("\\", "/"), "nodeBC_freq_log_ac", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 2, true, true, "nodeBC dist. log, cumulative", "$BC_{\\rm node}$", "$p(BC_{\\rm node})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "lower left");
+//				py.plot(temp_fileName+"/plot_nodeBC_freq_log.py", f74.getAbsolutePath().replace("\\", "/"), "nodeBC_freq_log", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, true, true, "nodeBC dist. log", "$BC_{\\rm node}$", "$p(BC_{\\rm node})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "upper right");
+//				py.plot(temp_fileName+"/plot_nodeBC_freq_log_ac.py", f74.getAbsolutePath().replace("\\", "/"), "nodeBC_freq_log_ac", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 2, true, true, "nodeBC dist. log, cumulative", "$BC_{\\rm node}$", "$p(BC_{\\rm node})$", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "lower left");
 
 				py.plot(temp_fileName+"/plot_visitedNodes.py", f81.getAbsolutePath().replace("\\", "/"), "visited_nodes", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "visited nodes", "step", "#visited nodes", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "lower right");
 				py.plot(temp_fileName+"/plot_visitedNodes(single).py", f81.getAbsolutePath().replace("\\", "/"), "visited_nodes(single)", 0, 0, 0, 0, true, "black", false, true, markerColor, 4, 0, false, false, "visited nodes(a single try only)", "step", "#visited nodes", true, "${\\gamma}="+gamma+"$ ${\\alpha}="+alphaString+"$", "lower right");
