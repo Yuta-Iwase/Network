@@ -1065,17 +1065,8 @@ public class Network implements Cloneable{
 				stack.remove(stack.size()-1);
 
 				final int PredSize = PredCursor[w]-addressList[w];
-//				for(int i=0 ; i<Pred.get(w).size() ; i++){
 				for(int i=0 ; i<PredSize ; i++){
-//					v = Pred.get(w).get(i);
 					v = Pred[addressList[w]+i];
-//					node[0] = Math.min(v,w);
-//					node[1] = Math.max(v,w);
-//					for(m=0;m<M;m++){
-//						listNode[0] = Math.min(list[m][0],list[m][1]);
-//						listNode[1] = Math.max(list[m][0],list[m][1]);
-//						if(listNode[0]==node[0]&&listNode[1]==node[1])break;
-//					}
 
 					int vwEdge = PredIndex[addressList[w]+i];
 					c = (sigma[v]/sigma[w]) * (1.0+delta[w]);
