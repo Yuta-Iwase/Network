@@ -1024,13 +1024,16 @@ public class Network implements Cloneable{
 						dist[w] = dist[v] + 1.0/weight[vwEdge];
 
 						// insert/update w
-						queue.add(w);
-						for(int i=0;i<queue.size()-1;i++){
-							if(queue.get(i) == w){
-								queue.remove(i);
-								break;
+						if(contentQueue[w]) {
+							for(int i=0;i<queue.size();i++){
+								if(queue.get(i) == w){
+									queue.remove(i);
+									break;
+								}
 							}
 						}
+						queue.add(w);
+						contentQueue[w] = true;
 
 						sigma[w] = 0;
 
@@ -1159,16 +1162,13 @@ public class Network implements Cloneable{
 							for(int i=0;i<queue.size();i++){
 								if(queue.get(i) == w){
 									queue.remove(i);
-//									System.out.println("ok");
 									break;
 								}
 							}
 						}
 						queue.add(w);
 						contentQueue[w] = true;
-//						System.out.println(queue.size());
 
-//						Pred.get(w).clear();
 						PredCursor[w] = addressList[w];
 					}
 					//path counting
