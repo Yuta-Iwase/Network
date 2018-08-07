@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class DMSNetwork extends Network{
 	int generateCount = 0;
@@ -12,7 +13,7 @@ public class DMSNetwork extends Network{
 	 * @param a 頂点選択のときに各確率に履かせるゲタ
 	 * @param loopLimit 次数分布のリトライ回数
 	 */
-	public DMSNetwork(int N0, int N, int insertEdges, double a, int loopLimit) {
+	public DMSNetwork(int N0, int N, int insertEdges, double a, int loopLimit, long seed) {
 		try {
 			// 引数の値が、生成不能な値になっている
 			if(N0<insertEdges) {
@@ -23,10 +24,9 @@ public class DMSNetwork extends Network{
 			System.exit(0);
 		}
 
-		do {
-			// debug
-			int sumDegree = 0;
+		Random rnd = new Random(seed);
 
+		do {
 			// 初期化
 			degree = new int[N];
 
@@ -45,7 +45,6 @@ public class DMSNetwork extends Network{
 				int N0_additionalStub = (N0-1)-N0_initStub;
 				for(int i=0;i<N0;i++) {
 					degree[i] = N0-1;
-					sumDegree += degree[i];
 					for(int j=0;j<N0_additionalStub;j++) {
 						additionalStub_List.add(i);
 					}
@@ -63,12 +62,12 @@ public class DMSNetwork extends Network{
 				// 選択
 				for(int j=0;j<insertEdges;j++) {
 
-					double r = Math.random()*total_probability;
+					double r = rnd.nextDouble()*total_probability;
 					int chosedNode = -1;
 					if(r<=total_init_prob) {
-						chosedNode = (int)(Math.random()*i);
+						chosedNode = (int)(rnd.nextDouble()*i);
 					}else {
-						int chosedStub = (int)(Math.random()*additionalStub_List.size());
+						int chosedStub = (int)(rnd.nextDouble()*additionalStub_List.size());
 						chosedNode = additionalStub_List.get(chosedStub);
 					}
 
@@ -85,12 +84,10 @@ public class DMSNetwork extends Network{
 					int currentChosedNode = currentChosedNodes.get(j);
 					additionalStub_List.add(currentChosedNode);
 					degree[currentChosedNode]++;
-					sumDegree++;
 				}
 
 				// 追加頂点の初期情報設定
 				degree[i] = insertEdges;
-				sumDegree += insertEdges;
 
 				// total_probability, sum_degreeの更新
 				total_probability += 2*insertEdges+a;
@@ -100,12 +97,17 @@ public class DMSNetwork extends Network{
 
 
 			// Configurationの要領でネットワークを構築
-			ConfigrationNetwork.generate(this, degree, loopLimit, false);
+			ConfigrationNetwork.generate(this, degree, loopLimit, false, seed);
+			seed++;
 
 			// ネットワーク生成回数カウント
 			generateCount++;
 		}while(!success);
 
+	}
+
+	public DMSNetwork(int N0, int N, int insertEdges, double a, int loopLimit) {
+		this(N0, N, insertEdges, a, loopLimit, System.currentTimeMillis());
 	}
 
 	/**
@@ -118,7 +120,21 @@ public class DMSNetwork extends Network{
 	 * @param loopLimit 次数分布のリトライ回数
 	 */
 	public DMSNetwork(int N, int insertEdges, double a, int loopLimit) {
-		this(insertEdges+1, N, insertEdges, a, loopLimit);
+		this(insertEdges+1, N, insertEdges, a, loopLimit, System.currentTimeMillis());
+	}
+
+	/**
+	 * DMS(Dorogovtsev, Mendes, Samukhin) networkを作る。<br>
+	 * 次数分布の指数は、3+a/insertEdges となる。<br>
+	 * 注:初期頂点数は、insertEdges+1となる。<br>
+	 * @param N 最終的な頂点数
+	 * @param insertEdges 1回のステップに追加する辺の本数
+	 * @param a 頂点選択のときに各確率に履かせるゲタ
+	 * @param loopLimit 次数分布のリトライ回数
+	 * @param
+	 */
+	public DMSNetwork(int N, int insertEdges, double a, int loopLimit, long seed) {
+		this(insertEdges+1, N, insertEdges, a, loopLimit, seed);
 	}
 
 

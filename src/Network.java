@@ -999,7 +999,7 @@ public class Network implements Cloneable{
 			while(!queue.isEmpty()){
 				// 【修正箇所】
 				// queueからdist[v]が最小となるものを取り出す
-				minDis = Double.MAX_VALUE - 1.0;
+				minDis = Double.MAX_VALUE;
 				v = -1;
 				minIndex = -1;
 				for(int i=0;i<queue.size();i++){
@@ -1069,8 +1069,9 @@ public class Network implements Cloneable{
 					node_bc[w] = node_bc[w] + delta[w];
 				}
 			}
-
 		}
+
+
 	}
 
 	/**
@@ -1124,6 +1125,7 @@ public class Network implements Cloneable{
 			contentQueue[s] = true;
 
 			while(!queue.isEmpty()){
+				System.out.println(queue.size());
 				// queueからdist[v]が最小となるものを取り出す
 				minDis = Double.MAX_VALUE;
 				v = -1;
@@ -1151,7 +1153,8 @@ public class Network implements Cloneable{
 						// insert/update w
 						if(contentQueue[w]) {
 							for(int i=0;i<queue.size();i++){
-								if(queue.get(i) == w){
+								int currentNode = queue.get(i);
+								if(currentNode == w){
 									queue.remove(i);
 									break;
 								}
@@ -2387,12 +2390,22 @@ public class Network implements Cloneable{
 	/**
 	 * 重みに僅かなブレwidth分ブレさせる
 	 */
-	public void disturb() {
+	public void disturb(long seed) {
 		double width = Math.pow(10, -8);
+		Random rnd = new Random(seed);
 		for(int i=0 ; i<weight.length ; i++) {
-			weight[i] = weight[i] + (Math.random()-0.5)*width;
+			weight[i] = weight[i] + (rnd.nextDouble()-0.5)*width;
 		}
 	}
+
+	/**
+	 * 重みに僅かなブレwidth分ブレさせる
+	 */
+	public void disturb() {
+		disturb(System.currentTimeMillis());
+	}
+
+
 
 	/**
 	 * 重みを1へ戻す

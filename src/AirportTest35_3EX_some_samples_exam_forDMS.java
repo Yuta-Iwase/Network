@@ -9,6 +9,7 @@ import Tools.SendMail;
 
 public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 	static SendMail mailer = null;
+//	static long seed = 3;
 
 	public static void main(String[] args) throws Exception{
 		if(args.length>1) {
@@ -18,7 +19,7 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 
 		AirportTest35_3EX_some_samples_exam_forDMS job = new AirportTest35_3EX_some_samples_exam_forDMS();
 //		job.run("param.ini");
-		job.run(1, 1000, 4, 2.7, -2, -2.0, 0.1, false);
+		job.run(100, 1000, 4, 2.7, -2, -2, 0.1, false);
 	}
 
 	@Override
@@ -224,11 +225,15 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 
 
 				// [ループ、level2]times処理
+				long debug_stamp=System.currentTimeMillis();
 				for(int t=0;t<times;t++) {
+					long debug_time = System.currentTimeMillis()-debug_stamp;
+					debug_stamp = System.currentTimeMillis();
+					System.out.println("debug: t=" + t + "\t" + new Date().toString() + "\t" + debug_time/1000);
 					// ネットワーク構築
 					Network net;
-//					net = new DMSNetwork(N0, N, M0, a, 100);
 					net = new DMSNetwork(N, M0, a, 100);
+//					net = new DMSNetwork(N, M0, a, 100, seed);
 					net.setNeightbor();
 					net.setNode(false);
 					net.setEdge();
@@ -242,6 +247,7 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 					else{
 //						net.SetWeight_to_Alpha(alpha, num_step);
 						net.SetWeight_to_Alpha(alpha);
+//						net.disturb(seed);
 						net.disturb();
 					}
 
@@ -258,7 +264,7 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 						pw13.println(w_round_list[i]);
 					}
 					// ②
-					net.EdgeBetweenness();
+//					net.EdgeBetweenness();
 					double[] edge_BC_list = new double[net.edgeList.size()];
 					for(int i=0;i<N*N;i++) edgeBC_freq[i]=0;
 					for(int i=0;i<edge_BC_list.length;i++) {

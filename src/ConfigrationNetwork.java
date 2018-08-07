@@ -21,6 +21,14 @@ public class ConfigrationNetwork extends Network{
 		generate(this, degree, loopLimit, message);
 	}
 
+	public ConfigrationNetwork(int[] degree,int loopLimit, long seed) {
+		generate(this, degree, loopLimit, seed);
+	}
+
+	public ConfigrationNetwork(int[] degree,int loopLimit,boolean message, long seed){
+		generate(this, degree, loopLimit, message, seed);
+	}
+
 	/**
 	 * ScaleFreeNetwork.class用
 	 * @param N
@@ -37,12 +45,32 @@ public class ConfigrationNetwork extends Network{
 		}while(!success);
 	}
 
+	/**
+	 * ScaleFreeNetwork.class用
+	 * @param N
+	 * @param gamma
+	 * @param minDegree
+	 * @param maxDegree
+	 * @param loopLimit
+	 * @param seed
+	 */
+	protected ConfigrationNetwork(int N, double gamma, int minDegree, int maxDegree, int loopLimit, long seed) {
+		do {
+			MakePowerLaw dist = new MakePowerLaw(N, gamma, minDegree, maxDegree);
+			generate(this, dist.degree, loopLimit, false, seed);
+			generateCount++;
+			seed++;
+		}while(!success);
+	}
 
-	public static void generate(Network net, int[] degree,int loopLimit,boolean message) {
+
+	public static void generate(Network net, int[] degree,int loopLimit,boolean message, long seed) {
 		net.directed = false;
 		net.doubleCount = false;
 		net.N = degree.length;
 		net.degree = new int[net.N];
+
+		Random rnd = new Random(seed);
 
 		ArrayList<Integer> array = new ArrayList<Integer>();
 		int sumDegree=0;
@@ -61,7 +89,6 @@ public class ConfigrationNetwork extends Network{
 		}
 		net.M = sumDegree/2;
 
-		Random rnd = new Random();
 		int disconnectedN=sumDegree;
 		int targetEdgeA,targetEdgeB;
 		int nowLine=0;
@@ -114,8 +141,16 @@ public class ConfigrationNetwork extends Network{
 		}while(disconnectedN>0);
 	}
 
+	public static void generate(Network net, int[] degree, int loopLimit, boolean message) {
+		generate(net, degree, loopLimit, message, System.currentTimeMillis());
+	}
+
 	private void generate(Network net, int[] degree,int loopLimit) {
 		generate(net, degree, loopLimit, true);
+	}
+
+	private void generate(Network net, int[] degree,int loopLimit, long seed) {
+		generate(net, degree, loopLimit, true, seed);
 	}
 
 }
