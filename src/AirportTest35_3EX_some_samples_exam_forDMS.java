@@ -17,8 +17,8 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 		}
 
 		AirportTest35_3EX_some_samples_exam_forDMS job = new AirportTest35_3EX_some_samples_exam_forDMS();
-		job.run("param.ini");
-//		job.run(2, 1000, 2, 2.7, 0.1, 0.2, 0.1, false);
+//		job.run("param.ini");
+		job.run(1, 1000, 4, 2.7, -2, -1.1, 0.1, false);
 	}
 
 	@Override
@@ -65,9 +65,10 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 			// ④
 			File f41 = null;
 			PrintWriter pw41 = null;
-			f41 = new File("high_salience_edges_kmin" + M0 + "_gamma" + gamma +".csv");
+			String s41 = "high_salience_edges_kmin" + M0 + "_gamma" + gamma +".csv";
+			f41 = new File(s41);
 			if(f41.exists()) {
-				Scanner scan = new Scanner(new File("high_salience_edges.csv"));
+				Scanner scan = new Scanner(new File(s41));
 				ArrayList<String> lines = new ArrayList<>();
 				while(scan.hasNextLine()) {
 					lines.add(scan.nextLine());
@@ -485,6 +486,7 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 
 			mailer.sendMyself("job complete", "DMS network alpha=" + min_alpha + "<br>" + new Date().toString());
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}
