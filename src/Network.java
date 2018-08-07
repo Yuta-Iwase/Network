@@ -1164,7 +1164,6 @@ public class Network implements Cloneable{
 					}
 					//path counting
 					if(MyTool.compareDouble(dist[w], dist[v]+1.0/weight[vwEdge]) == 0){
-//						Pred.get(w).add(v);
 						Pred[PredCursor[w]] = v;
 						PredIndex[PredCursor[w]] = vwEdge;
 						PredCursor[w]++;
@@ -1172,27 +1171,14 @@ public class Network implements Cloneable{
 				}
 			}
 
-//			int[] node = new int[2];
-//			int[] listNode = new int[2];
 			//// accumulation
 			while(!stack.isEmpty()){
 				w = stack.get(stack.size()-1);
 				stack.remove(stack.size()-1);
 
 				final int PredSize = PredCursor[w]-addressList[w];
-//				for(int i=0 ; i<Pred.get(w).size() ; i++){
 				for(int i=0 ; i<PredSize ; i++){
-//					v = Pred.get(w).get(i);
-////					v = Pred[addressList[w]+i];
-//					node[0] = Math.min(v,w);
-//					node[1] = Math.max(v,w);
-//					for(m=0;m<M;m++){
-//						listNode[0] = Math.min(list[m][0],list[m][1]);
-//						listNode[1] = Math.max(list[m][0],list[m][1]);
-//						if(listNode[0]==node[0]&&listNode[1]==node[1])break;
-//					}
 					int vwEdge = PredIndex[addressList[w]+i];
-//					edgeList.get(vwEdge).linkSalience += 1;
 					linkSalience[vwEdge]++;
 				}
 			}
