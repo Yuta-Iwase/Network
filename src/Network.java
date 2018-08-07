@@ -1125,7 +1125,7 @@ public class Network implements Cloneable{
 			contentQueue[s] = true;
 
 			while(!queue.isEmpty()){
-				System.out.println(queue.size());
+//				System.out.println(queue.size());
 				// queueからdist[v]が最小となるものを取り出す
 				minDis = Double.MAX_VALUE;
 				v = -1;
