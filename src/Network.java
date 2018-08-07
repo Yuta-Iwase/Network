@@ -995,6 +995,7 @@ public class Network implements Cloneable{
 			dist[s] = 0;
 			sigma[s] = 1;
 			queue.add(s);
+			contentQueue[s] = true;
 
 			while(!queue.isEmpty()){
 				// 【修正箇所】
@@ -1010,6 +1011,7 @@ public class Network implements Cloneable{
 					}
 				}
 				queue.remove(minIndex);
+				contentQueue[v] = false;
 				stack.add(v);
 
 				final int vAddress = addressList[v];
