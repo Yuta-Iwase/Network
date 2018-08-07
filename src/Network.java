@@ -961,17 +961,13 @@ public class Network implements Cloneable{
 	double[] dist = new double[N];
 
 	//list of predecessors on shortest paths from source
-//	ArrayList<ArrayList<Integer>> Pred = new ArrayList<ArrayList<Integer>>();
-//	for(int i=0;i<N;i++) Pred.add(new ArrayList<Integer>());
-
-	int[] Pred = new int[2*M];
-	int[] PredIndex = new int[2*M];
-	int[] PredCursor = new int[N];
+	ArrayList<ArrayList<Integer>> Pred = new ArrayList<ArrayList<Integer>>();
+	for(int i=0;i<N;i++) Pred.add(new ArrayList<Integer>());
 
 	ArrayList<Edge> edge = new ArrayList<Edge>();
 	for(int i=0;i<M;i++)edge.add(new Edge());
 
-	int v,w,minIndex;
+	int v,w,m,minIndex,vwEdge;
 	double c;
 	double[] node_bc = new double[N];
 	for(int i=0;i<N;i++) node_bc[i]=0;
@@ -981,16 +977,11 @@ public class Network implements Cloneable{
 	for(int s=0 ; s<N ; s++){
 		//// single-source shortest-paths problem
 		// initialization
-//		for(int i=0 ; i<N ; i++){
-//			Pred.get(i).clear();
-//			dist[i] = Double.MAX_VALUE; // 【修正箇所】念のため右辺をInteger.MAX_VALUEから変更
-//			sigma[i] = 0;
-//		}
-
-		for(int i=0;i<N;i++) PredCursor[i]=addressList[i]; //PredCursor初期化(事実上のPred初期化)
-		for(int i=0;i<N;i++) dist[i]=Double.MAX_VALUE;
-		for(int i=0;i<N;i++) dist[i]=sigma[i] = 0;
-
+		for(int i=0 ; i<N ; i++){
+			Pred.get(i).clear();
+			dist[i] = Double.MAX_VALUE; // 【修正箇所】念のため右辺をInteger.MAX_VALUEから変更
+			sigma[i] = 0;
+		}
 		dist[s] = 0;
 		sigma[s] = 1;
 		queue.add(s);
@@ -1011,14 +1002,10 @@ public class Network implements Cloneable{
 			queue.remove(minIndex);
 			stack.add(v);
 
-			final int vAddress = addressList[v];
 			for(int neighbor=0 ; neighbor<nodeList.get(v).list.size() ; neighbor++){
-				final int currentCursor = vAddress + neighbor;
-				w = neightborList[currentCursor];
-//				w = nodeList.get(v).list.get(neighbor).index;
+				w = nodeList.get(v).list.get(neighbor).index;
 				// path discovery
-//				int vwEdge = searchEdge(v,w);
-				int vwEdge = neightborIndexList[currentCursor];
+				vwEdge = searchEdge(v,w);
 				if(dist[w] > dist[v] + 1.0/weight[vwEdge]){
 					dist[w] = dist[v] + 1.0/weight[vwEdge];
 
@@ -1033,45 +1020,37 @@ public class Network implements Cloneable{
 
 					sigma[w] = 0;
 
-//					Pred.get(w).clear();
-					PredCursor[w] = addressList[w];
+					Pred.get(w).clear();
 				}
 				//path counting
 				if(dist[w] == dist[v]+1.0/weight[vwEdge]){
 					sigma[w] = sigma[w] + sigma[v];
-//					Pred.get(w).add(v);
-					Pred[PredCursor[w]] = v;
-					PredIndex[PredCursor[w]] = vwEdge;
-					PredCursor[w]++;
+					Pred.get(w).add(v);
 				}
 			}
 		}
 
 		for(int i=0;i<delta.length;i++)delta[i]=0.0;
 		int[] node = new int[2];
-//		int[] listNode = new int[2];
+		int[] listNode = new int[2];
 		//// accumulation
 		while(!stack.isEmpty()){
 			w = stack.get(stack.size()-1);
 			stack.remove(stack.size()-1);
 
-			final int PredSize = PredCursor[w]-addressList[w];
-//			for(int i=0 ; i<Pred.get(w).size() ; i++){
-			for(int i=0 ; i<PredSize ; i++){
-//				v = Pred.get(w).get(i);
-				v = Pred[addressList[w]+i];
-//				node[0] = Math.min(v,w);
-//				node[1] = Math.max(v,w);
-//				for(m=0;m<M;m++){
-//					listNode[0] = Math.min(list[m][0],list[m][1]);
-//					listNode[1] = Math.max(list[m][0],list[m][1]);
-//					if(listNode[0]==node[0]&&listNode[1]==node[1])break;
-//				}
-				int vwEdge = PredIndex[addressList[w]+i];
-				edge.get(vwEdge).setNode(node[0], node[1]);
+			for(int i=0 ; i<Pred.get(w).size() ; i++){
+				v = Pred.get(w).get(i);
+				node[0] = Math.min(v,w);
+				node[1] = Math.max(v,w);
+				for(m=0;m<M;m++){
+					listNode[0] = Math.min(list[m][0],list[m][1]);
+					listNode[1] = Math.max(list[m][0],list[m][1]);
+					if(listNode[0]==node[0]&&listNode[1]==node[1])break;
+				}
+				edge.get(m).setNode(node[0], node[1]);
 
 				c = (sigma[v]/sigma[w]) * (1.0+delta[w]);
-				edgeList.get(vwEdge).betweenCentrality = edgeList.get(vwEdge).betweenCentrality + c;
+				edgeList.get(m).betweenCentrality = edgeList.get(m).betweenCentrality + c;
 				delta[v] = delta[v] + c;
 			}
 
