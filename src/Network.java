@@ -986,11 +986,6 @@ public class Network implements Cloneable{
 		for(int s=0 ; s<N ; s++){
 			//// single-source shortest-paths problem
 			// initialization
-//			for(int i=0 ; i<N ; i++){
-//				Pred.get(i).clear();
-//				dist[i] = Double.MAX_VALUE; // 【修正箇所】念のため右辺をInteger.MAX_VALUEから変更
-//				sigma[i] = 0;
-//			}
 			for(int i=0;i<N;i++) PredCursor[i]=addressList[i]; //PredCursor初期化(事実上のPred初期化)
 			for(int i=0;i<N;i++) dist[i]=Double.MAX_VALUE;
 			for(int i=0;i<N;i++) contentQueue[i]=false;
@@ -1041,13 +1036,11 @@ public class Network implements Cloneable{
 
 						sigma[w] = 0;
 
-//						Pred.get(w).clear();
 						PredCursor[w] = addressList[w];
 					}
 					//path counting
 					if(dist[w] == dist[v]+1.0/weight[vwEdge]){
 						sigma[w] = sigma[w] + sigma[v];
-//						Pred.get(w).add(v);
 						Pred[PredCursor[w]] = v;
 						PredIndex[PredCursor[w]] = vwEdge;
 						PredCursor[w]++;
@@ -1056,8 +1049,6 @@ public class Network implements Cloneable{
 			}
 
 			for(int i=0;i<delta.length;i++)delta[i]=0.0;
-//			int[] node = new int[2];
-//			int[] listNode = new int[2];
 
 			//// accumulation
 			while(!stack.isEmpty()){
