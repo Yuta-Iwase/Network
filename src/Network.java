@@ -973,6 +973,8 @@ public class Network implements Cloneable{
 		ArrayList<ArrayList<Integer>> Pred = new ArrayList<ArrayList<Integer>>();
 		for(int i=0;i<N;i++) Pred.add(new ArrayList<Integer>());
 
+		boolean[] contentQueue = new boolean[N];
+
 		int v,w,m,minIndex;
 		double c;
 		double[] node_bc = new double[N];
@@ -988,6 +990,8 @@ public class Network implements Cloneable{
 				dist[i] = Double.MAX_VALUE; // 【修正箇所】念のため右辺をInteger.MAX_VALUEから変更
 				sigma[i] = 0;
 			}
+			for(int i=0 ; i<N ; i++) contentQueue[i]=false;
+
 			dist[s] = 0;
 			sigma[s] = 1;
 			queue.add(s);
@@ -1100,8 +1104,6 @@ public class Network implements Cloneable{
 		double[] dist = new double[N];
 
 		//list of predecessors on shortest paths from source
-//		ArrayList<ArrayList<Integer>> Pred = new ArrayList<ArrayList<Integer>>();
-//		for(int i=0;i<N;i++) Pred.add(new ArrayList<Integer>());
 		int[] Pred = new int[2*M];
 		int[] PredIndex = new int[2*M];
 		int[] PredCursor = new int[N];
@@ -1117,14 +1119,10 @@ public class Network implements Cloneable{
 		for(int s=0 ; s<N ; s++){
 			//// single-source shortest-paths problem
 			// initialization
-//			for(int i=0 ; i<N ; i++){
-//				Pred.get(i).clear();
-//				dist[i] = Double.MAX_VALUE;
-//			}
-
 			for(int i=0;i<N;i++) PredCursor[i]=addressList[i]; //PredCursor初期化(事実上のPred初期化)
-			for(int i=0 ; i<N ; i++) dist[i]=Double.MAX_VALUE;
-			for(int i=0 ; i<N ; i++) contentQueue[i]=false;
+			for(int i=0;i<N;i++) dist[i]=Double.MAX_VALUE;
+			for(int i=0;i<N;i++) contentQueue[i]=false;
+
 			dist[s] = 0;
 			queue.add(s);
 			contentQueue[s] = true;
