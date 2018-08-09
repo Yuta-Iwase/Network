@@ -18,8 +18,8 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 		}
 
 		AirportTest35_3EX_some_samples_exam_forDMS job = new AirportTest35_3EX_some_samples_exam_forDMS();
-//		job.run("param.ini");
-		job.run(100, 1000, 4, 2.7, -2, -2, 0.1, false);
+		job.run("param.ini");
+//		job.run(100, 1000, 4, 2.7, -2, -2, 0.1, false);
 	}
 
 	@Override
@@ -225,11 +225,7 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 
 
 				// [ループ、level2]times処理
-				long debug_stamp=System.currentTimeMillis();
 				for(int t=0;t<times;t++) {
-					long debug_time = System.currentTimeMillis()-debug_stamp;
-					debug_stamp = System.currentTimeMillis();
-					System.out.println("debug: t=" + t + "\t" + new Date().toString() + "\t" + debug_time/1000);
 					// ネットワーク構築
 					Network net;
 					net = new DMSNetwork(N, M0, a, 100);

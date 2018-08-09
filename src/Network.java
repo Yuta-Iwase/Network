@@ -2391,10 +2391,10 @@ public class Network implements Cloneable{
 	 * 重みに僅かなブレwidth分ブレさせる
 	 */
 	public void disturb(long seed) {
-		double width = Math.pow(10, -8);
+		double width = 2*Math.pow(10, -8);
 		Random rnd = new Random(seed);
 		for(int i=0 ; i<weight.length ; i++) {
-			weight[i] = weight[i] + (rnd.nextDouble()-0.5)*width;
+			weight[i] = weight[i] * (1 + ((rnd.nextDouble()-0.5)*width));
 		}
 	}
 
