@@ -36,6 +36,7 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 			String max_alpha = nextString_from_pList();
 			String delta_alpha = nextString_from_pList();
 			boolean useRandomWalk = nextBoolean_from_pList();
+			boolean weightShuffle = nextBoolean_from_pList();
 
 			String markerColor = "purple";
 			int bins = 50;
@@ -66,7 +67,7 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 			// ④
 			File f41 = null;
 			PrintWriter pw41 = null;
-			String s41 = "high_salience_edges_kmin" + M0 + "_gamma" + gamma +".csv";
+			String s41 = (weightShuffle?"[shuffle]":"") + "high_salience_edges_kmin" + M0 + "_gamma" + gamma +".csv";
 			f41 = new File(s41);
 			if(f41.exists()) {
 				Scanner scan = new Scanner(new File(s41));
@@ -95,7 +96,7 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 			for(int alpha_factor=0;alpha_factor<ALPHA_CONTROLED_TIMES;alpha_factor++) {
 				double alpha = dec_current_alpha.doubleValue();
 				String alphaString = dec_current_alpha.toString();
-				String temp_fileName = "alpha" + alphaString + "_gamma" + gamma + "_kmin" + M0;
+				String temp_fileName = "alpha" + alphaString + "_gamma" + gamma + "_kmin" + M0 + (weightShuffle?"shuffle":"");
 				new File(temp_fileName).mkdirs();
 				dec_current_alpha = dec_current_alpha.add(DELTA_ALPHA);
 				start_time = System.currentTimeMillis();
@@ -246,6 +247,7 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 //						net.disturb(seed);
 						net.disturb();
 					}
+					if(weightShuffle) net.weightShuffle();
 
 					// ①
 					double[] w_round_list = new double[net.weight.length];
