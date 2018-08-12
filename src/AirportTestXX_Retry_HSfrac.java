@@ -3,10 +3,10 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-public class AirportTest38_1_weight_variance_forDMS extends Job{
+public class AirportTestXX_Retry_HSfrac extends Job{
 
 	public static void main(String[] args) {
-		AirportTest38_1_weight_variance_forDMS job = new AirportTest38_1_weight_variance_forDMS();
+		AirportTestXX_Retry_HSfrac job = new AirportTestXX_Retry_HSfrac();
 		job.run("param.ini");
 //		job.run(100, 200, 2.7, 4, -1, 0.1, 31, false);
 
@@ -46,7 +46,7 @@ public class AirportTest38_1_weight_variance_forDMS extends Job{
 			double inv_N = 1.0/N;
 
 			// PrintWriter設置
-			PrintWriter pw = new PrintWriter(new File("kmin" + k_min + (weightShuffle?"_shuffle":"") + ".txt"));
+			PrintWriter pw1 = new PrintWriter(new File("weightVariance_" + "ganna_" + gamma + "_kmin" + k_min + (weightShuffle?"_shuffle":"") + ".csv"));
 			PrintWriter pw2 = new PrintWriter(new File("hs_" + "ganna_" + gamma + "_kmin" + k_min + (weightShuffle?"_shuffle":"") + ".csv"));
 
 			for(int al=0;al<alpha_times;al++) {
@@ -56,6 +56,7 @@ public class AirportTest38_1_weight_variance_forDMS extends Job{
 				// 取るパラメータ
 				double hs_frac = 0.0;
 				double variance = 0.0;
+				double[] edgeBC = new double[N*N];
 
 				for(int t=0;t<times;t++) {
 					// 構築、重み付け
@@ -76,6 +77,17 @@ public class AirportTest38_1_weight_variance_forDMS extends Job{
 					double current_hs_frac = current_hs_count*inv_N;
 					hs_frac += current_hs_frac;
 
+					// edgeBC処理
+					net.EdgeBetweenness();
+					int[] currentEdgeBC = new int[N*N];
+					final double inv_M = 1.0/net.M;
+					for(int i=0;i<net.M;i++) {
+						currentEdgeBC[(int)Math.round(net.edgeList.get(i).betweenCentrality)]++;
+					}
+					for(int i=0;i<edgeBC.length;i++) {
+						edgeBC[i] += currentEdgeBC[i]*inv_M;
+					}
+
 					// 重み処理
 					double inv_average_w = 1.0/MyTool.average(net.weight);
 					double average_wPrime = 0.0;
@@ -93,16 +105,27 @@ public class AirportTest38_1_weight_variance_forDMS extends Job{
 				}
 				hs_frac /= times;
 				variance /= times;
+				for(int i=0;i<edgeBC.length;i++) edgeBC[i] /= times;
 
 				// alpha加算
 				alpha_dec = alpha_dec.add(delta_alpha_dec);
 
-				pw.println(variance + "," + hs_frac + ","  + alpha);
+				pw1.println(variance + "," + hs_frac + ","  + alpha);
 				pw2.println(alpha + "," + hs_frac);
 				System.out.println(alpha + "\t" + variance + "\t" + hs_frac);
+
+				String folderName = "edgeBC";
+				File folder = new File(folderName);
+				folder.mkdirs();
+				String s3 = (weightShuffle?"[shuffle]":"") + "edgeBC" + "_alpha" + alpha +"_kmin" + k_min + "_gamma" + gamma +".csv";
+				PrintWriter pw3 = new PrintWriter(folder + "/" + s3);
+				for(int i=0;i<edgeBC.length;i++) {
+					if(edgeBC[i]>0) pw3.println(i + "," + edgeBC[i]);
+				}
+				pw3.close();
 			}
 
-			pw.close();
+			pw1.close();
 			pw2.close();
 		} catch (Exception e) {
 			System.err.println(e);
