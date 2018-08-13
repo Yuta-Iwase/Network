@@ -231,9 +231,9 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 					Network net;
 					net = new DMSNetwork(N, M0, a, 100);
 //					net = new DMSNetwork(N, M0, a, 100, seed);
-					net.setNeightbor();
 					net.setNode(false);
 					net.setEdge();
+					net.setNeightbor();
 					final double INV_M = 1.0/net.M;
 					final double INV_N = 1.0/net.N;
 					final double INV_SQUARE_N = 1.0/(net.N*net.N);
