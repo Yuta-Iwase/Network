@@ -6,6 +6,9 @@ import java.util.ArrayList;
 public class py_PointPlot {
 
 
+	/**
+	 * pyファイルの名前を省略<br>
+	 */
 	public void plot(String str_inputPath, String str_outputName, double dou_plotRangeX_start, double dou_plotRangeX_end, double dou_plotRangeY_start, double dou_plotRangeY_end, boolean bool_withLine, String str_lineColor, boolean bool_dottedLine, boolean bool_withPoint, String str_pointColor, int int_pointSize, int int_accumulationMode, boolean bool_logscaleX, boolean bool_logscaleY, String str_title, String str_xLabel, String str_yLabel, boolean bool_withLegend, String str_legendLabel, String str_legendPosition) {
 		String name = "py_" + System.currentTimeMillis() + ".py";
 		try {
@@ -16,6 +19,7 @@ public class py_PointPlot {
 	}
 
 	/**
+	 * 汎用的なメソッド<br>
 	 * ※plotRangeのはじめと終わりを同一にすることで自動スケール。<br>
 	 */
 	public void plot(String pyFilePath, String str_inputPath, String str_outputName, double dou_plotRangeX_start, double dou_plotRangeX_end, double dou_plotRangeY_start, double dou_plotRangeY_end, boolean bool_withLine, String str_lineColor, boolean bool_dottedLine, boolean bool_withPoint, String str_pointColor, int int_pointSize, int int_accumulationMode, boolean bool_logscaleX, boolean bool_logscaleY, String str_title, String str_xLabel, String str_yLabel, boolean bool_withLegend, String str_legendLabel, String str_legendPosition) {
@@ -26,6 +30,9 @@ public class py_PointPlot {
 		};
 	}
 
+	/**
+	 * 関数プロット(単一)<br>
+	 */
 	public void plot(String pyFilePath, String str_inputPath, String str_outputName, double dou_plotRangeX_start, double dou_plotRangeX_end, double dou_plotRangeY_start, double dou_plotRangeY_end, boolean bool_withLine, String str_lineColor, boolean bool_dottedLine, boolean bool_withPoint, String str_pointColor, int int_pointSize, String str_pointDescription, boolean bool_withAnnotate, int int_accumulationMode, boolean bool_logscaleX, boolean bool_logscaleY, String str_title, String str_xLabel, String str_yLabel, boolean bool_withLegend, String str_legendLabel, String str_legendPosition, String str_function, String str_function_LineColors, boolean bool_function_DottedLine, String str_function_LegendLabel){
 		try {
 			coreSimgleArg(pyFilePath, str_inputPath, str_outputName, dou_plotRangeX_start, dou_plotRangeX_end, dou_plotRangeY_start, dou_plotRangeY_end, bool_withLine, str_lineColor, bool_dottedLine, bool_withPoint, str_pointColor, int_pointSize, str_pointDescription, bool_withAnnotate, int_accumulationMode, bool_logscaleX, bool_logscaleY, str_title, str_xLabel, str_yLabel, bool_withLegend, str_legendLabel, str_legendPosition, str_function, str_function_LineColors, bool_function_DottedLine, str_function_LegendLabel);

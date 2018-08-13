@@ -32,6 +32,8 @@ public class AirportTestXX_Retry_HSfrac extends Job{
 			// 解析用パラメータ
 			double hs_threshold = 0.9;
 			int retry_limit = 100;
+			int bins = 20; //Nの約数であること
+			BigDecimal bin_width = BigDecimal.ONE.divide(new BigDecimal(bins));
 
 			// BigDecimal型で厳密に値を管理
 			BigDecimal alpha_dec = new BigDecimal(min_alpha_string);
@@ -57,10 +59,12 @@ public class AirportTestXX_Retry_HSfrac extends Job{
 				double hs_frac = 0.0;
 				double variance = 0.0;
 				double[] edgeBC = new double[N*N];
+				double[] salience = new double[N+1];
 
 				for(int t=0;t<times;t++) {
 					// 構築、重み付け
 					Network net = new DMSNetwork(N, k_min, a, retry_limit);
+					final double inv_M = 1.0/net.M;
 					net.setNode(false);
 					net.setEdge();
 					net.setNeightbor();
@@ -70,6 +74,15 @@ public class AirportTestXX_Retry_HSfrac extends Job{
 
 					// salience処理
 					net.LinkSalience();
+					//// salience分布
+					int[] currentSalience = new int[N*N];
+					for(int i=0;i<net.M;i++) {
+						currentSalience[net.linkSalience[i]]++;
+					}
+					for(int i=0;i<salience.length;i++) {
+						salience[i] += currentSalience[i]*inv_M;
+					}
+					//// hs frac
 					int current_hs_count = 0;
 					for(int i=0;i<net.edgeList.size();i++) {
 						if(threshold_multi_N<net.edgeList.get(i).linkSalience) current_hs_count++;
@@ -80,7 +93,6 @@ public class AirportTestXX_Retry_HSfrac extends Job{
 					// edgeBC処理
 					net.EdgeBetweenness();
 					int[] currentEdgeBC = new int[N*N];
-					final double inv_M = 1.0/net.M;
 					for(int i=0;i<net.M;i++) {
 						currentEdgeBC[(int)Math.round(net.edgeList.get(i).betweenCentrality)]++;
 					}
@@ -106,6 +118,7 @@ public class AirportTestXX_Retry_HSfrac extends Job{
 				hs_frac /= times;
 				variance /= times;
 				for(int i=0;i<edgeBC.length;i++) edgeBC[i] /= times;
+				for(int i=0;i<salience.length;i++) salience[i] /= times;
 
 				// alpha加算
 				alpha_dec = alpha_dec.add(delta_alpha_dec);
@@ -114,15 +127,58 @@ public class AirportTestXX_Retry_HSfrac extends Job{
 				pw2.println(alpha + "," + hs_frac);
 				System.out.println(alpha + "\t" + variance + "\t" + hs_frac);
 
-				String folderName = "edgeBC";
-				File folder = new File(folderName);
-				folder.mkdirs();
+				String folderName_edgeBC = "edgeBC";
+				File folder_edgeBC = new File(folderName_edgeBC);
+				folder_edgeBC.mkdirs();
+
 				String s3 = (weightShuffle?"[shuffle]":"") + "edgeBC" + "_alpha" + alpha +"_kmin" + k_min + "_gamma" + gamma +".csv";
-				PrintWriter pw3 = new PrintWriter(folder + "/" + s3);
+				PrintWriter pw3 = new PrintWriter(folderName_edgeBC + "/" + s3);
 				for(int i=0;i<edgeBC.length;i++) {
 					if(edgeBC[i]>0) pw3.println(i + "," + edgeBC[i]);
 				}
 				pw3.close();
+
+				String folderName_salience = "salience";
+				File folder_salience = new File(folderName_salience);
+				folder_salience.mkdirs();
+				String s41 = (weightShuffle?"[shuffle]":"") + "salience" + "_alpha" + alpha +"_kmin" + k_min + "_gamma" + gamma;
+				PrintWriter pw41 = new PrintWriter(folderName_salience + "/" + s41 + ".csv");
+				for(int i=0;i<salience.length;i++) {
+					if(salience[i]>0) pw41.println(i + "," + salience[i]);
+				}
+				pw41.close();
+
+				String s42 = (weightShuffle?"[shuffle]":"") + "salience("+ bins +"BIN)" + "_alpha" + alpha +"_kmin" + k_min + "_gamma" + gamma;
+				PrintWriter pw42 = new PrintWriter(folderName_salience + "/" + s42 + ".csv");
+				BigDecimal current_s = BigDecimal.ZERO;
+				int bin_points = N/bins;
+				for(int i=0;i<bins-1;i++) {
+					double currentFrequency = 0.0;
+					for(int j=0;j<bin_points;j++) {
+						currentFrequency += salience[i*bin_points + j];
+					}
+					pw42.println(current_s.doubleValue() + "," + currentFrequency);
+					current_s = current_s.add(bin_width);
+				}
+				double currentFrequency = 0.0;
+				for(int j=0;j<bin_points+1;j++) {
+					currentFrequency += salience[(bins-1)*bin_points + j];
+				}
+				pw42.println(current_s.doubleValue() + "," + currentFrequency);
+				current_s = current_s.add(bin_width);
+				pw42.close();
+
+				py_PointPlot py = new py_PointPlot();
+
+				py.plot(folderName_salience+"/"+"plot_"+s42+".py", s42+".csv", s42,
+				0.0, 0.0,
+				0.0, 1.0,
+				false, "black", false,
+				true, "red", 5,
+				0, false, false,
+				"", "salience $s$", "$p(s)$",
+				true, "${\\alpha}=$"+alpha+" ${\\gamma}=$"+gamma+" $\\langle k \\rangle="+(k_min*2)+"$", "lower right");
+
 			}
 
 			pw1.close();
