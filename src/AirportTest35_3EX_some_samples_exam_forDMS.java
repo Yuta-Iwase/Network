@@ -262,7 +262,7 @@ public class AirportTest35_3EX_some_samples_exam_forDMS extends Job{
 						pw13.println(w_round_list[i]);
 					}
 					// ②
-//					net.EdgeBetweenness();
+					net.EdgeBetweenness();
 					double[] edge_BC_list = new double[net.edgeList.size()];
 					for(int i=0;i<N*N;i++) edgeBC_freq[i]=0;
 					for(int i=0;i<edge_BC_list.length;i++) {
