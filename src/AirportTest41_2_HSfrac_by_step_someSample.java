@@ -8,7 +8,7 @@ public class AirportTest41_2_HSfrac_by_step_someSample extends Job{
 		AirportTest41_2_HSfrac_by_step_someSample job = new AirportTest41_2_HSfrac_by_step_someSample();
 		job.run("param.ini");
 
-//		job.run(2, 1000, 2, 2.7, 2.0, 10, 1);
+//		job.run(2, 1000, 4, 2.7, 2.0, 2, 1);
 	}
 
 	@Override
@@ -32,8 +32,11 @@ public class AirportTest41_2_HSfrac_by_step_someSample extends Job{
 			String limitFilePath = folderPath + "limit_" + fileNameFraction + ".csv";
 			PrintWriter pw2 = new PrintWriter(new File(limitFilePath));
 
-			String visitFrac_FilePath = folderPath + "visit_" + fileNameFraction + ".csv";
-			PrintWriter pw3 = new PrintWriter(new File(visitFrac_FilePath));
+			String visitNodeFrac_FilePath = folderPath + "visitNode_" + fileNameFraction + ".csv";
+			PrintWriter pw3 = new PrintWriter(new File(visitNodeFrac_FilePath));
+
+			String visitEdgeFrac_FilePath = folderPath + "visitEdge_" + fileNameFraction + ".csv";
+			PrintWriter pw4 = new PrintWriter(new File(visitEdgeFrac_FilePath));
 
 			double a = (gamma-3)*kmin;
 			int hs_frac;
@@ -47,7 +50,8 @@ public class AirportTest41_2_HSfrac_by_step_someSample extends Job{
 
 			double[] hs_frac_list = new double[stepTimes+1];
 			double limit_HSfrac = 0.0;
-			double[] visitedFrac_list = new double[stepTimes+1];
+			double[] visitedNodeFrac_list = new double[stepTimes+1];
+			double[] visitedEdgeFrac_list = new double[stepTimes+1];
 
 			for(int t=0;t<times;t++) {
 				System.out.println("t=" + t);
@@ -56,11 +60,13 @@ public class AirportTest41_2_HSfrac_by_step_someSample extends Job{
 				currentStep = 0;
 
 				Network net = new DMSNetwork(N, kmin, a, 100);
+				final double INV_M = 1.0/net.M;
 				net.setNode(false);
 				net.setEdge();
 				net.setNeightbor();
 
 				net.turnUniform();
+				net.disturb();
 
 				hs_frac = 0;
 				net.LinkSalience();
@@ -70,13 +76,17 @@ public class AirportTest41_2_HSfrac_by_step_someSample extends Job{
 //				System.out.println(currentStep/N + "\t" + hs_frac*INV_N);
 //				pw1.println(currentStep/N + "," + hs_frac*INV_N);
 				hs_frac_list[current_hs_frac_index] += hs_frac*INV_N;
-				visitedFrac_list[current_hs_frac_index++] += 0.0;
+				visitedNodeFrac_list[current_hs_frac_index] = 0.0;
+				visitedEdgeFrac_list[current_hs_frac_index] = 0.0;
+				current_hs_frac_index++;
+
 
 				walkerNode = (int)(Math.random()*net.N);
 				currentStep = DELTA_STEP;
 //				int beforeStep = 0;
 				while(true) {
 					int nextWalkerNode = net.BiasedRandomWalk_continueWeight(DELTA_STEP, 1.0, alpha, walkerNode, 0.0, true);
+					net.disturb();
 //					System.out.println("walk: " + DELTA_STEP);
 					walkerNode = nextWalkerNode;
 
@@ -86,9 +96,13 @@ public class AirportTest41_2_HSfrac_by_step_someSample extends Job{
 						if(net.linkSalience[i]>=hs_threshold) hs_frac++;
 					}
 					int currentVisitedNodes = 0;
-					for(int i=0;i<net.N;i++) if(net.isVisited_onRW[i])currentVisitedNodes++;
+					int currentVisitedEdges = 0;
+					for(int i=0;i<net.N;i++) if(net.visitedNodes_onRW[i])currentVisitedNodes++;
+					for(int i=0;i<net.M;i++) if(net.visitedEdge_onRW[i])currentVisitedEdges++;
 					hs_frac_list[current_hs_frac_index] += hs_frac*INV_N;
-					visitedFrac_list[current_hs_frac_index++] += currentVisitedNodes*INV_N;
+					visitedNodeFrac_list[current_hs_frac_index] += currentVisitedNodes*INV_N;
+					visitedEdgeFrac_list[current_hs_frac_index] += currentVisitedEdges*INV_M;
+					current_hs_frac_index++;
 
 //					beforeStep = currentStep;
 					currentStep += DELTA_STEP;
@@ -97,6 +111,7 @@ public class AirportTest41_2_HSfrac_by_step_someSample extends Job{
 
 				net.turnUniform();
 				net.SetWeight_to_Alpha(alpha);
+				net.disturb();
 				hs_frac = 0;
 				net.LinkSalience();
 				for(int i=0;i<net.M;i++) {
@@ -108,9 +123,10 @@ public class AirportTest41_2_HSfrac_by_step_someSample extends Job{
 
 			double INV_TIME = 1.0/times;
 			for(int i=0;i<hs_frac_list.length;i++) {
-				System.out.println(i*delta_scaledStep + "\t" + hs_frac_list[i]*INV_TIME + "\t" + visitedFrac_list[i]*INV_TIME);
+				System.out.println(i*delta_scaledStep + "\t" + hs_frac_list[i]*INV_TIME + "\t" + visitedNodeFrac_list[i]*INV_TIME + "\t" + visitedEdgeFrac_list[i]*INV_TIME);
 				pw1.println(i*delta_scaledStep + "," + hs_frac_list[i]*INV_TIME);
-				pw3.println(i*delta_scaledStep + "," + visitedFrac_list[i]*INV_TIME);
+				pw3.println(i*delta_scaledStep + "," + visitedNodeFrac_list[i]*INV_TIME);
+				pw4.println(i*delta_scaledStep + "," + visitedEdgeFrac_list[i]*INV_TIME);
 			}
 			limit_HSfrac *= INV_TIME;
 			System.out.println("limit\t" + limit_HSfrac);
@@ -120,18 +136,19 @@ public class AirportTest41_2_HSfrac_by_step_someSample extends Job{
 			pw1.close();
 			pw2.close();
 			pw3.close();
+			pw4.close();
 
 			py_PointPlot py = new py_PointPlot();
-			py.plot(folderPath+"plot_"+fileNameFraction+".py", new String[]{fileNameFraction+".csv", "visit_"+fileNameFraction+".csv"}, fileNameFraction,
+			py.plot(folderPath+"plot_"+fileNameFraction+".py", new String[]{fileNameFraction+".csv", "visitNode_"+fileNameFraction+".csv", "visitEdge_"+fileNameFraction+".csv"}, fileNameFraction,
 					0.0, 0.0,
-					0.0, 1.0,
-					false, new String[]{"black", "black"}, new boolean[]{false, false},
-					true, new String[]{"red", "green"}, new int[]{5, 5},
-					new String[]{"o", "o"}, true,
+					0.0, 1.05,
+					false, new String[]{"black", "black", "black"}, new boolean[]{false, false, false},
+					true, new String[]{"red", "blue", "green"}, new int[]{5, 5, 5},
+					new String[]{"o", "s", "^"}, true,
 					0, false, false,
-					"HS frac by step", "step$/N$", "#HS$/N$",
-					true, new String[]{"${\\alpha}=$"+alpha+" ${\\gamma}=$"+gamma+" $k_{\\min}=$"+kmin, "visited nodes$/N$"}, "lower right",
-					("y=x*0+"+limit_HSfrac), "blue", true, "$\\lim_{{\\rm step} \\to \\infty}$ (HS frac)"
+					"", "step$/N$", "$f_{\\, {\\rm HS}}$, #visited nodes$/N$, #visited edges$/M$",
+					true, new String[]{"${\\alpha}=$"+alpha+" ${\\gamma}=$"+gamma+" $\\langle k \\rangle=$"+(kmin*2), "#visited nodes$/N$", "#visited edges$/M$"}, "lower right",
+					("y=x*0+"+limit_HSfrac), "red", true, "$\\lim_{{\\rm step} \\to \\infty}$ (HS frac)"
 					);
 //			py.plot(folderPath+"plot_"+fileNameFraction+".py", fileNameFraction+".csv", fileNameFraction,
 //					0.0, 0.0,

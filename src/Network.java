@@ -60,7 +60,8 @@ public class Network implements Cloneable{
 	int[] linkSalience = null;
 
 	 // BiasedRandomWalk_continueWeightで用いる訪問済みリスト
-	boolean[] isVisited_onRW = null;
+	boolean[] visitedNodes_onRW = null;
+	boolean[] visitedEdge_onRW = null;
 
 
 	// setLabel(String inputFilePath)メソッドを実行することでラベル設定を読み込むことができる
@@ -1480,11 +1481,15 @@ public class Network implements Cloneable{
 		}
 
 		if(!continueWeight) weight = new double[M];
-		if(continueWeight && isVisited_onRW==null) {
-			isVisited_onRW = new boolean[N];
-			for(int i=0;i<N;i++)isVisited_onRW[i]=false;
+		if(visitedNodes_onRW==null) {
+			visitedNodes_onRW = new boolean[N];
+			for(int i=0;i<N;i++)visitedNodes_onRW[i]=false;
 		}
-		isVisited_onRW[currentNodeIndex] = true;
+		if(visitedEdge_onRW==null) {
+			visitedEdge_onRW = new boolean[M];
+			for(int i=0;i<N;i++)visitedEdge_onRW[i]=false;
+		}
+		visitedNodes_onRW[currentNodeIndex] = true;
 
 		int selectedEdge,nextNodeIndex;
 		double sumDegree;
@@ -1520,7 +1525,8 @@ public class Network implements Cloneable{
 				}
 
 				// 加重
-				newWeight[currentNode.eList.get(selectedEdge).index] += deltaW;
+				int throughEdgeIndex = currentNode.eList.get(selectedEdge).index;
+				newWeight[throughEdgeIndex] += deltaW;
 
 				// nextNodeIndexの決定
 				if(currentNode.eList.get(selectedEdge).node[0]!=currentNodeIndex){
@@ -1531,7 +1537,8 @@ public class Network implements Cloneable{
 				currentNodeIndex = nextNodeIndex;
 
 				// 訪問済み更新(continue用)
-				isVisited_onRW[nextNodeIndex] = true;
+				visitedNodes_onRW[nextNodeIndex] = true;
+				visitedEdge_onRW[throughEdgeIndex] = true;
 			}else {
 				// 次数0なら確定ワープ
 				t--;

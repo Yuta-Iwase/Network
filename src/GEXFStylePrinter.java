@@ -14,8 +14,12 @@ public class GEXFStylePrinter {
 	String filePath;
 	PrintWriter pw;
 
-	/*
-	 * aaa
+	/**
+	 * 初期化時、ネットワークの基本情報を打ち込む
+	 * @param N 頂点数
+	 * @param list 辺リスト
+	 * @param directed 有向グラフか？
+	 * @param filePath 出力するファイル名(パス)
 	 */
 	public GEXFStylePrinter(int N, int[][] list, boolean directed, String filePath) throws FileNotFoundException{
 		this.N = N;
