@@ -1,58 +1,65 @@
 public class テスト用{
 	public static void main(String[] args) throws Exception{
+		int times = 10;
 		double gamma = 2.7;
 		int m0 = 2;
 		int N = 1000;
-		int bins = 50;
+		double alpha = -2.0;
+//		double[] alphaList = new double[] {-3.0,-4.0,-6.0,-10.0,-20.0,-40.0};
+//		double alpha = -1234;
 
 		double a = m0 * (gamma-3.0);
+		double hs_thres = N*0.9;
+
+//		double hs_frac = 0.0;
+//
+//
+//		for(int al=0;al<alphaList.length;al++) {
+//			alpha = alphaList[al];
+//			long start = System.currentTimeMillis();
+//			for(int t=0;t<times;t++) {
+//				Network net = new DMSNetwork(N, m0, a, 100);
+//				net.setNode(false);
+//				net.setEdge();
+//				net.setNeightbor();
+//				net.SetWeight_to_Alpha(alpha);
+//				net.disturb();
+//
+//				net.LinkSalience();
+//				double current_hs_frac = 0.0;
+//				for(int i=0;i<net.M;i++) {
+//					if(net.linkSalience[i]>=hs_thres) {
+//						current_hs_frac++;
+//					}
+//				}
+//				current_hs_frac /= net.N;
+////				System.out.println(current_hs_frac);
+//
+//				hs_frac += current_hs_frac;
+//			}
+//
+//			hs_frac /= times;
+//			System.out.println("finish: " + (System.currentTimeMillis()-start)*0.001 + "[s]");
+//			System.out.println(alpha + "\t" + hs_frac);
+//		}
 
 		Network net = new DMSNetwork(N, m0, a, 100);
+		net.setNode(false);
+		net.setEdge();
 		net.setNeightbor();
-		net.SetWeight_to_Alpha(1.0);
-//		System.out.println(net.weight.length);
-//		System.out.println(net.neightborList.length);
-//		System.out.println(net.addressList.length);
+		net.SetWeight_to_Alpha(alpha);
+		net.disturb();
 
-//		double sum_
-		double max_str = 0.0;
-		double min_str = Double.MAX_VALUE;
-		double[] str_list = new double[N];
-		int[] str_feq = new int[N*N];
-		double INV_N = 1.0/net.N;
+		net.LinkSalience();
 
-		for(int v=0;v<net.N;v++) {
-			double current_str = 0.0;
-			for(int e=0;e<net.degree[v];e++) {
-				current_str += net.weight[net.neightborIndexList[net.addressList[v]+e]];
-			}
-			str_list[v] = current_str;
-			if(max_str<current_str) max_str=current_str;
-			if(min_str>current_str) min_str=current_str;
-		}
+		GEXFStylePrinter gexf = new GEXFStylePrinter(N, net.list, false, "c:/desktop/network_alpha" + alpha + ".gexf");
+		gexf.init_1st();
+		gexf.printNode_2nd();
+		gexf.printEdge_3rd(null, "link_salience", net.linkSalience);
+		gexf.terminal_4th();
 
-		double xRange = max_str-min_str;
-		double bin_width = xRange/bins;
 
-		for(int i=0;i<net.N;i++) {
-			double current_str = str_list[i];
-			int current_binIndex = 0;
-			while(current_binIndex<bins) {
-				if(current_str<bin_width*(current_binIndex+1)) {
-					break;
-				}
-				current_binIndex++;
-			}
-			if(current_binIndex >= bins) current_binIndex=bins-1;
-			str_feq[current_binIndex]++;
-		}
 
-		for(int i=0;i<bins;i++) {
-			if(str_feq[i]>0) {
-				System.out.println(bin_width*i + "\t" + str_feq[i]*INV_N);
-			}
-
-		}
 	}
 
 }
