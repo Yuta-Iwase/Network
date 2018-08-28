@@ -137,5 +137,10 @@ public class DMSNetwork extends Network{
 		this(insertEdges+1, N, insertEdges, a, loopLimit, seed);
 	}
 
+	public static double calc_a(double gamma, int m0) {
+		double a = (gamma-3.0)*m0;
+		return a;
+	}
+
 
 }
