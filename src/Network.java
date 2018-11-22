@@ -47,6 +47,9 @@ public class Network implements Cloneable{
 	boolean weighted;
 	boolean success = true; //基本true サブクラス次第でfalseにもなる
 
+	double degreeCorrelationCoefficient;
+	double DCC_divider; //次数相関係数の分母
+
 	//// レガシー変数
 	// setNode()メソッドを実行することでノードリストを使うことができる
 	ArrayList<Node> nodeList = new ArrayList<Node>();
@@ -311,12 +314,21 @@ public class Network implements Cloneable{
 		for(int i=0;i<M;i++){
 			int left = list[i][0];
 			int right = list[i][1];
-			neightborList[cursor[left]] = right;
-			neightborList[cursor[right]] = left;
-			neightborIndexList[cursor[left]] = i;
-			neightborIndexList[cursor[right]] = i;
-			cursor[left]++;
-			cursor[right]++;
+			// TODO
+			try {
+				neightborList[cursor[left]] = right;
+				neightborList[cursor[right]] = left;
+				neightborIndexList[cursor[left]] = i;
+				neightborIndexList[cursor[right]] = i;
+				cursor[left]++;
+				cursor[right]++;
+			}catch(Exception e) {
+				System.out.println("*error**");
+				System.out.println(right + "\t" + left);
+				System.out.println(cursor[right] + "\t" + cursor[left]);
+				System.out.println(neightborList.length);
+				System.exit(1);
+			}
 		}
 	}
 
@@ -362,6 +374,17 @@ public class Network implements Cloneable{
 		}catch(Exception e){
 			System.out.println(e);
 		}
+	}
+
+	/**
+	 * 頂点vの隣接頂点の配列を返す
+	 */
+	public int[] neightbor(int v) {
+		int[] v_neightbor = new int[degree[v]];
+		for(int i=0;i<degree[v];i++) {
+			v_neightbor[i] = neightborList[addressList[v]+i];
+		}
+		return v_neightbor;
 	}
 
 	/** 引数n,mをもつ辺のindexを返す*/
@@ -774,6 +797,92 @@ public class Network implements Cloneable{
 		}
 	}
 
+	/**
+	 * 次数相関係数を計算する。<br>
+	 * edge swapを用いて係数を調整する場合はdegreeCorrelationCoefficient_forSwapping()を使う。<br>
+	 * 参考:Newman, Mark EJ. "Mixing patterns in networks." Physical Review E 67.2 (2003): 026126.<br>
+	 * 参考:矢久保考介『複雑ネットワークとその構造』共立出版<br>
+	 */
+	public void degreeCorrelationCoefficient() {
+		double productMean = 0.0;
+		double sumMean = 0.0;
+		double squareSumMean = 0.0;
+		for(int i=0;i<M;i++) {
+			int node0 = list[i][0];	int node1 = list[i][1];
+			int degree0 = degree[node0];	int degree1 = degree[node1];
+
+			productMean += degree0*degree1;
+			sumMean += (degree0 + degree1);
+			squareSumMean += degree0*degree0 + degree1*degree1;
+		}
+		productMean /= M;
+		sumMean /= M;
+		squareSumMean /= M;
+
+		DCC_divider = (2*squareSumMean-sumMean*sumMean);
+		degreeCorrelationCoefficient = (4*productMean-sumMean*sumMean) / DCC_divider;
+	}
+
+	public double degreeCorrelationCoefficient_forSwapping(boolean positiveCorrelation) {
+		boolean swapValidity = false;
+
+		int edgeA=-1, edgeB=-1;
+		int nodeA0=-1, nodeA1=-1, nodeB0=-1, nodeB1=-1;
+		while(!swapValidity) {
+			swapValidity = true;
+			edgeA = (int)(Math.random()*list.length);
+			edgeB = (int)(Math.random()*list.length);
+
+			if(edgeA==edgeB) swapValidity=false; // 同一辺の交換を禁じる
+
+
+			nodeA0 = list[edgeA][0];	nodeA1 = list[edgeA][1];
+			nodeB0 = list[edgeB][0];	nodeB1 = list[edgeB][1];
+
+			// A0-B1のマルチパスを禁じる
+			if(swapValidity) {
+				int[] nodeA0_neightborList = neightbor(nodeA0);
+				for(int i=0;i<nodeA0_neightborList.length;i++) {
+					if(nodeB1 == nodeA0_neightborList[i]) {
+						swapValidity = false;
+						break;
+					}
+				}
+			}
+
+			// B0-A1のマルチパスを禁じる
+			if(swapValidity) {
+				int[] nodeB0_neightborList = neightbor(nodeB0);
+				for(int i=0;i<nodeB0_neightborList.length;i++) {
+					if(nodeA1 == nodeB0_neightborList[i]) {
+						swapValidity = false;
+						break;
+					}
+				}
+			}
+
+			// 相関係数を目的通りの方向にかえられているか
+			if(swapValidity) {
+				double DCC_difference = (
+						- (degree[nodeA0]*degree[nodeA1]+degree[nodeB0]*degree[nodeB1])
+						+ (degree[nodeA0]*degree[nodeB1]+degree[nodeB1]*degree[nodeA1])
+						) * (4.0/(2*M)) / DCC_divider;
+				// 正しい設定時の処理
+				if(DCC_difference > 0 == positiveCorrelation) {
+					degreeCorrelationCoefficient += DCC_difference;
+					list[edgeA][0] = nodeB1;
+					list[edgeB][0] = nodeA1;
+
+					//TODO アルゴリズム最適化
+					setNeightbor();
+				}else {
+					swapValidity = false;
+				}
+			}
+		}
+
+		return degreeCorrelationCoefficient;
+	}
 
 
 	/** 頂点の媒介中心性を計算しプロットする(Brandesらの方法)<br>
