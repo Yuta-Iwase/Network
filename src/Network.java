@@ -314,21 +314,12 @@ public class Network implements Cloneable{
 		for(int i=0;i<M;i++){
 			int left = list[i][0];
 			int right = list[i][1];
-			// TODO
-			try {
-				neightborList[cursor[left]] = right;
-				neightborList[cursor[right]] = left;
-				neightborIndexList[cursor[left]] = i;
-				neightborIndexList[cursor[right]] = i;
-				cursor[left]++;
-				cursor[right]++;
-			}catch(Exception e) {
-				System.out.println("*error**");
-				System.out.println(right + "\t" + left);
-				System.out.println(cursor[right] + "\t" + cursor[left]);
-				System.out.println(neightborList.length);
-				System.exit(1);
-			}
+			neightborList[cursor[left]] = right;
+			neightborList[cursor[right]] = left;
+			neightborIndexList[cursor[left]] = i;
+			neightborIndexList[cursor[right]] = i;
+			cursor[left]++;
+			cursor[right]++;
 		}
 	}
 
@@ -823,12 +814,17 @@ public class Network implements Cloneable{
 		degreeCorrelationCoefficient = (4*productMean-sumMean*sumMean) / DCC_divider;
 	}
 
-	public double degreeCorrelationCoefficient_forSwapping(boolean positiveCorrelation) {
+	public double degreeCorrelationCoefficient_forSwapping(boolean positiveCorrelation, int loopLimit) {
 		boolean swapValidity = false;
 
 		int edgeA=-1, edgeB=-1;
 		int nodeA0=-1, nodeA1=-1, nodeB0=-1, nodeB1=-1;
+		int currentFailCount = -1;
 		while(!swapValidity) {
+			currentFailCount++;
+			if(currentFailCount > loopLimit){
+				return -123456;
+			}
 			swapValidity = true;
 			edgeA = (int)(Math.random()*list.length);
 			edgeB = (int)(Math.random()*list.length);
@@ -865,22 +861,22 @@ public class Network implements Cloneable{
 			if(swapValidity) {
 				double DCC_difference = (
 						- (degree[nodeA0]*degree[nodeA1]+degree[nodeB0]*degree[nodeB1])
-						+ (degree[nodeA0]*degree[nodeB1]+degree[nodeB1]*degree[nodeA1])
-						) * (4.0/(2*M)) / DCC_divider;
+						+ (degree[nodeA0]*degree[nodeB1]+degree[nodeB0]*degree[nodeA1])
+						) * (4.0/M) / DCC_divider;
 				// 正しい設定時の処理
 				if(DCC_difference > 0 == positiveCorrelation) {
 					degreeCorrelationCoefficient += DCC_difference;
-					list[edgeA][0] = nodeB1;
-					list[edgeB][0] = nodeA1;
+					list[edgeA][1] = nodeB1;
+					list[edgeB][1] = nodeA1;
 
 					//TODO アルゴリズム最適化
 					setNeightbor();
+
 				}else {
 					swapValidity = false;
 				}
 			}
 		}
-
 		return degreeCorrelationCoefficient;
 	}
 
