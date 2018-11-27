@@ -1,53 +1,48 @@
 public class テスト用{
-	static int ii = 0;
 	public static void main(String[] args) throws Exception{
-//		int times = 1000;
-//		double dcc_mean = 0.0;
-//
-//		for(int i=0;i<times;i++) {
-//			int N = 1000;
-//			double gamma = 2.7;
-//			int minDegree = 2;
-//			int maxDegree = N/10;
-//			int loopLimit = 100;
-//
-//			ScaleFreeNetwork net = new ScaleFreeNetwork(N, gamma, minDegree, maxDegree, loopLimit);
-//			net.degreeCorrelationCoefficient();
-//
-//			dcc_mean += net.degreeCorrelationCoefficient;
-//		}
-//
-//		dcc_mean /= times;
-//		System.out.println(dcc_mean);
-
-
-
-
 
 		int N = 1000;
 		double gamma = 2.7;
 		int minDegree = 2;
 		int maxDegree = N/10;
-		int loopLimit = 100;
+		int swapTime = 10000;
+		int loopLimit = 1000;
+		int step = 1_000_000;
+		double alpha = 1.0;
 
 		ScaleFreeNetwork net = new ScaleFreeNetwork(N, gamma, minDegree, maxDegree, loopLimit);
 		net.setNeightbor();
 		net.degreeCorrelationCoefficient();
-//		double before_DCC = net.degreeCorrelationCoefficient;
-//
-//		net.degreeCorrelationCoefficient_forSwapping(true);
-//		net.setNeightbor();
-//		net.degreeCorrelationCoefficient();
-//		double true_DCC = net.degreeCorrelationCoefficient;
-//
-//		System.out.println("true_dif=" + (true_DCC-before_DCC));
-		for(int i=0;i<10000;i++){
-			ii = i;
-			net.degreeCorrelationCoefficient_forSwapping(true, 1000);
+		for(int i=0;i<swapTime;i++){
+			net.degreeCorrelationCoefficient_forSwapping(true, loopLimit);
 		}
 		System.out.println(net.degreeCorrelationCoefficient);
 
-		net.printList("C:\\Users\\Owner\\Desktop\\新しいフォルダー\\net.csv");
+		net.setNode(false);
+		net.setEdge();
+		net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
+		int[][] edgeList = net.list;
+		int[] degreeList = net.degree;
+		int[] mean_w = new int[N*N];
+		int[] mean_w_elements = new int[N*N];
+		for(int i=0;i<net.M;i++) {
+			int left = edgeList[i][0];			int right = edgeList[i][0];
+			int degree0 = degreeList[left];	int degree1 = degreeList[right];
+
+			double currentWeight = net.weight[i];
+
+			mean_w[degree0*degree1] += currentWeight;
+			mean_w_elements[degree0*degree1]++;
+		}
+		for(int i=0;i<mean_w.length;i++) {
+			if(mean_w[i]>0) {
+				System.out.println(i + "\t" + mean_w[i]/(double)mean_w_elements[i]);
+			}
+		}
+
+
+
+
 	}
 
 }

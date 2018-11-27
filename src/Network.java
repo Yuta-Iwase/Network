@@ -823,7 +823,7 @@ public class Network implements Cloneable{
 		while(!swapValidity) {
 			currentFailCount++;
 			if(currentFailCount > loopLimit){
-				return -123456;
+				return -123457;
 			}
 			swapValidity = true;
 			edgeA = (int)(Math.random()*list.length);
@@ -834,6 +834,8 @@ public class Network implements Cloneable{
 
 			nodeA0 = list[edgeA][0];	nodeA1 = list[edgeA][1];
 			nodeB0 = list[edgeB][0];	nodeB1 = list[edgeB][1];
+
+			if(nodeA0 == nodeB1 || nodeA1==nodeB0) swapValidity=false; //自己ループを禁じる
 
 			// A0-B1のマルチパスを禁じる
 			if(swapValidity) {
@@ -864,7 +866,7 @@ public class Network implements Cloneable{
 						+ (degree[nodeA0]*degree[nodeB1]+degree[nodeB0]*degree[nodeA1])
 						) * (4.0/M) / DCC_divider;
 				// 正しい設定時の処理
-				if(DCC_difference > 0 == positiveCorrelation) {
+				if(positiveCorrelation ? DCC_difference > 0 : DCC_difference < 0) {
 					degreeCorrelationCoefficient += DCC_difference;
 					list[edgeA][1] = nodeB1;
 					list[edgeB][1] = nodeA1;
