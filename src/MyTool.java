@@ -73,4 +73,30 @@ public class MyTool {
 		System.out.println(list[list.length-1] + "}");
 	}
 
+	/**
+	 *
+	 * @param scatterSequence 散布列
+	 * @param maxY 散布列の要素の最大値
+	 * @return 度数列
+	 */
+	static int[] makeFrequency(int[] scatterSequence, int maxY) {
+		int[] frequency = new int[maxY+1];
+		for(int i=0;i<scatterSequence.length;i++) {
+			frequency[scatterSequence[i]]++;
+		}
+		return frequency;
+	}
+
+	static int[] makeFrequency(int[] scatterSequence) {
+		int maxY = Integer.MIN_VALUE;
+		for(int i=0;i<scatterSequence.length;i++) {
+			if(maxY<scatterSequence[i]) maxY=scatterSequence[i];
+		}
+		int[] frequency = new int[maxY];
+		for(int i=0;i<scatterSequence.length;i++) {
+			frequency[scatterSequence[i]]++;
+		}
+		return frequency;
+	}
+
 }

@@ -11,7 +11,7 @@ public class AirportTest42_1_kk_vs_w_test{
 		int swapTime = 10000;
 		int loopLimit = 1000;
 		int step = 1_000_000;
-		double alpha = -1.0;
+		double alpha = 1.0;
 
 		int[][] edgeList;
 		int[] degreeList;
@@ -38,7 +38,9 @@ public class AirportTest42_1_kk_vs_w_test{
 		// 無相関
 		origin_DCC = org_net.degreeCorrelationCoefficient;
 		System.out.println("もとの係数:\t" + origin_DCC);
-		org_net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
+//		org_net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
+		org_net.SetWeight_to_Alpha(alpha);
+		org_net.disturb();
 		edgeList = org_net.list;
 		degreeList = org_net.degree;
 		origin_sum_w = new int[N*N];
@@ -63,7 +65,9 @@ public class AirportTest42_1_kk_vs_w_test{
 
 		as_net.setNode(false);
 		as_net.setEdge();
-		as_net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
+//		as_net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
+		as_net.SetWeight_to_Alpha(alpha);
+		as_net.disturb();
 		edgeList = as_net.list;
 		degreeList = as_net.degree;
 		as_sum_w = new int[N*N];
@@ -88,7 +92,9 @@ public class AirportTest42_1_kk_vs_w_test{
 
 		dis_net.setNode(false);
 		dis_net.setEdge();
-		dis_net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
+//		dis_net.BiasedRandomWalk(step, 1.0, alpha, 0.0, true);
+		dis_net.SetWeight_to_Alpha(alpha);
+		dis_net.disturb();
 		edgeList = dis_net.list;
 		degreeList = dis_net.degree;
 		dis_sum_w = new int[N*N];
@@ -139,6 +145,27 @@ public class AirportTest42_1_kk_vs_w_test{
 		System.out.println(org_HSfrac);
 		System.out.println(as_HSfrac);
 		System.out.println(dis_HSfrac);
+
+		// org_サリエンス分布
+		int[] dis_s_freq = MyTool.makeFrequency(dis_net.linkSalience, N);
+		for(int i=0;i<N;i++) {
+			if(dis_s_freq[i]>0) {
+				System.out.println(i + "\t" + dis_s_freq[i]);
+			}
+		}
+
+		GEXFStylePrinter gexf = new GEXFStylePrinter(N, dis_net.list, false, "dis_net.gexf");
+		gexf.init_1st();
+		gexf.printNode_2nd();
+		gexf.printEdge_3rd(dis_net.weight, "link_salience", dis_net.linkSalience);
+		gexf.terminal_4th();
+		
+		gexf = new GEXFStylePrinter(N, as_net.list, false, "as_net.gexf");
+		gexf.init_1st();
+		gexf.printNode_2nd();
+		gexf.printEdge_3rd(as_net.weight, "link_salience", as_net.linkSalience);
+		gexf.terminal_4th();
+
 
 	}
 
