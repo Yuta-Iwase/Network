@@ -1,0 +1,5 @@
+times=2
+network=DMS
+N=1000
+gamma=3.0
+kmin(m0)=2
